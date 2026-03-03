@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAPMAN · Production Toolkit V3</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg0:#0e0f11;--bg1:#141519;--bg2:#1a1b21;--bg3:#22242b;--bg4:#2d3039;--bg5:#3b3e4a;
+--tx0:#f2f3f7;--tx1:#c5c9d4;--tx2:#8a8f9e;--tx3:#5d6272;
+--blue:#3b82f6;--blueD:rgba(59,130,246,.1);--blueG:rgba(59,130,246,.25);
+--cyan:#22d3ee;--cyanD:rgba(34,211,238,.1);
+--amber:#f59e0b;--amberD:rgba(245,158,11,.1);
+--red:#ef4444;--redD:rgba(239,68,68,.08);
+--green:#22c55e;--greenD:rgba(34,197,94,.1);
+--purple:#a78bfa;--purpleD:rgba(167,139,250,.1);
+--pink:#ec4899;--pinkD:rgba(236,72,153,.1);
+--orange:#f97316;--orangeD:rgba(249,115,22,.1);
+--r:8px;--rl:12px;--font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+--side:260px;--head:48px;
+}
+html{font-size:13.5px;scroll-behavior:smooth;background:var(--bg0)}
+body{font-family:var(--font);color:var(--tx0);line-height:1.55;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--blue);color:#fff}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+
+/* LAYOUT */
+.app{display:flex;min-height:100vh}
+.side{width:var(--side);background:var(--bg1);border-right:1px solid var(--bg3);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:50;transition:transform .2s ease}
+.main{margin-left:var(--side);flex:1;min-height:100vh}
+.head{position:sticky;top:0;z-index:40;background:rgba(14,15,17,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--bg3);padding:0 28px;height:var(--head);display:flex;align-items:center;gap:12px}
+.head-title{font-size:15px;font-weight:700;white-space:nowrap}
+.head-sub{font-size:11px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.content{padding:20px 28px 60px}
+
+/* SIDEBAR */
+.side-logo{padding:16px;border-bottom:1px solid var(--bg3);display:flex;align-items:center;gap:10px}
+.logo-k{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:15px;color:#fff;flex-shrink:0}
+.logo-t{font-weight:700;font-size:14px;letter-spacing:1.5px;text-transform:uppercase}
+.logo-s{font-size:10px;color:var(--tx2);font-weight:400;margin-top:1px}
+.side-search{padding:10px 12px 6px}
+.sbox{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--r);cursor:pointer;transition:border-color .12s}
+.sbox:hover{border-color:var(--bg5)}
+.sbox svg{color:var(--tx3);width:13px;height:13px;flex-shrink:0}
+.sbox span{color:var(--tx3);font-size:11px;flex:1}
+.sbox kbd{font-family:var(--mono);font-size:9px;padding:1px 4px;background:var(--bg0);border:1px solid var(--bg3);border-radius:3px;color:var(--tx3)}
+.side-nav{flex:1;padding:6px 8px;overflow-y:auto}
+.nlbl{padding:6px 8px 3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx3)}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;color:var(--tx2);transition:all .1s;border:1px solid transparent;margin-bottom:1px}
+.ni:hover{background:var(--bg2);color:var(--tx1)}
+.ni.on{background:var(--blueD);color:var(--blue);border-color:rgba(59,130,246,.12)}
+.ni svg{width:14px;height:14px;flex-shrink:0;opacity:.6}
+.ni.on svg{opacity:1}
+.ni .cnt{margin-left:auto;font-size:9px;font-family:var(--mono);background:var(--bg3);padding:1px 5px;border-radius:8px;color:var(--tx3)}
+.ni.on .cnt{background:var(--blueD);color:var(--blue)}
+.side-ft{padding:10px 12px;border-top:1px solid var(--bg3)}
+.msw{display:flex;background:var(--bg2);border-radius:6px;padding:2px;border:1px solid var(--bg3)}
+.mbtn{flex:1;padding:5px;font-size:10px;font-weight:600;text-align:center;border:none;background:none;color:var(--tx3);cursor:pointer;border-radius:5px;font-family:var(--font);transition:all .1s}
+.mbtn.on{background:var(--blue);color:#fff}
+
+/* FILTERS */
+.frow{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;align-items:center}
+.fp{padding:4px 10px;font-size:10.5px;font-weight:500;color:var(--tx2);background:var(--bg2);border:1px solid var(--bg3);border-radius:16px;cursor:pointer;transition:all .1s;white-space:nowrap;font-family:var(--font)}
+.fp:hover{color:var(--tx1);border-color:var(--bg5)}
+.fp.on{color:var(--blue);background:var(--blueD);border-color:rgba(59,130,246,.15)}
+.fp-mood.on{color:var(--amber);background:var(--amberD);border-color:rgba(245,158,11,.15)}
+.fsep{width:1px;height:18px;background:var(--bg4);margin:0 3px}
+
+/* GRID & CARDS */
+.gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:10px}
+.cd{background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--rl);overflow:hidden;transition:all .15s}
+.cd:hover{border-color:var(--bg5);box-shadow:0 4px 20px rgba(0,0,0,.18)}
+.cd.core{border-left:2px solid var(--blue)}
+.cd-top{display:flex;align-items:center;gap:9px;padding:12px 14px 0}
+.vi{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;font-weight:700;flex-shrink:0;letter-spacing:.3px}
+.cd-m{flex:1;min-width:0}
+.cd-ir{display:flex;align-items:center;gap:5px}
+.cid{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--tx3);background:var(--bg3);padding:0 5px;border-radius:3px;line-height:1.6}
+.cd-n{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cd-b{display:flex;gap:2px}
+.cb{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:none;border:none;border-radius:5px;color:var(--tx3);cursor:pointer;font-size:12px;transition:all .08s}
+.cb:hover{background:var(--bg3);color:var(--tx1)}
+.cb.fo{color:var(--amber)}
+
+/* Tags */
+.cd-t{display:flex;flex-wrap:wrap;gap:3px;padding:6px 14px 0}
+.tg{font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px;letter-spacing:.3px;text-transform:uppercase;font-family:var(--mono);line-height:1.6}
+.tg-g{background:var(--cyanD);color:var(--cyan)} /* genre */
+.tg-m{background:var(--amberD);color:var(--amber)} /* mood */
+.tg-t{background:var(--greenD);color:var(--green)} /* type */
+.tg-r{background:var(--purpleD);color:var(--purple)} /* role */
+.tg-i{background:var(--blueD);color:var(--blue)} /* insert */
+.tg-re{background:var(--pinkD);color:var(--pink)} /* return */
+
+.cd-d{padding:6px 14px;font-size:11.5px;color:var(--tx2);line-height:1.45}
+
+/* Dose */
+.dose{display:flex;align-items:center;gap:6px;padding:3px 14px 0}
+.dose-t{flex:1;height:2px;background:var(--bg3);border-radius:1px;overflow:hidden}
+.dose-f{height:100%;border-radius:1px}
+.d-micro{width:18%;background:var(--green)}.d-low{width:33%;background:var(--cyan)}.d-med{width:52%;background:var(--amber)}.d-moment{width:78%;background:var(--red)}
+.dose-l{font-size:9px;font-family:var(--mono);color:var(--tx3);white-space:nowrap}
+
+/* Expand */
+.cd-exp{overflow:hidden;max-height:0;transition:max-height .3s cubic-bezier(.4,0,.2,1)}
+.cd.open .cd-exp{max-height:3000px}
+.cd-tog{display:flex;align-items:center;justify-content:center;gap:3px;padding:6px 14px;font-size:10px;font-weight:500;color:var(--tx3);cursor:pointer;transition:color .1s;border-top:1px solid var(--bg3);margin-top:8px}
+.cd-tog:hover{color:var(--tx1)}
+.cd-tog svg{width:12px;height:12px;transition:transform .2s}
+.cd.open .cd-tog svg{transform:rotate(180deg)}
+
+.cd-body{padding:0 14px 14px}
+.dt{margin-top:8px}
+.dt-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.dt-l::after{content:'';flex:1;height:1px;background:var(--bg3)}
+.dt-v{font-family:var(--mono);font-size:11px;color:var(--tx1);line-height:1.65;padding:8px 10px;background:var(--bg0);border-radius:var(--r);border:1px solid var(--bg3);white-space:pre-wrap;word-break:break-word}
+.dt-v em{color:var(--blue);font-style:normal}
+
+/* Chain steps */
+.cs{display:flex;gap:8px;padding:8px 10px;background:var(--bg0);border:1px solid var(--bg3);border-radius:var(--r);margin-top:5px}
+.cs-n{width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:50%;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--tx2);flex-shrink:0;margin-top:1px}
+.cs-i{flex:1;min-width:0}
+.cs-p{font-size:11px;font-weight:600;color:var(--tx0)}
+.cs-r{font-size:9px;color:var(--cyan);font-weight:500;margin-left:5px}
+.cs-s{font-family:var(--mono);font-size:10.5px;color:var(--tx2);line-height:1.55;margin-top:1px}
+
+/* Stop rules */
+.sr{margin-top:10px;padding:8px 10px;background:var(--redD);border:1px solid rgba(239,68,68,.12);border-radius:var(--r)}
+.sr-t{font-size:9px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.sr-r{font-size:10.5px;color:var(--tx2);line-height:1.45;padding:1px 0 1px 12px;position:relative}
+.sr-r::before{content:'×';position:absolute;left:0;color:var(--red);font-weight:700;font-size:11px}
+
+/* Copy */
+.cpb{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;font-size:9.5px;font-weight:600;background:var(--bg3);border:1px solid var(--bg4);border-radius:4px;color:var(--tx2);cursor:pointer;font-family:var(--mono);transition:all .1s;letter-spacing:.2px}
+.cpb:hover{border-color:var(--blue);color:var(--blue)}
+.cpb.ok{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* BUILDER */
+.bw{display:grid;grid-template-columns:260px 1fr;gap:20px}
+.bp{background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--rl);padding:16px;position:sticky;top:calc(var(--head) + 20px);align-self:start}
+.fi{margin-bottom:12px}
+.fl{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:4px}
+.fin,.fsl{width:100%;padding:8px 10px;background:var(--bg0);border:1px solid var(--bg3);border-radius:var(--r);color:var(--tx0);font-family:var(--font);font-size:12px;transition:border-color .1s}
+.fin:focus,.fsl:focus{border-color:var(--blue);outline:none}
+.fsl option{background:var(--bg1)}
+.gbtn{width:100%;padding:10px;font-size:12px;font-weight:700;background:var(--blue);color:#fff;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--font);transition:all .1s;letter-spacing:.4px}
+.gbtn:hover{filter:brightness(1.1)}
+.bout{min-height:300px}
+.bb{background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--rl);padding:14px 16px;margin-bottom:10px}
+.bn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--blue);border-radius:50%;font-size:10px;font-weight:700;font-family:var(--mono);color:#fff;flex-shrink:0}
+.bh{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.bt{font-size:14px;font-weight:700}
+.bs{font-size:11px;color:var(--tx2);margin-bottom:10px}
+
+/* WIZARD */
+.wc{margin-bottom:20px}
+.wct{font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.wct::after{content:'';flex:1;height:1px;background:var(--bg3)}
+.ws{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--r);margin-bottom:4px;transition:all .12s}
+.ws.dn{opacity:.4}
+.wch{width:18px;height:18px;border:2px solid var(--bg5);border-radius:50%;background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:transparent;font-size:9px;transition:all .1s}
+.wch.ok{background:var(--green);border-color:var(--green);color:#fff}
+
+/* FIX-IT */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.fc{padding:12px;background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--r);cursor:default;transition:all .12s}
+.fc:hover{border-color:var(--cyan);background:var(--bg2)}
+.fs{font-size:12px;font-weight:600;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.fs::before{content:'';width:5px;height:5px;background:var(--red);border-radius:50%;flex-shrink:0}
+.ff{font-size:10.5px;color:var(--tx2);font-family:var(--mono);line-height:1.45}
+
+/* MIXDOWN */
+.mx-step{display:flex;gap:12px;margin-bottom:12px;padding:14px;background:var(--bg1);border:1px solid var(--bg3);border-radius:var(--rl)}
+.mx-n{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:50%;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--tx2);flex-shrink:0}
+.mx-c{flex:1}
+.mx-t{font-size:13px;font-weight:700;margin-bottom:2px}
+.mx-d{font-size:11px;color:var(--tx2);line-height:1.5}
+.mx-v{font-family:var(--mono);font-size:10.5px;color:var(--tx1);background:var(--bg0);padding:8px;border-radius:var(--r);border:1px solid var(--bg3);margin-top:6px;white-space:pre-wrap}
+
+/* ARRANGEMENT */
+.arr-row{display:flex;gap:2px;margin-bottom:2px}
+.arr-cell{flex:1;padding:6px 4px;font-size:9px;font-family:var(--mono);text-align:center;border-radius:3px;font-weight:500}
+.arr-head{background:var(--bg3);color:var(--tx2)}
+.arr-on{background:var(--blueD);color:var(--blue);border:1px solid rgba(59,130,246,.15)}
+.arr-off{background:var(--bg2);color:var(--tx3);border:1px solid transparent}
+.arr-build{background:var(--amberD);color:var(--amber);border:1px solid rgba(245,158,11,.15)}
+.arr-fx{background:var(--purpleD);color:var(--purple);border:1px solid rgba(167,139,250,.15)}
+
+/* COMMAND */
+.cmd-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-start;justify-content:center;padding-top:10vh;backdrop-filter:blur(3px)}
+.cmd-bg.open{display:flex}
+.cmd-box{width:min(520px,94vw);background:var(--bg1);border:1px solid var(--bg4);border-radius:var(--rl);overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.45)}
+.cmd-h{display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--bg3)}
+.cmd-h svg{color:var(--tx3);width:14px;height:14px;flex-shrink:0}
+.cmd-i{flex:1;padding:12px 8px;background:none;border:none;color:var(--tx0);font-size:14px;font-family:var(--font);outline:none}
+.cmd-i::placeholder{color:var(--tx3)}
+.cmd-l{max-height:300px;overflow-y:auto;padding:4px}
+.cmd-r{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .06s}
+.cmd-r:hover,.cmd-r.sel{background:var(--bg3)}
+.cmd-ic{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--bg0);border-radius:5px;font-size:8px;font-family:var(--mono);font-weight:700;color:var(--tx2);flex-shrink:0}
+.cmd-tx{flex:1;min-width:0}
+.cmd-nm{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmd-mt{font-size:9px;color:var(--tx3);font-family:var(--mono)}
+.cmd-e{padding:24px;text-align:center;color:var(--tx3);font-size:12px}
+.cmd-ft{padding:6px 12px;border-top:1px solid var(--bg3);display:flex;gap:12px;font-size:9px;color:var(--tx3)}
+.cmd-ft kbd{font-family:var(--mono);padding:0 3px;background:var(--bg0);border:1px solid var(--bg3);border-radius:2px;font-size:8px}
+
+/* VENDOR COLORS */
+.v-ff{background:#1a2e4a;color:#5b9ef6}.v-d16{background:#3a1a1a;color:#e6705a}.v-uhe{background:#271e3a;color:#b090e6}
+.v-art{background:#1a2a3a;color:#5abee6}.v-val{background:#1a3027;color:#60d090}.v-evt{background:#3a2a1a;color:#e6b050}
+.v-ba{background:#3a1a2a;color:#e65a9a}.v-izo{background:#1a3a2a;color:#5ae6a0}.v-krg{background:#2a2a1a;color:#c0bc50}
+.v-xfr{background:#2a1a3a;color:#c050e6}.v-abl{background:#222;color:#999}.v-cg{background:#1a253a;color:#5090e6}
+.v-spc{background:#1a3a3a;color:#50e6e6}.v-dm{background:#3a1a1a;color:#e65050}.v-str{background:#2a2a1a;color:#b0b050}
+.v-pls{background:#1a1a3a;color:#7070e6}.v-mix{background:#252530;color:#8888bb}
+
+/* EMPTY */
+.emp{text-align:center;padding:48px 20px;color:var(--tx3)}
+.emp-i{font-size:24px;margin-bottom:6px}
+.emp-t{font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:3px}
+
+/* SECTION */
+.sec{display:none}.sec.on{display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);padding:7px 16px;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--r);color:var(--tx0);font-size:11px;font-weight:500;z-index:300;opacity:0;transition:all .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:860px){.side{transform:translateX(-100%)}.side.mo{transform:translateX(0)}.main{margin-left:0}.content{padding:14px}.gr{grid-template-columns:1fr}.bw{grid-template-columns:1fr}.mob{display:flex!important}.head{padding:0 14px}}
+.mob{display:none;align-items:center;justify-content:center;width:28px;height:28px;background:none;border:1px solid var(--bg4);border-radius:6px;color:var(--tx2);cursor:pointer}
+.moo{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:49;display:none}.moo.on{display:block}
+</style>
+</head>
+<body>
+<!-- PASSWORD GATE -->
+<div id="lockScreen" style="position:fixed;inset:0;z-index:10000;background:#0e0f11;display:flex;align-items:center;justify-content:center">
+<div style="text-align:center;max-width:320px;padding:24px">
+<div style="width:56px;height:56px;background:#3b82f6;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;color:#fff">K</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#f2f3f7;margin-bottom:4px">KAPMAN Toolkit</div>
+<div style="font-size:12px;color:#8a8f9e;margin-bottom:20px">Accès réservé</div>
+<input id="pwdIn" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPwd()" style="width:100%;padding:10px 14px;background:#1a1b21;border:1px solid #22242b;border-radius:8px;color:#f2f3f7;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:8px;text-align:center">
+<button onclick="checkPwd()" style="width:100%;padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Entrer</button>
+<div id="pwdErr" style="color:#ef4444;font-size:11px;margin-top:8px;display:none">Mot de passe incorrect</div>
+</div>
+</div>
+<script>
+// ═══ CHANGE TON MOT DE PASSE ICI ═══
+const KAPMAN_PWD = '62!NjC3e';
+// ════════════════════════════════════
+
+function checkPwd(){
+  const v=document.getElementById('pwdIn').value;
+  if(v===KAPMAN_PWD){
+    document.getElementById('lockScreen').style.display='none';
+    sessionStorage.setItem('kauth','1');
+  } else {
+    document.getElementById('pwdErr').style.display='block';
+    document.getElementById('pwdIn').value='';
+    document.getElementById('pwdIn').style.borderColor='#ef4444';
+    setTimeout(()=>{document.getElementById('pwdIn').style.borderColor='#22242b';},800);
+  }
+}
+if(sessionStorage.getItem('kauth')==='1') document.getElementById('lockScreen').style.display='none';
+</script>
+<div class="moo" id="moo" onclick="closeMob()"></div>
+<aside class="side" id="side">
+<div class="side-logo"><div class="logo-k">K</div><div><div class="logo-t">Kapman</div><div class="logo-s">Production Toolkit V3</div></div></div>
+<div class="side-search"><div class="sbox" onclick="openCmd()" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Rechercher…</span><kbd>⌘K</kbd></div></div>
+<nav class="side-nav" id="sNav"></nav>
+<div class="side-ft"><div class="msw"><button class="mbtn on" id="mAll" onclick="gM('full')">FULL</button><button class="mbtn" id="mCore" onclick="gM('core')">CORE ★</button></div></div>
+</aside>
+<div class="main"><header class="head"><button class="mob" onclick="openMob()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button><div><div class="head-title" id="hT"></div><div class="head-sub" id="hS"></div></div></header><div class="content" id="ctn"></div></div>
+<div class="cmd-bg" id="cmdBg" onclick="if(event.target===this)closeCmd()"><div class="cmd-box"><div class="cmd-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="cmd-i" id="cmdI" placeholder="Rechercher instruments, FX, problèmes…" autocomplete="off"></div><div class="cmd-l" id="cmdL"></div><div class="cmd-ft"><span><kbd>↑↓</kbd> Nav</span><span><kbd>↵</kbd> Go</span><span><kbd>Esc</kbd> Close</span></div></div></div>
+<div class="toast" id="tst"></div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// VENDOR MAP
+// ════════════════════════════════════════════════════════
+const VC={'u-he':'v-uhe',Arturia:'v-art',FabFilter:'v-ff',D16:'v-d16',Valhalla:'v-val',Eventide:'v-evt','Baby Audio':'v-ba',iZotope:'v-izo',KORG:'v-krg',Xfer:'v-xfr',Ableton:'v-abl',Cableguys:'v-cg',Spectrasonics:'v-spc',Devious:'v-dm',Multi:'v-mix'};
+const VS={'u-he':'u·he',Arturia:'Art',FabFilter:'FF',D16:'D16',Valhalla:'Val',Eventide:'Evt','Baby Audio':'BA',iZotope:'iZo',KORG:'KRG',Xfer:'Xfr',Ableton:'Abl',Cableguys:'CG',Spectrasonics:'Spc',Devious:'DM',Multi:'Mix'};
+
+// ════════════════════════════════════════════════════════
+// DATA: INSTRUMENTS — 35 presets
+// Genre: Electro/House/Synthwave/Minimale/Trance/Pop
+// Mood: Warm/Cold/Dark/Bright/Melancholic/Euphoric
+// ════════════════════════════════════════════════════════
+const I=[
+// — BASS —
+{id:'I01',vst:'Diva',v:'u-he',type:'Bass',g:['Electro','House'],m:['Dark'],core:1,name:'Sub Architect',
+desc:'Sub bass chirurgicale. Fondation kick+bass underground. Triple VCO sine sub.',
+preset:'TRIPLE VCO | Osc1: Sawtooth | Osc2: Square -1 oct | Osc3: off, Noise off\nFilter: LADDER 24dB LP | Cutoff 32% | Resonance (Emphasis) 0%',
+tweaks:'Envelope 2 → Cutoff: Attack 0ms | Decay 220ms | Sustain 40% | Release 80ms\nVoice Tab: MONO | Glide OFF | Stack OFF | Accuracy: DIVINE\nTrimmers: Drift 0% (clean sub, no drift)',
+chain:'Pro-Q 4 → HP 28Hz Brick Wall 48dB/oct | Mono Bass <120Hz (M/S Side HP)\n→ Saturn 2 → Single band 50-150Hz | Style: Subtle Tube | Drive 12% | Mix 100%\n→ Pro-C 2 → Style: Opto | Ratio 3:1 | Thresh -12dB | Attack 10ms | Release Auto\n→ Pro-Q 4 → Final check: cut 200-400Hz nasal (-2dB bell Q=1.5)',
+stops:['Sub fondamentale < 120Hz uniquement','Mono obligatoire sous 150Hz — utiliser Pro-Q 4 M/S','Level-match TOUJOURS avant de juger un traitement']},
+
+{id:'I02',vst:'Diva',v:'u-he',type:'Bass',g:['Synthwave','Pop'],m:['Warm'],core:1,name:'Neon Pulse',
+desc:'Bass pulsante analogique chaude pour couplet/refrain. Dual VCO pulse+saw.',
+preset:'DUAL VCO | Osc1: Pulse PW 60% | Osc2: Sawtooth -7ct detune\nFilter: CASCADE LP | Cutoff 45% | Reso 18% | Rough mode',
+tweaks:'Env2→Cutoff: A 2ms | D 350ms | S 28% | R 100ms\nLFO1→PW Osc1: Rate 0.3Hz | Amount 15% (subtle movement)\nVoice: MONO | Glide 40ms | Accuracy: GREAT',
+chain:'Saturn 2 → Band 80-300Hz | Style: Warm Tape | Drive 18% | Mix 100%\n→ Pro-Q 4 → HP 30Hz | Notch 250Hz -2dB Q=2 (boxiness)\n→ Pro-C 2 → Style: Classic | Ratio 4:1 | Thresh -10dB | Attack 5ms',
+stops:['Resonance max 20% sur Cascade — au-delà ça siffle','Si thin, monte le Drive Saturn pas le Gain','A/B avec bypass complet à chaque étape']},
+
+{id:'I03',vst:'Mini V3',v:'Arturia',type:'Bass',g:['Electro','House'],m:['Dark','Warm'],core:1,name:'Mono Beast',
+desc:'Bass Minimoog grasse. Le son qui fait trembler le club. 3 oscillateurs.',
+preset:'Osc1: Sawtooth 16\' | Osc2: Square 16\' | Osc3: Sawtooth 32\' -7ct\nOsc Mix: 1=60% | 2=80% | 3=40% | Filter Cutoff 38% | Emphasis 18%',
+tweaks:'Filter Env: A 3ms | D 280ms | S 22% | R 60ms\nFilter Contour: 55% | Keyboard Ctrl: 40%\nGlide: ON 45ms | Mono\nOverdrive: ON (built-in, subtle warmth)',
+chain:'Devastor 2 → Topology 1 (pre-filter) | Preamp +12dB | Threshold -6dB | Shape: curve 2\n→ Pro-Q 4 → HP 30Hz | Cut 300Hz -2dB Q=2 (boxiness)\n→ Pro-C 2 → Style: Punch | Ratio 4:1 | Thresh -12dB | Attack 0.5ms\n→ Pro-MB → Band 60-120Hz: 3:1 slow | tighten sub',
+stops:['3 osc = beaucoup d\'énergie → HP strict à 30Hz','Overdrive built-in + Devastor = oversaturation facile — doser','Sidechain au kick OBLIGATOIRE via Ableton Compressor']},
+
+{id:'I04',vst:'Serum 2',v:'Xfer',type:'Bass',g:['Electro','Minimale'],m:['Cold'],core:1,name:'Modular Sub',
+desc:'Sub wavetable chirurgicale. Précision absolue du low-end.',
+preset:'Osc A: Basic Shapes > Sine | Sub Osc: ON\nOsc B: OFF | Noise: OFF\nFilter: MG Low 12 | Cutoff 38% | Reso 0%',
+tweaks:'Env1→Filter: A 0 | D 150ms | S 48% | R 80ms\nMono: ON | Portamento: OFF (or 20ms max)\nVoices: 1 | No Unison (c\'est un sub)',
+chain:'Pro-Q 4 → HP 25Hz 48dB/oct | LP 120Hz 24dB/oct (sub only)\n→ Devastor 2 → Preamp +6dB | Threshold -3dB | curve 1 (subtle)\n→ Pro-C 2 → Style: Classic | Ratio 3:1 | Thresh -8dB',
+stops:['Sub = MONO, zéro stereo, zéro unison','Aucune harmonique >200Hz en solo','Vérifier PHASE avec le kick: Pro-Q 4 analyzer']},
+
+{id:'I05',vst:'Phoscyon 2',v:'D16',type:'Bass',g:['Electro','House'],m:['Dark','Euphoric'],core:0,name:'303 Acid Line',
+desc:'Acid bass D16 303. Le groove underground par excellence.',
+preset:'Osc: Sawtooth | Cutoff: 40% | Resonance: 62% | Env Mod: 55%\nAccent: ON 70% | Slide: every 3rd-4th step',
+tweaks:'Distortion built-in: 18% (subtle grit)\nPattern: program Accent + Slide = le VRAI groove 303\nTune: match ta tonalité exactement',
+chain:'Devastor 2 → Preamp +8dB | Threshold -6dB (add grit if needed)\n→ Pro-Q 4 → HP 40Hz | Dynamic bell at reso peak ~800Hz-2kHz (-4dB)\n→ Pro-C 2 → Style: Punch | Ratio 4:1 | Fast Attack 0.3ms | taming peaks\n→ ValhallaDelay → Sync 1/16 dotted | FB 15% | LP 4kHz | Mix 10%',
+stops:['Resonance > 70% = danger de feedback monitoring','Le PATTERN fait tout, pas le sound design','Accent + Slide combinés = le vrai son, pas juste la reso']},
+
+{id:'I06',vst:'Trilian',v:'Spectrasonics',type:'Bass',g:['House','Pop'],m:['Warm'],core:0,name:'Analog Module',
+desc:'Basses synthétiques premium Trilian. Grande palette de textures bass.',
+preset:'Category: Synth Bass → "Classic Mini" ou "Juicy Sub"\nFilter: ajuster Cutoff pour sit sous le kick',
+tweaks:'Mono + Legato ON | Glide 30ms\nFilter Env: short Decay pour groove\nLayer avec sub Serum si fondamentale manque',
+chain:'Pro-Q 4 → HP 30Hz | Cut 200-300Hz boxy -2dB\n→ Devastor 2 → Preamp +6dB | subtle (Threshold -3dB)\n→ Pro-C 2 → Style: Opto | Ratio 3:1 | gentle',
+stops:['Presets Trilian souvent trop riches → SCULPT par soustraction','Une bonne basse suffit, pas 3 layers','Sidechain kick toujours']},
+
+{id:'I07',vst:'DX7 V',v:'Arturia',type:'Bass',g:['Electro','Synthwave'],m:['Cold'],core:0,name:'FM Electric Bass',
+desc:'Bass FM DX7 iconique. Son électrique métallique unique.',
+preset:'Category: E.Bass → Algorithm 5 (classic FM)\nOperator ratios: simple — 1:1 et 1:2',
+tweaks:'Modulation Index: 40-60% (moderate)\nVelocity → Mod Index: ON (dynamics essentielles)\nOutput Level Op1: ajuster pour niveau',
+chain:'Pro-Q 4 → HP 35Hz | Tame 1-2kHz ring (dynamic EQ)\n→ Comp FET-76 → Ratio 4:1 | Input for -4 to -6dB GR | Attack 3 | Release 7\n→ Devastor 2 → Preamp +4dB (Tube warmth subtle)',
+stops:['FM = harsh → EQ correctif APRÈS toujours','Garder les ratios d\'opérateurs simples','Velocity sensitivity = le groove FM']},
+
+// — LEAD —
+{id:'I08',vst:'Diva',v:'u-he',type:'Lead',g:['Electro','Synthwave'],m:['Cold','Bright'],core:1,name:'Wire Lead',
+desc:'Lead mono tranchant. Présence mid-range qui coupe le mix.',
+preset:'DUAL VCO | Osc1: Sawtooth | Osc2: Square +7 semi | Sync ON\nFilter: BITE (MS-20 HP+LP) | LP Cutoff 52% | HP Cutoff 15% | Reso 22%',
+tweaks:'Env2→LP Cutoff: A 5ms | D 200ms | S 52% | R 150ms\nMono | Glide 60ms | Detune Osc2: +5ct\nVoice Drift: 10% (slight analog instability)',
+chain:'Decimort 2 → Bit 24 | Sample Rate 26kHz (subtle lo-fi color)\n→ Pro-Q 4 → HP 200Hz | Presence boost 2.5kHz +2dB Q=1.5\n→ ValhallaVintageVerb → Mode: Smooth Plate | Color: 80s | Decay 1.2s | Mix 12%\n→ Delay TAPE-201 → Sync 1/8 dot | FB 20% | Mix 15% | Wow: 10%',
+stops:['Le lead reste SOUS le hook vocal en level','Reverb max 15% wet en contexte club','Le filtre Bite donne le caractère MS-20 — explorer doucement']},
+
+{id:'I09',vst:'Jup-8 V4',v:'Arturia',type:'Lead',g:['Synthwave','Pop'],m:['Bright','Euphoric'],core:0,name:'Retro Sync',
+desc:'Lead sync Jupiter-8 classique. Hooks mémorisables.',
+preset:'Osc1: Pulse PW 40% | Osc2: Saw SYNC ON\nLPF: Cutoff 58% | Reso 28%\nHPF: 100Hz',
+tweaks:'Env2→Cutoff: fast A | D 300ms | S 38%\nMono | Glide 50ms\nOsc2 tune +7 pour sweep sync',
+chain:'Saturn 2 → Band full | Style: Warm Tape | Drive 15% | Mix 100%\n→ Pro-Q 4 → HP 180Hz | Presence 3kHz +2dB\n→ Delay ETERNITY → Sync 1/4 dot | FB 20% | Mix 12%',
+stops:['Le sweep sync doit être musical — pas juste du bruit','Reso max 35% sur le Jup-8','A/B mono vs stereo pour compatibilité']},
+
+{id:'I10',vst:'CS-80 V4',v:'Arturia',type:'Lead',g:['Synthwave','Electro'],m:['Melancholic','Dark'],core:0,name:'Vangelis Scream',
+desc:'Lead expressif dramatique CS-80. Pour moments forts uniquement.',
+preset:'Single Layer | Osc: Saw+Pulse | Ring Mod OFF\nLPF 53% | Reso 22% | HPF 100Hz',
+tweaks:'Aftertouch→Brilliance: Amount 40% (expressivité)\nEnv: A 50ms | D 500ms | S 58% | R 300ms\nVibrato: Depth 8% | Rate 5Hz',
+chain:'Dist TUBE-CULTURE → Drive 20% | Mix 30% (parallel)\n→ Pro-Q 4 → Tame 2-3kHz resonance (-2dB dynamic)\n→ ValhallaVintageVerb → Mode: Concert Hall | Color: 80s | Decay 1.8s | Mix 14%',
+stops:['Un SEUL lead dramatique à la fois dans l\'arrangement','Vibrato SUBTIL — au-delà de 10% ça sonne kitsch','C\'est un "moment", pas un fill permanent']},
+
+{id:'I11',vst:'MiniFreak V',v:'Arturia',type:'Lead',g:['Electro','Minimale'],m:['Cold','Dark'],core:0,name:'Freak Texture',
+desc:'Lead texturé digital/analog. Parfait pour underground.',
+preset:'Osc1: VA Supersaw | Osc2: Wavetable (Formant)\nFilter: LP Ladder | Cutoff 48%',
+tweaks:'FX Section: Chorus subtle + Delay short\nMod Matrix: LFO→Filter Cutoff 0.2Hz (slow movement)\nMono | Glide 40ms',
+chain:'Pro-Q 4 → HP 150Hz | Cut harsh 4kHz if needed (-2dB dynamic)\n→ Decimort 2 → 24bit | 20kHz (very subtle)\n→ ValhallaDelay → Sync 1/8 | FB 20% | LP 5kHz | Mix 15%',
+stops:['Les FX built-in du MiniFreak sont bons — pas tout bypasser','La matrice de mod = le vrai pouvoir du MiniFreak','Rester MUSICAL pas experimental']},
+
+// — PAD —
+{id:'I12',vst:'Diva',v:'u-he',type:'Pad',g:['Synthwave','Trance'],m:['Dark','Melancholic'],core:0,name:'Deep Haze',
+desc:'Pad sombre évolutif. Texture atmosphérique underground.',
+preset:'DUAL VCO | Osc1+2: Sawtooth | Detune ±8ct | -1 oct chacun\nFilter: LADDER LP | Cutoff 28% | Reso 8%',
+tweaks:'Env2→Cutoff: A 800ms | D 2s | S 58% | R 3s (slow evolve)\nLFO1→Cutoff: 0.15Hz | Amount 10% (breathing)\nVoices 4 | Drift 30% (analog warmth)',
+chain:'ValhallaSupermassive → Mode: Gemini | Mix 35% | Warp 40%\n→ Pro-Q 4 → HP 80Hz | Shelf -3dB@8kHz\n→ Pro-C 2 → Style: Opto | gentle -4dB GR max',
+stops:['JAMAIS masquer la basse — HP obligatoire','Si tu entends le pad consciemment, il est trop fort','HP au-dessus de la fondamentale du kick']},
+
+{id:'I13',vst:'Jup-8 V4',v:'Arturia',type:'Pad',g:['Synthwave','Pop'],m:['Warm','Bright'],core:1,name:'Silk Pad',
+desc:'Le pad Jupiter-8 iconique. Warmth et chorus vintage immédiat.',
+preset:'Osc1+2: Sawtooth | Detune ±6ct\nLPF: Cutoff 48% | Reso 5% | HPF: 120Hz\nChorus: ON (built-in Jup-8 chorus)',
+tweaks:'VCA Env: A 600ms | D 1.5s | S 72% | R 2s\nChorus Rate: medium | Mode I\nVoices: 6 | Unison OFF',
+chain:'Chorus DIMENSION-D → Mode II | Mix 100% (dedicated character)\n→ Pro-Q 4 → HP 100Hz | Air shelf +1.5dB@10kHz\n→ ValhallaPlate → Decay 2.5s | LP 6kHz | Mix 18%',
+stops:['Le chorus built-in + DIMENSION-D = LE son, pas plus','HP 100Hz impératif','Level-match avec et sans FX toujours']},
+
+{id:'I14',vst:'CS-80 V4',v:'Arturia',type:'Pad',g:['Synthwave','Trance'],m:['Dark','Melancholic'],core:1,name:'Blade Runner Wash',
+desc:'Le pad CS-80 cinématique. Texture riche et évolutive.',
+preset:'Dual Layers | Both Sawtooth | Ring Mod OFF\nLPF 33% | HPF 200Hz | Reso 8%',
+tweaks:'Slow Attack 1s | Long Release 4s\nTremolo: Rate 2Hz | Depth 12%\nBrilliance 38%',
+chain:'ShimmerVerb → Pitch +12st@8% | Decay 3s | Mix 18%\n→ Pro-Q 4 → HP 150Hz | Shelf -2dB@6kHz\n→ Pro-L 2 → True Peak | -1dBTP (catching peaks)',
+stops:['CS-80 est DENSE — HP bien au-dessus du kick','Ring Mod OFF sauf intention créative précise','Ce pad TOURNE en fond, il ne doit pas chanter']},
+
+{id:'I15',vst:'Polysix',v:'KORG',type:'Pad',g:['Synthwave','Pop'],m:['Warm','Bright'],core:1,name:'Poly Warmth',
+desc:'Le pad Polysix classique. Simple, chaud, immédiatement utilisable.',
+preset:'VCO: Sawtooth\nVCF: Cutoff 53% | Reso 5% | EG Intensity 28%\nChorus: ON Mode I',
+tweaks:'EG: A 400ms | D 1s | S 68% | R 2s\nMG (LFO): VCF target | Freq slow | Intensity 5%\nVoices: 6',
+chain:'Pro-Q 4 → HP 120Hz | Air shelf +1dB@12kHz\n→ ValhallaVintageVerb → Mode: Smooth Plate | Color: 80s | Decay 2s | Mix 15%\n→ Pro-C 2 → Style: Opto | -3dB GR gentle',
+stops:['Chorus built-in = LE son du Polysix, pas de doublon','SIMPLE = MIEUX avec le Polysix','Si thin, monte les voices pas l\'EQ']},
+
+{id:'I16',vst:'Prophet-5 V',v:'Arturia',type:'Pad',g:['House','Pop'],m:['Warm','Euphoric'],core:0,name:'Prophet Atmosphere',
+desc:'Pad Prophet-5 épais. Le son premium des années 80.',
+preset:'Osc A: Sawtooth | Osc B: Pulse PW 48%\nMix 50/50 | LPF 38% | Reso 6%\nPoly mode | 5 voices',
+tweaks:'Filter Env: A 1s | D 2s | S 52% | R 3s\nPoly-Mod: Osc B→Filter 8% (subtle animation)\nUnison OFF (already thick)',
+chain:'Rev LX-24 → Plate mode | Mix 18%\n→ Pro-Q 4 → HP 100Hz | Scoop 400Hz -2dB\n→ Pro-C 2 → Style: Opto | -3dB GR',
+stops:['Poly-Mod < 15% sinon chaos','Le Prophet est nativement riche — pas d\'empilement','HP au-dessus de la fondamentale bass']},
+
+// — ARG —
+{id:'I17',vst:'Diva',v:'u-he',type:'Arp',g:['Synthwave','Trance'],m:['Bright','Euphoric'],core:1,name:'Crystal Sequence',
+desc:'Arp bright et rythmique. Le groove mélodique du track.',
+preset:'DCO model | Pulse PW 35% + Sawtooth summed\nFilter: CASCADE LP | Cutoff 62% | Reso 12%',
+tweaks:'Env2→Cutoff: A 1ms | D 100ms | S 18% | R 50ms (plucky)\nAbleton Arpeggiator MIDI: 1/16 | Gate 55%\nVelocity Random: 70-115 range',
+chain:'MicroPitch → Pitch A: -8ct | Pitch B: +8ct | Delay: 10/12ms | Mix 40%\n→ ValhallaDelay → Sync 1/8 dot | FB 25% | LP 4kHz | HP 200Hz | Mix 18%\n→ Pro-Q 4 → HP 250Hz | Tame 3kHz if harsh (-2dB)',
+stops:['Arp en PHASE rythmique avec le kick — écouter ensemble','Delay only, PAS de reverb longue sur les arps','Si trop busy, Gate → 40%']},
+
+{id:'I18',vst:'Polysix',v:'KORG',type:'Arp',g:['Synthwave','Pop'],m:['Warm','Bright'],core:0,name:'Poly Arp Machine',
+desc:'Arpèges Polysix classiques 80s. Le groove nostalgique.',
+preset:'VCO: Pulse PW 43%\nVCF: Cutoff 48% | Reso 18% | EG Int 38%\nArpeggiator: ON | Up | 1/16',
+tweaks:'EG: A 2ms | D 120ms | S 8% | R 60ms (plucky)\nChorus: ON Mode II\nUtiliser Ableton Arp pour plus de contrôle si besoin',
+chain:'TriceraChorus → Voices moderate | Rate slow | Mix 40% (width)\n→ ValhallaDelay → Sync 1/8 dot | FB 20% | LP 5kHz | Mix 16%\n→ Pro-Q 4 → HP 250Hz (strict)',
+stops:['Arp INTERNE du Polysix OU Ableton, pas les deux','Delay = effet principal sur les arps','Rate > 1/8 = bouillie']},
+
+// — PLUCK —
+{id:'I19',vst:'Serum 2',v:'Xfer',type:'Pluck',g:['House','Electro'],m:['Cold','Bright'],core:1,name:'Glass Pluck',
+desc:'Pluck net et percussif. Stabs et accents mélodiques.',
+preset:'Osc A: Analog > Sawtooth | Unison 2 voices | Detune 12%\nFilter: MG Low 12 | Cutoff 28% | Reso 22%',
+tweaks:'Amp Env: A 0 | D 180ms | S 0 | R 100ms (pure pluck)\nEnv2→Filter: Depth 58% | Same short shape\nPoly: 4 voices max',
+chain:'MicroPitch → ±6ct | 10ms | Mix 35%\n→ ValhallaRoom → Mode: Small Room | Decay 0.5s | Mix 10%\n→ Pro-Q 4 → HP 200Hz | Tame 5kHz (-1.5dB if needed)',
+stops:['Sustain = 0 → court et net','Si click au début, allonge Attack de 1-2ms','MicroPitch oui, Chorus non (mono-compat)']},
+
+// — KICK —
+{id:'I20',vst:'PunchBox',v:'D16',type:'Kick',g:['Electro','House'],m:['Dark'],core:1,name:'Club Kick Synth',
+desc:'Kick synthétique D16. Low-end avec contrôle chirurgical.',
+preset:'Sine Generator: Pitch Start 180Hz → End 42Hz | Sweep Time 35ms\nBody: Medium | Click: sample transient',
+tweaks:'Saturator: Tube mode | Drive 12%\nClick level: -8dB vs body (subtil)\nSub Tune: MATCHER à ta tonalité du track',
+chain:'Pro-Q 4 → HP 25Hz 48dB/oct | Resonant cleanup (kill boxiness 300Hz)\n→ Pro-C 2 → Style: Punch | Attack 0.5ms | Ratio 4:1\n→ Pro-L 2 → Mode: Safe | Ceiling -1dBTP',
+stops:['Pitch du kick DANS la tonalité du track','Click trop fort = amateur','Saturation douce uniquement sur le body']},
+
+// — DRUMS —
+{id:'I21',vst:'Drumazon 2',v:'D16',type:'Drums',g:['Electro','House'],m:['Dark','Warm'],core:1,name:'909 Foundation Kit',
+desc:'909 virtuelle D16. La base de tout track underground/house.',
+preset:'Default 909 kit\nKick: Tune to taste | Decay medium\nSnare: Tone 50% | Snap ON',
+tweaks:'Closed HH: Decay 30ms\nOpen HH: Decay 150ms | Choke group linked\nRimshot: pour accents percussifs\nChaque son → Drum Rack channel séparé',
+chain:'[Routage par son dans Ableton Drum Rack]\nKick → chain I20 | Snare → Saturn 2 + Pro-Q 4\nHH → Pro-Q 4 (HP 4kHz) + Decimort 2 subtle\nBUS → Neutron 5 Compressor (Style: Bus, 2:1 glue)',
+stops:['CHAQUE son dans son propre channel Drum Rack','Ne saturer que les mid/high, PAS le kick direct','Bus drums: max -3dB GR']},
+
+{id:'I22',vst:'Nepheton 2',v:'D16',type:'Drums',g:['Electro','Minimale'],m:['Dark','Cold'],core:0,name:'808 Toolkit',
+desc:'808 virtuelle D16. Pour moments dark et minimal.',
+preset:'Default 808 kit\nKick: Long decay | Tone medium\nCowbell + Rimshot pour accents',
+tweaks:'Kick tune: match ta tonalité EXACTE\nClap: Tone bright | Snappy\nMaracas: velocity-sensitive ghost notes',
+chain:'[Routage identique I21]\nKick: long tail → sidechain CRITIQUE\nClap → Neutron 5 TS (Attack +15%)\nTout à travers Decimort 2 subtle (24bit/30kHz)',
+stops:['Le kick 808 tail = LA basse → pas de bass synthé séparée','Layer avec un sample click pour le transient','Sub tail MONO obligatoire sous 120Hz']},
+
+// — FX —
+{id:'I23',vst:'Serum 2',v:'Xfer',type:'FX',g:['Electro','Trance'],m:['Dark'],core:0,name:'Impact & Risers',
+desc:'FX de transition: downlifters, impacts, sweeps en Serum 2.',
+preset:'Osc A: Noise (White) | Filter: HP automated\nFor downlifter: LFO→Pitch | High→Low over 2-4 bars',
+tweaks:'Impact: very short env + noise burst layered\nSweep: Filter Cutoff automation manuelle\nAbleton Utility pour volume automation fine',
+chain:'ShaperBox 3 → Volume + Filter custom curves\n→ ValhallaSupermassive → Mode: dark | Short decay\n→ Pro-Q 4 → HP 100Hz (ne pas polluer le low-end)',
+stops:['Les FX sont des MOMENTS, pas du fill permanent','Un SEUL FX de transition à la fois','Volume automate > plugin settings pour le contrôle fin']},
+
+{id:'I24',vst:'Pigments',v:'Arturia',type:'FX',g:['Electro','Minimale'],m:['Cold','Dark'],core:0,name:'Granular Texture',
+desc:'Textures granulaires pour backgrounds et transitions.',
+preset:'Engine A: Granular (importer un sample texture)\nEngine B: Wavetable subtle | Filter: LP Ladder 42%',
+tweaks:'Grain Size: 80ms | Position: LFO slow sweep\nDensity: 8 | Spray: 15%\nAmp Env: Attack 2s (very slow fade in)',
+chain:'ValhallaSupermassive → Mode: Hydra | Mix 30% | Warp 48%\n→ Pro-Q 4 → HP 120Hz | Notch mud 300Hz\n→ Crystalline → Shimmer 8% (très subtil)',
+stops:['Granular = CPU heavy → Freeze quand satisfait','C\'est un lit sonore, pas un élément d\'attention','Warp Supermassive < 55% sinon mush']},
+
+// More instruments...
+{id:'I25',vst:'BA-1',v:'Baby Audio',type:'Lead',g:['Synthwave','Pop'],m:['Warm','Melancholic'],core:0,name:'Lo-Fi Hook',
+desc:'Lead lo-fi Baby Audio. Caractère vintage instantané.',
+preset:'Start from any BA-1 preset\nKey params: Drift | Noise | Filter | Chorus',
+tweaks:'Drift: 28% (analog instability)\nNoise: 8% (subtle hiss texture)\nFilter LP: ~53% | Chorus: ON subtle',
+chain:'Pro-Q 4 → HP 200Hz | Presence 2.5kHz +1.5dB Q=1.5\n→ Tape MELLO-FI → Wow 8% | Flutter 5% | Noise OFF | Sat 12%\n→ ValhallaRoom → Small | Decay 0.4s | Mix 10%',
+stops:['BA-1 a du caractère built-in — pas surcharger','Drift > 50% = out of tune','Lo-fi = CHOIX esthétique, pas excuse pour mauvais mix']},
+
+{id:'I26',vst:'SEM V2',v:'Arturia',type:'Bass',g:['Electro','House'],m:['Warm','Dark'],core:0,name:'SEM Growl',
+desc:'Bass Oberheim SEM. Mid-range grognant unique.',
+preset:'Osc1: Sawtooth | Osc2: Pulse\nFilter: Multimode | Blend LP→Notch | Cutoff 38%',
+tweaks:'Env→Cutoff: Fast A | D 200ms | S 28%\nFilter mode: blender LP vers Notch pour le growl\nMono | Glide 35ms',
+chain:'Saturn 2 → Band 100-500Hz | Style: Warm Tube | Drive 18% | Mix 100%\n→ Pro-Q 4 → HP 35Hz | Mid presence 800Hz +1.5dB\n→ Pro-C 2 → Style: Punch | Ratio 4:1',
+stops:['Le multimode filter est puissant — explorer graduellement','Position du Notch = clé du caractère','Sidechain kick toujours']},
+
+{id:'I27',vst:'OP-Xa V',v:'Arturia',type:'Pad',g:['Trance','Synthwave'],m:['Euphoric','Bright'],core:0,name:'Oberheim Heaven',
+desc:'Pad Oberheim OB-Xa. Lush et euphorique.',
+preset:'Osc1: Saw | Osc2: Saw detuned ±5ct\nFilter: 2-pole LP | Cutoff 45% | Reso 8%',
+tweaks:'Filter Env: slow attack 800ms | D 2s | S 65%\nChorus: ON\nVoices: 6 | Unison OFF',
+chain:'Chorus JUN-6 → Rate slow | Mix 50%\n→ Pro-Q 4 → HP 120Hz | Air +1dB@12kHz\n→ ValhallaVintageVerb → Mode: Cathedral | Color: 80s | Decay 3s | Mix 15%',
+stops:['Déjà très riche — pas d\'empilement','HP strict au-dessus de la bass','Cathedral verb pour le côté épique']},
+
+{id:'I28',vst:'ARP 2600 V3',v:'Arturia',type:'Lead',g:['Electro','Minimale'],m:['Cold','Dark'],core:0,name:'ARP Acid',
+desc:'Lead expérimental ARP 2600. Patching flexible.',
+preset:'VCO1: Saw | VCO2: Square FM from VCO1\nVCF: LP | Cutoff 40% | Reso 35%',
+tweaks:'Patch: VCO2→VCF Cutoff FM (experimental)\nEnv: Fast snap | Mono | Glide ON\nNoise: touch of S&H→Cutoff',
+chain:'Redoptor 2 → Drive subtle (D16 tube character)\n→ Pro-Q 4 → HP 150Hz | Dynamic tame reso peak\n→ Delay BRIGADE → BBD mode | Sync 1/8 | FB 25% | Mix 15%',
+stops:['L\'ARP 2600 est un MONSTRE de modulation — rester musical','FM amount < 30% pour rester tonal','Delay BBD = caractère analog, pas digital delay']},
+
+{id:'I29',vst:'Diva',v:'u-he',type:'Pluck',g:['House','Pop'],m:['Warm','Bright'],core:0,name:'Analog Stab',
+desc:'Stab/pluck analogique chaud pour house et pop.',
+preset:'DCO model | Saw+Pulse summed | PW 45%\nFilter: CASCADE LP | Cutoff 35% | Reso 15%',
+tweaks:'Env2→Filter: A 0 | D 120ms | S 0 | R 80ms (sharp pluck)\nPoly 4 voices | No glide\nQ (quantize) button: ON for digital snap',
+chain:'Saturn 2 → Band 200Hz-2kHz | Style: Tape | Drive 12%\n→ MicroPitch → ±6ct | Mix 30%\n→ Pro-Q 4 → HP 180Hz | Shelf +1dB@8kHz (air)',
+stops:['Sustain = 0 pour un vrai stab','Si trop harsh, allonge Decay au lieu de couper les highs','MicroPitch pour width, pas chorus']},
+
+{id:'I30',vst:'Serum 2',v:'Xfer',type:'Lead',g:['Trance','Electro'],m:['Euphoric','Bright'],core:0,name:'Supersaw Lead',
+desc:'Supersaw moderne Serum. Pour les moments euphoriques.',
+preset:'Osc A: Analog > Saw | Unison 7 voices | Detune 20%\nFilter: MG Low 18 | Cutoff 65% | Drive 5%',
+tweaks:'Osc B: Analog > Saw | Unison 3 | -12ct detune (thickness)\nFilter Env: short snap for pluck variation\nPoly 4 voices',
+chain:'Pro-Q 4 → HP 150Hz | Cut 400Hz mud -2dB\n→ MicroPitch → ±10ct | 15ms | Mix 35%\n→ ValhallaVintageVerb → Mode: Bright Hall | Color: NOW | Decay 1.5s | Mix 12%\n→ Pro-C 2 → Style: Bus | 2:1 | -3dB GR (glue)',
+stops:['Unison 7 = BEAUCOUP de CPU → Freeze','Vérifier mono compat impérativement','C\'est un MOMENT euphorique, pas le son permanent']}
+];
+
+// ════════════════════════════════════════════════════════
+// DATA: FX CHAINS — 55+ racks
+// ════════════════════════════════════════════════════════
+const F=[
+// ─── LOW-END ───
+{id:'F01',name:'Kick Foundation',role:'LOW-END',v:'FabFilter',type:'Chain',ins:1,core:1,dose:'medium',
+desc:'Chaîne kick complète. Cleanup → harmoniques → punch → peak safety.',
+ch:[
+{p:'Pro-Q 4',r:'Cleanup',s:'HP 28Hz Brick Wall 48dB/oct\nCut boxiness: Bell 300-400Hz, -2dB, Q=1.5\nShelf +1dB@60Hz (optional fondamentale boost)'},
+{p:'Saturn 2',r:'Harmonics',s:'2 bands:\n• Band 50-150Hz: Style Subtle Tube | Drive 10% | Mix 100%\n• Band 2-5kHz: Style Tape | Drive 8% | Mix 100%\nHQ: Good (8x oversample)'},
+{p:'Pro-C 2',r:'Transient',s:'Style: Punch | Attack 0.5ms | Release 80ms\nRatio 3:1 | Threshold -10dB | Knee: medium\nLookahead: OFF (zero latency)'},
+{p:'Pro-L 2',r:'Peak safety',s:'Style: Safe | Target -1dBTP\nGR max 1-2dB | Meter: True Peak'}
+],stops:['Level-match avant/après chaque plugin','Le kick doit sonner bien SEUL en solo','Si transient trop dur → allonge Attack Pro-C de 0.5 à 3ms']},
+
+{id:'F02',name:'Sub Bass Control',role:'LOW-END',v:'FabFilter',type:'Chain',ins:1,core:1,dose:'medium',
+desc:'Chaîne sub/bass. Propreté + dynamique + warmth analogique.',
+ch:[
+{p:'Pro-Q 4',r:'Cleanup',s:'HP 25Hz 48dB/oct Brick Wall\nCut nasal 200-350Hz: Bell -3dB Q=1.5\nMono Bass mode: ON (mono sous 120Hz automatique)'},
+{p:'Pro-MB',r:'Multiband tighten',s:'Band 30-80Hz: Ratio 3:1 | Attack slow 30ms | Release 200ms\nBand 80-200Hz: Ratio 2:1 | gentle | Attack 15ms'},
+{p:'Pro-C 2',r:'Glue',s:'Style: Opto | Ratio 2:1 | Threshold -8dB\nAttack 10ms | Release Auto\n-3 to -5dB GR'},
+{p:'Devastor 2',r:'Warmth',s:'Topology 1 | Preamp +6dB | Threshold -3dB\nFilter 1: LP 800Hz (distord only lows)\nDry/Wet: 35% (parallel processing)'}
+],stops:['Sub = MONO → vérifier en mono régulièrement','Ne pas trop compresser → doit respirer avec le kick','Devastor en DERNIER, faible dose, parallèle']},
+
+{id:'F03',name:'Kick+Bass Sidechain',role:'LOW-END',v:'Ableton',type:'Chain',ins:1,core:1,dose:'medium',
+desc:'Sidechain propre kick→bass. Place nette, pas pumping EDM.',
+ch:[
+{p:'Ableton Compressor',r:'Sidechain duck',s:'Audio From: Kick track (pre-fader)\nRatio 4:1 | Attack 0.1ms | Release 80ms\nThreshold: ajuster pour -4 à -6dB GR\nKnee: soft'},
+{p:'Alternative: ShaperBox 3',r:'Volume shape',s:'Module: Volume | Trigger: Audio (kick) ou MIDI\nCourbe: duck rapide 5ms, return smooth ~50ms\nPlus précis que le compressor pour le shape exact'}
+],stops:['Duck INVISIBLE → si tu entends le pumping, réduis le GR','Release trop court = clic | trop long = bass absente','Solo bass+kick ensemble pour vérifier le pocket']},
+
+{id:'F04',name:'808 Sub Processing',role:'LOW-END',v:'FabFilter',type:'Chain',ins:1,core:0,dose:'medium',
+desc:'Traitement kick/sub 808 long tail + harmoniques.',
+ch:[
+{p:'Pro-Q 4',r:'Tone shape',s:'HP 28Hz | Boost fondamentale 40-55Hz +2dB shelf\nCut mid bleed 150-300Hz -3dB bell'},
+{p:'Saturn 2',r:'Upper harmonics',s:'Band 100-300Hz ONLY: Style Warm Tube | Drive 15%\n→ rend le 808 audible sur petits speakers'},
+{p:'Pro-C 2',r:'Tail control',s:'Style: Opto | Ratio 2:1 | Attack 30ms (preserve transient)\nRelease 200ms'},
+{p:'Pro-Q 4',r:'Mono check',s:'M/S mode: Side channel HP @120Hz\n= mono sous 120Hz | Width 0% below'}
+],stops:['Le tail 808 = LA basse → pas de bass séparée','Harmoniques Saturn pour audibilité phones/laptop','Mono sous 120Hz OBLIGATOIRE']},
+
+{id:'F05',name:'Bass Parallel Distortion',role:'LOW-END',v:'D16',type:'Chain',ins:1,core:0,dose:'low',
+desc:'Distortion parallèle pour grit sans perdre le sub.',
+ch:[
+{p:'Ableton Audio Effect Rack',r:'Parallel split',s:'Chain A: DRY (100%, no FX)\nChain B: WET (avec plugins ci-dessous)'},
+{p:'Pro-Q 4 [wet]',r:'Pre-filter',s:'HP 150Hz (on ne distord que les mids)\nLP 4kHz (pas de harshness)'},
+{p:'Devastor 2 [wet]',r:'Distortion',s:'Preamp +18dB | Threshold -12dB | Shape curve 3 (aggressive)\nFilter: OFF | HQ: ON'},
+{p:'Pro-Q 4 [wet]',r:'Post-shape',s:'Tame harsh peaks 2-4kHz dynamically\nShelf cut above 6kHz'}
+],stops:['Le dry chain garde le sub INTACT','Distortion UNIQUEMENT sur les mids 150Hz-4kHz','Mix wet chain à -6 à -10dB sous le dry']},
+
+{id:'F06',name:'Low-End Mono Insurance',role:'LOW-END',v:'FabFilter',type:'Atomic',ins:1,core:1,dose:'micro',
+desc:'Mono check universel. Sur chaque piste avec du contenu sub.',
+ch:[{p:'Pro-Q 4',r:'Mono bass',s:'Mode: M/S | Side channel: HP @120-150Hz 24dB/oct\n= tout sous 120Hz est mono\nAnalyzer: vérifier visuellement\nAlternative: Ozone 12 Imager Band 1 Width 0%'}
+],stops:['Sur CHAQUE piste ayant du contenu sous 150Hz','Vérifier en mono régulièrement → Utility Width 0%','Alternative: Ableton Utility → Bass Mono sous une fréquence']},
+
+// ─── PUNCH ───
+{id:'F07',name:'Drums Bus Glue',role:'PUNCH',v:'FabFilter',type:'Chain',ins:1,core:1,dose:'medium',
+desc:'Bus drums complet. Colle le kit avec punch sans écraser.',
+ch:[
+{p:'Pro-Q 4',r:'Bus EQ',s:'HP 30Hz safety | Cuts seulement, pas de boost > +2dB\nClean up résonances spécifiques'},
+{p:'Pro-C 2',r:'Bus compression',s:'Style: Bus | Ratio 2:1 | Attack 10ms | Release Auto\n-2 à -4dB GR | Mix: 80% (PARALLÈLE!)\nSidechain EQ: HP 200Hz (le kick ne trigger pas trop)'},
+{p:'Saturn 2',r:'Glue saturation',s:'Single full band | Style: Warm Tube | Drive 8-12%\nMix 100% | HQ: Good'},
+{p:'Neutron 5 Transient Shaper',r:'Punch enhancement',s:'Attack: +10 à +15% | Sustain: -5%\nBand Focus: 1-5kHz (transient range)\nOutput: level-match'}
+],stops:['PARALLÈLE comp via Mix knob → jamais 100%','Max -4dB GR sur le bus','Saturn Drive < 15% → colle, pas crunch']},
+
+{id:'F08',name:'Snare Enhancement',role:'PUNCH',v:'FabFilter',type:'Chain',ins:1,core:1,dose:'medium',
+desc:'Snare/clap: plus de crack et de présence dans le mix.',
+ch:[
+{p:'Neutron 5 Transient Shaper',r:'Attack boost',s:'Attack: +18% | Sustain: -8%\nBand Focus: 2-6kHz (crack frequency)'},
+{p:'Saturn 2',r:'Density',s:'2 bands:\n• 200Hz-1kHz: Style Tape | Drive 15%\n• 2-8kHz: Style Warm Tube | Drive 12%\nHQ: Good'},
+{p:'Pro-Q 4',r:'Sculpt',s:'Cut 400Hz mud: -2dB Q=2\nBoost 4kHz crack: +2dB Q=1.5\nHP 100Hz'}
+],stops:['Snare doit COUPER sans être agressive','Si transient trop sharp → réduis TS Attack','A/B avec le kick en solo pour vérifier l\'équilibre']},
+
+{id:'F09',name:'HiHat Polish',role:'PUNCH',v:'FabFilter',type:'Chain',ins:1,core:1,dose:'low',
+desc:'Hi-hats/cymbales propres. Clarté et air, pas de harshness.',
+ch:[
+{p:'Pro-Q 4',r:'Shape',s:'HP 4kHz (strict — virer TOUT le low)\nBell cut @8kHz si harsh: -2dB Q=2\nAir shelf +1.5dB@12kHz'},
+{p:'Decimort 2',r:'Character',s:'Bit: 24 (full) | Sample Rate: 30kHz\nTrès subtle analog color — à peine audible'},
+{p:'Pro-C 2',r:'Tame peaks',s:'Style: Opto | Ratio 2:1 | Fast Attack\n-2dB GR max | juste pour les peaks'}
+],stops:['HP agressif à 4kHz MINIMUM sur tous les hats','Decimort = un PARFUM, pas un effet audible','Si les hats dominent → baisser le volume D\'ABORD, pas EQ']},
+
+{id:'F10',name:'Perc Character',role:'PUNCH',v:'D16',type:'Chain',ins:1,core:0,dose:'low',
+desc:'Percussions (rimshot, shaker, tamb). Caractère et placement spatial.',
+ch:[
+{p:'Pro-Q 4',r:'Shape per-sound',s:'HP adapté au son: Shaker 3kHz | Rimshot 500Hz | Tamb 2kHz\nCut résonances spécifiques'},
+{p:'Decimort 2',r:'Grit',s:'Bit: 14 | Sample Rate: 28kHz\nSubtle lo-fi sans détruire'},
+{p:'Devastor 2',r:'Warmth',s:'Preamp +4dB | Threshold -2dB (very subtle)\nDry/Wet: 50%'},
+{p:'ValhallaRoom',r:'Space',s:'Mode: Small Room | Decay 0.3s | Mix 8%\nHP 400Hz | LP 6kHz (small space)'}
+],stops:['Chaque perc a un HP ADAPTÉ différent','Les percs donnent le GROOVE — pas juste du fill','Micro-reverb pour profondeur, pas de grande reverb']},
+
+{id:'F11',name:'Parallel Crush',role:'PUNCH',v:'D16',type:'Chain',ins:0,core:1,dose:'moment',
+desc:'RETURN de compression parallèle. Maximum énergie pour les drops.',
+ch:[
+{p:'Devastor 2',r:'Destroy',s:'Preamp +24dB | Threshold -24dB | Shape curve 4 (hard)\nFilter 1: BP 800Hz (focus mid)'},
+{p:'Decimort 2',r:'Bit crush',s:'Bit: 12 | Sample Rate: 22kHz\nCRASH the signal'},
+{p:'Pro-Q 4',r:'Damage control',s:'HP 200Hz (kill sub) | LP 8kHz (kill fizz)\nCut harsh peaks dynamically'},
+{p:'Pro-C 2',r:'Squash',s:'Style: Opto | Ratio 8:1 | Threshold -20dB\nHeavy GR = OK c\'est le but ici'}
+],stops:['C\'est un RETURN → envoyer via sends, jamais insert 100%','HP 200Hz obligatoire → protéger le low-end','Pour MOMENTS de max énergie, pas permanent']},
+
+{id:'F12',name:'Transient Master',role:'PUNCH',v:'iZotope',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Contrôle de transient universel. ± punch sur n\'importe quoi.',
+ch:[{p:'Neutron 5 Transient Shaper',r:'Shape',s:'Attack: +10 à +25% pour plus de punch | -10% pour adoucir\nSustain: -5 à -15% pour tighten le son\nBand Focus: optionnel 1-5kHz pour cibler les transients'}
+],stops:['TS ≠ compresseur → ils font des choses différentes','Vérifier en contexte MIX, pas en solo','Au-delà de ±25% ça devient artificiel']},
+
+{id:'F13',name:'Soft Clipper',role:'PUNCH',v:'iZotope',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Soft clipping pour loudness sans compression. Idéal drum bus.',
+ch:[{p:'Neutron 5 Clipper',r:'Soft clip',s:'Threshold: -1 à -3dB | Mode: Soft\nGain: compensate for peak loss\nPlacer AVANT le limiter dans la chaîne'}
+],stops:['Le clipper TRONQUE les peaks → drums seulement','Perte de transient = le prix → doser','Toujours AVANT le limiter, JAMAIS après']},
+
+// ─── WIDTH ───
+{id:'F14',name:'Stereo Spread',role:'WIDTH',v:'Eventide',type:'Chain',ins:1,core:1,dose:'low',
+desc:'Élargissement stereo mono-compatible. MicroPitch technique.',
+ch:[
+{p:'MicroPitch',r:'Stereo spread',s:'Pitch A: -8 cents | Pitch B: +8 cents\nDelay A: 10ms | Delay B: 12ms\nMix: 40% | Low Cut: 150Hz'},
+{p:'Pro-Q 4',r:'Mono bass check',s:'M/S mode: Side channel HP 150Hz\n→ le spread ne touche pas le low-end'}
+],stops:['TOUJOURS vérifier en mono (Utility → Width 0%)','Jamais sur kick, sub, ou bass','MicroPitch > Chorus pour mono-compatibilité']},
+
+{id:'F15',name:'Mid/Side Polish',role:'WIDTH',v:'FabFilter',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'EQ Mid/Side pour élargir proprement.',
+ch:[{p:'Pro-Q 4',r:'M/S EQ',s:'MID channel:\n  Cut 300Hz -1dB (less boxiness in center)\n  Boost 2kHz +1dB (vocal/lead clarity)\nSIDE channel:\n  HP 200Hz (critical — no bass on sides)\n  Boost 8kHz shelf +2dB (air on sides)\n  Cut 500Hz -2dB'}
+],stops:['Side HP minimum 150Hz — non négociable','Max +2dB par move individual','Vérifier mono SYSTÉMATIQUEMENT après']},
+
+{id:'F16',name:'Haas Width',role:'WIDTH',v:'Ableton',type:'Atomic',ins:1,core:0,dose:'micro',
+desc:'Élargissement Haas simple. Delay micro sur un côté.',
+ch:[{p:'Ableton Simple Delay',r:'Haas trick',s:'Link: OFF | Left: 0ms | Right: 8-15ms\nDry/Wet: 100% | Feedback: 0%\nPUIS: Utility → tester Width 0% pour mono-check'}
+],stops:['8-15ms max → au-delà c\'est un echo audible','TOUJOURS vérifier mono — le Haas annule souvent','Alternative plus safe: MicroPitch (F14)']},
+
+// ─── SPACE ───
+{id:'F17',name:'Room Return',role:'SPACE',v:'Valhalla',type:'Atomic',ins:0,core:1,dose:'low',
+desc:'Return room courte. Espace naturel pour tout le mix.',
+ch:[{p:'ValhallaRoom',r:'Small room',s:'Mode: Small Room | Decay: 0.4s\nPreDelay: 10ms | High Cut: 8kHz\nEarly Size: 40% | Late Size: 35%\nDepth: 60% (blend early/late)\nMix: 100% (c\'est un return)'}
+],stops:['Return ONLY → envoyer via sends','Si tu ENTENDS la reverb, baisse le send','HP le return à 200Hz dans la reverb ou après']},
+
+{id:'F18',name:'Long Verb Return',role:'SPACE',v:'Valhalla',type:'Atomic',ins:0,core:1,dose:'medium',
+desc:'Return reverb longue. Profondeur et espace pour les moments.',
+ch:[{p:'ValhallaVintageVerb',r:'Long reverb',s:'Mode: Concert Hall | Color: 80s\nDecay: 2.5s | PreDelay: 30ms\nSize: 65% | Early Diff: 70% | Late Diff: 80%\nMod Rate: 30% | Mod Depth: 25%\nBass Mult: 0.8x | High Shelf: 4kHz\nMix: 100% (return)'}
+],stops:['HP le return à 250Hz minimum','Sidechain au kick → Ableton Compressor sur le return','Underground = SEC par défaut → reverb pour moments']},
+
+{id:'F19',name:'Snare Plate Moment',role:'SPACE',v:'Valhalla',type:'Chain',ins:0,core:1,dose:'moment',
+desc:'Return plate signature snare. LE moment des drops et transitions.',
+ch:[
+{p:'ValhallaPlate',r:'Plate reverb',s:'Decay: 3s | PreDelay: 15ms | Width: 100%\nDamping: 40% | Mod Depth: 30%\nMix: 100% (return)'},
+{p:'Pro-Q 4',r:'Shape tail',s:'HP 300Hz (clean low end)\nLP 6kHz (no fizz)\nCut 500Hz resonance if needed -2dB'},
+{p:'Pro-C 2',r:'Sidechain duck',s:'Sidechain FROM: snare/clap track\nRatio 4:1 | Fast Attack 0.1ms | Release 200ms\n→ la reverb DUCK sur le hit, SWELL après'}
+],stops:['UNIQUEMENT snare/clap → pas de kick ou bass','Le sidechain sur la reverb EST le truc → la pompe','Automation send: full au drop, COUPÉ ailleurs']},
+
+{id:'F20',name:'Throw Delay',role:'SPACE',v:'Valhalla',type:'Atomic',ins:0,core:1,dose:'moment',
+desc:'Return delay "throw". Send automatisé pour delays dramatiques.',
+ch:[{p:'ValhallaDelay',r:'Throw delay',s:'Mode: Tape | Time: Sync 1/4 dotted\nFeedback: 35% | Age: 40% (tape degradation)\nLP: 4kHz | HP: 300Hz\nWidth: 80% | Mix: 100% (return)\nDiffusion: 20%'}
+],stops:['Send à 0 par DÉFAUT → automation manuelle uniquement','Feedback > 40% = buildup infini dangereux','LP obligatoire sur le delay — jamais full bandwidth']},
+
+{id:'F21',name:'Dark Verb',role:'SPACE',v:'Eventide',type:'Atomic',ins:0,core:0,dose:'medium',
+desc:'Reverb sombre et profonde. Pour tracks underground et dark.',
+ch:[{p:'SP2016 Reverb',r:'Dark space',s:'Algorithm: Stereo Room ou Room\nDecay: 2s | HF Damp: aggressive (LP ~3kHz)\nPreDelay: 25ms | Mix: 100% (return)\nLow Decay: 1.5x'}
+],stops:['Parfait pour underground — pas de brightness','HP return à 200Hz toujours','Sidechain au kick si bass-heavy tracks']},
+
+{id:'F22',name:'Shimmer Moment',role:'SPACE',v:'Eventide',type:'Atomic',ins:0,core:0,dose:'moment',
+desc:'Reverb shimmer pour breakdowns et transitions.',
+ch:[{p:'ShimmerVerb',r:'Shimmer',s:'Decay: 4s | Size: large\nPitch Mix: +12st@15% | +24st@5%\nLP: 8kHz | HP: 200Hz\nMix: 100% (return)'}
+],stops:['MOMENT uniquement → breakdown/transition','Jamais pendant le groove principal','Send PROGRESSIF, pas on/off brutal']},
+
+{id:'F23',name:'Blackhole Ambient',role:'SPACE',v:'Eventide',type:'Atomic',ins:0,core:0,dose:'moment',
+desc:'Reverb infinie Blackhole. Pour moments sci-fi et FX.',
+ch:[{p:'Blackhole',r:'Infinite verb',s:'Mix: 100% (return) | Size: >80%\nGravity: positive, moderate\nLo Damp: moderate | Hi Damp: aggressive\nMod Depth: 30% | Mod Rate: slow'}
+],stops:['C\'est une TEXTURE, pas une reverb traditionnelle','Parfait pour ambiances et intros/outros','Ne pas utiliser sur les éléments rythmiques']},
+
+{id:'F24',name:'Spring Character',role:'SPACE',v:'Eventide',type:'Atomic',ins:0,core:0,dose:'low',
+desc:'Spring reverb pour caractère lo-fi et texture.',
+ch:[{p:'Spring',r:'Spring verb',s:'Tension: medium | Decay: 0.8s\nLP: 5kHz | HP: 300Hz\nMix: 100% (return)'}
+],stops:['Parfait sur percs et claps uniquement','Le spring est très COLORÉ → parcimonie','Pas sur les éléments principaux']},
+
+// ─── TEXTURE ───
+{id:'F25',name:'Tape Warmth',role:'TEXTURE',v:'D16',type:'Chain',ins:1,core:1,dose:'micro',
+desc:'Parfum tape/vintage subtil. Couleur analogique.',
+ch:[
+{p:'Decimort 2',r:'Analog color',s:'Bit: 24 (full resolution) | Sample Rate: 33kHz\nVery subtle aliasing — le son "sort du box"'},
+{p:'Tape MELLO-FI',r:'Tape character',s:'Wow: 8% | Flutter: 6% | Noise: OFF\nSaturation: 12% | Mix: 100%\nLow Cut: 40Hz'}
+],stops:['MICRO-DOSE → parfum, pas mur de bruit','Si tu entends du bruit ou du wow → trop fort','Sur pads et leads, JAMAIS sur kick/sub']},
+
+{id:'F26',name:'VHS Lo-Fi',role:'TEXTURE',v:'Baby Audio',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Texture VHS nostalgique pour breakdowns.',
+ch:[{p:'Super VHS',r:'VHS character',s:'Input: moderate | Texture: 38%\nDrift: 22% | Noise: 8%\nMix: 30% (PARALLÈLE pour garder clarté)'}
+],stops:['Mix parallèle 30-50% pour garder la clarté','Pour breakdowns et moments, PAS le drop principal','Ne cumule PAS avec Tape MELLO-FI']},
+
+{id:'F27',name:'Bit Crusher',role:'TEXTURE',v:'D16',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Bit crush destructif pour FX et moments extrêmes.',
+ch:[{p:'Decimort 2',r:'Destructive crush',s:'Bit Depth: 8-10 | Sample Rate: 16-22kHz\nPour un son vraiment dégradé et lo-fi\nAutomate le Mix/Wet pour moments uniquement'}
+],stops:['Effet DESTRUCTIF → automation du mix obligatoire','Parfait sur des FX, risers, ou snare moments','Jamais en permanence sur un élément important']},
+
+{id:'F28',name:'Harmonic Exciter',role:'TEXTURE',v:'Arturia',type:'Atomic',ins:1,core:0,dose:'micro',
+desc:'Exciter subtil pour air et présence high-frequency.',
+ch:[{p:'Bus EXCITER-104',r:'Air exciter',s:'Amount: 18% | Tune: focus 6-12kHz range\nDrive: gentle | Mix: 100%'}
+],stops:['L\'exciter AJOUTE des harmoniques → vérifier clash','Micro-dose uniquement','Parfait sur drums bus ou master à très faible dose']},
+
+{id:'F29',name:'Saturator Universal',role:'TEXTURE',v:'FabFilter',type:'Atomic',ins:1,core:1,dose:'low',
+desc:'Saturation multiband polyvalente. Couteau suisse de la couleur.',
+ch:[{p:'Saturn 2',r:'Multiband sat',s:'3 bands | Crossover slopes: 24dB/oct\n• Band 1 (< 150Hz): Style Subtle Tube | Drive 8%\n• Band 2 (150Hz-4kHz): Style Tape | Drive 12%\n• Band 3 (> 4kHz): Style Subtle Saturation | Drive 6%\nHQ: Good (8x) | Channel: Stereo\nGlobal Mix: 100% (per-band is already subtle)'}
+],stops:['Chaque bande < 15% Drive','Subtle Tube sur les low = magie','Tape sur les mids = colle naturelle']},
+
+{id:'F30',name:'Vinyl Character',role:'TEXTURE',v:'Arturia',type:'Chain',ins:1,core:0,dose:'low',
+desc:'Caractère vinyle: preamp color + filtrage + warmth.',
+ch:[
+{p:'Pre 1973',r:'Preamp color',s:'Input Gain: +3 à +6dB (gentle saturation)\nOutput: trim pour level-match\nLe preamp colore même à faible gain'},
+{p:'Pro-Q 4',r:'Vinyl EQ curve',s:'HP 40Hz gentle (vinyl rumble sim)\nLP 14kHz gentle 6dB/oct slope\nSmall dip 2kHz -1dB (vinyl scoop)'}
+],stops:['Le preamp colore même à faible gain → c\'est le but','LP gentle slope, pas agressif','Pour bus MUSIC ou pads, pas pour drums principaux']},
+
+{id:'F31',name:'Ozone Vintage Tape',role:'TEXTURE',v:'iZotope',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Émulation tape Ozone premium. Alternative à Tape MELLO-FI.',
+ch:[{p:'Ozone 12 Vintage Tape',r:'Tape emulation',s:'Drive: 1-2dB (subtle) | Tape Speed: 15ips\nLow Emphasis: +1dB | High Emphasis: flat\nSaturation: moderate | Wow & Flutter: minimal'}
+],stops:['Tape Ozone = plus "propre" que MELLO-FI','Idéal sur le master bus à micro-dose','Ne pas empiler avec d\'autres saturations tape']},
+
+// ─── MOVEMENT ───
+{id:'F32',name:'Filter Sweep Auto',role:'MOVEMENT',v:'Ableton',type:'Atomic',ins:1,core:0,dose:'medium',
+desc:'Filter sweep pour builds et transitions.',
+ch:[{p:'Ableton Auto Filter',r:'LP sweep',s:'Type: LP 24dB | Cutoff: automate 200Hz→8kHz over 4-8 bars\nResonance: 18% | LFO: OFF (automation manuelle)'}
+],stops:['Automation MANUELLE > LFO pour le contrôle','Resonance max 30% en contexte mix','Pour builds et transitions, pas permanent']},
+
+{id:'F33',name:'Tremolo Groove',role:'MOVEMENT',v:'Ableton',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Tremolo synced pour mouvement sur pads/synths.',
+ch:[{p:'Ableton Auto Pan',r:'Tremolo',s:'Mode: Normal | Amount: 35%\nRate: Sync 1/8 ou 1/4 | Phase: 0° (tremolo)\nShape: triangle (doux) ou sine (prononcé)'}
+],stops:['Amount subtil → mouvement, pas gating','Sync au BPM obligatoire','Triangle = plus doux que Sine']},
+
+{id:'F34',name:'Phaser Movement',role:'MOVEMENT',v:'Arturia',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Phaser lent pour mouvement organique sur pads.',
+ch:[{p:'Phaser BI-TRON',r:'Slow phase',s:'Rate: 0.1-0.3 Hz (très lent)\nDepth: 38% | Feedback: 12% | Mix: 48%'}
+],stops:['Le phaser = mouvement LENT','Feedback > 30% = résonances agressives','Pads uniquement, pas les éléments rythmiques']},
+
+{id:'F35',name:'Chorus Width',role:'MOVEMENT',v:'Eventide',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Chorus pour épaissir synths. Mono-compatible.',
+ch:[{p:'TriceraChorus',r:'Thicken',s:'Voices: moderate | Rate: slow\nDepth: 28% | Tone: neutral | Mix: 40-55%\nStereo Width: check mono compat'}
+],stops:['Chorus = épaissir, pas noyer','Vérifier mono-compat systématiquement','Alternative vintage: Chorus DIMENSION-D']},
+
+{id:'F36',name:'Flanger Effect',role:'MOVEMENT',v:'Arturia',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Flanger pour moments créatifs et transitions.',
+ch:[{p:'Flanger BL-20',r:'Flanger effect',s:'Rate: slow to medium | Depth: 40%\nFeedback: 20% | Mix: 30%\nAutomate le Rate pour les transitions'}
+],stops:['Le flanger est un MOMENT, pas permanent','Feedback > 40% = metallic','Automate le rate et le mix pour les builds']},
+
+// ─── DYNAMICS ───
+{id:'F37',name:'Master Bus Chain',role:'DYNAMICS',v:'iZotope',type:'Chain',ins:1,core:1,dose:'medium',
+desc:'Chaîne master complète. La touche finale avant mastering.',
+ch:[
+{p:'Pro-Q 4',r:'Final EQ',s:'HP 22Hz safety 48dB/oct\nSubtle tonal ONLY → si tu fais plus de 2 corrections, le mix a un problème\nCheck en M/S'},
+{p:'Pro-C 2',r:'Bus glue',s:'Style: Bus | Ratio 1.5:1 | Attack 15ms | Release Auto\n-1 à -2dB GR MAX | Mix: 70% (parallèle!)\nSidechain EQ: HP 200Hz'},
+{p:'Ozone 12 Imager',r:'Stereo field',s:'Band 1 (0-120Hz): Width 0% (MONO!)\nBand 2 (120Hz-2kHz): Width 90%\nBand 3 (2kHz+): Width 100-110% subtle'},
+{p:'Ozone 12 Maximizer',r:'Final limiter',s:'Algorithm: IRC IV Modern | Ceiling: -1dBTP\nTarget: -14 LUFS (streaming) | -8 LUFS (club)\nGR: 1-2dB MAX'}
+],stops:['Le master ne CORRIGE PAS le mix → retourne au mix si besoin','Max -2dB GR sur le compresseur bus','Le limiteur EN DERNIER, toujours']},
+
+{id:'F38',name:'Vocal/Sample Comp',role:'DYNAMICS',v:'FabFilter',type:'Chain',ins:1,core:0,dose:'medium',
+desc:'Double compression pour vocals et samples.',
+ch:[
+{p:'Pro-Q 4',r:'Pre-EQ',s:'HP 80Hz | Cut problèmes (resonances, rumble)\nPresence 3kHz +1.5dB subtle Q=1.5'},
+{p:'Comp FET-76',r:'Fast compression',s:'Ratio: 4:1 | Input: ajuster pour -4 à -6dB GR\nAttack: 3 (fast) | Release: 7 (medium-fast)\nFET character → ajoute du punch'},
+{p:'Pro-C 2',r:'Leveling',s:'Style: Opto | Ratio 2:1 | Attack 30ms (slow)\nRelease: Auto | -2 à -3dB GR\nSmooth leveling après les peaks'}
+],stops:['Double comp = chaque stage fait MOINS de travail','FET d\'abord (peaks), Opto ensuite (level)','Gain-stage ENTRE les deux plugins']},
+
+{id:'F39',name:'De-Esser',role:'DYNAMICS',v:'FabFilter',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'De-essing propre pour sibilance sur vocals/samples.',
+ch:[{p:'Pro-DS',r:'De-ess',s:'Mode: Wide Band | Range: -6 à -10dB\nThreshold: ajuster en solo sidechain\nHP Sidechain: ~4kHz\nPlacer AVANT la reverb'}
+],stops:['Écouter le sidechain en solo pour caler','Trop de de-essing = voix terne et morte','Placer AVANT reverb et delay']},
+
+{id:'F40',name:'Multiband Dynamics',role:'DYNAMICS',v:'FabFilter',type:'Atomic',ins:1,core:0,dose:'medium',
+desc:'Compression multiband pour contrôle fréquentiel fin.',
+ch:[{p:'Pro-MB',r:'Multiband comp',s:'Band 1 (0-120Hz): 3:1 | slow attack 30ms\nBand 2 (120Hz-2kHz): 2:1 | medium attack 10ms\nBand 3 (2kHz+): 2:1 | fast attack 3ms\nSOLO chaque bande | GR modéré partout -3dB max'}
+],stops:['Chaque bande doit avoir une RAISON précise','Solo les bandes pour entendre ce que tu fais','Alternative au broadband comp, PAS un ajout en plus']},
+
+{id:'F41',name:'Ozone Low End Focus',role:'DYNAMICS',v:'iZotope',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'Contrôle intelligent du low-end par Ozone.',
+ch:[{p:'Ozone 12 Low End Focus',r:'Low control',s:'Frequency: 120Hz | Mode: Punchy ou Smooth\nAmount: moderate | Contrast: adjust to taste\nParfait pour tighten le low end sans multiband classique'}
+],stops:['Un outil de finition, pas de correction','Tester Punchy vs Smooth pour ta vibe','Si le low-end a un problème, corriger à la source']},
+
+// ─── CREATIVE ───
+{id:'F42',name:'Reverse Verb Technique',role:'CREATIVE',v:'Valhalla',type:'Chain',ins:0,core:0,dose:'moment',
+desc:'Reverb inversée pour pré-hits. Technique classique.',
+ch:[
+{p:'ValhallaVintageVerb',r:'Big verb',s:'Mode: Concert Hall | Color: 80s\nDecay: 4-5s | Mix: 100%\nPROCÉDURE:\n1. Solo la snare, record le verb en audio\n2. Reverse le clip audio\n3. Place AVANT le hit original\n4. Fade out la fin pour pas de clic'},
+{p:'Alternative live: ValhallaSupermassive',r:'Swell FX',s:'Mode: Warp | Large decay\nAutomate le send pour swell en temps réel\nPlus facile que bounce+reverse'}
+],stops:['La technique bounce+reverse est la plus PROPRE','Le timing est TOUT → reverse atterrit pile sur le beat','Fade out la fin pour éviter le clic']},
+
+{id:'F43',name:'Stutter/Gate',role:'CREATIVE',v:'Cableguys',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Stutter et gate synced. Pour builds et tension.',
+ch:[{p:'ShaperBox 3',r:'Gate/Stutter',s:'Module: Volume | Draw: gate pattern synced BPM\nSpeed: automate 1/4 → 1/32 pour build\nSmooth: edges smooth pour éviter clics\nTrigger: MIDI ou Audio'}
+],stops:['Le stutter est un MOMENT, pas un état permanent','Automate la vitesse pour le build progressif','Smooth les edges de la gate → pas de clics']},
+
+{id:'F44',name:'Granular FX',role:'CREATIVE',v:'Arturia',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Effet granulaire temps réel pour textures et transitions.',
+ch:[{p:'Efx REFRACT',r:'Granular',s:'Grain Size: 50-100ms | Density: medium\nPitch: ±0 ou ±12 pour shimmer\nSpray: 20% | Mix: 30-50%'}
+],stops:['Effet créatif = AUTOMATION du mix','Parfait pour transitions et breakdowns','CPU intensive → freeze après usage']},
+
+{id:'F45',name:'Infiltrator Multi-FX',role:'CREATIVE',v:'Devious',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Multi-FX créatif. Sound design et transitions wild.',
+ch:[{p:'Infiltrator',r:'Multi-FX',s:'Browse presets par catégorie: Glitch / Degrade / Space\nXY Pad: pour performance live\nAutomate le Mix macro 0→100% pour transitions\nModule chain: customizable FX routing'}
+],stops:['Outil PERFORMATIF → automation du mix en priorité','Browse les presets D\'ABORD, tweake ensuite','Ne le laisse pas à 100% en permanence']},
+
+{id:'F46',name:'Resonator Texture',role:'CREATIVE',v:'Ableton',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Ajouter de la tonalité à des sons non-pitched.',
+ch:[{p:'Ableton Resonators',r:'Pitched texture',s:'Note: tune à ta tonalité | Decay: medium\nBrightness: 38% | Mix: 20-30%\nSur: noise, percs, drums → ajoute pitch'}
+],stops:['Tune sur la tonalité du track exactement','Mix < 30% sinon ça domine le son original','Parfait sur percs pour ajouter du tonal']},
+
+{id:'F47',name:'Harmonizer FX',role:'CREATIVE',v:'Eventide',type:'Atomic',ins:1,core:0,dose:'moment',
+desc:'Harmonizer pour effets de pitch et doublage.',
+ch:[{p:'H910 Harmonizer',r:'Pitch FX',s:'Pitch: ±semitones pour harmonies\nDelay: 10-50ms | Feedback: 15%\nMix: 20-40% (parallel)\nPour doubler, pitch très léger ±5-10ct'}
+],stops:['Le H910 a du CARACTÈRE → c\'est vintage, pas clean','Pour doubler: pitch micro + delay micro','Feedback modéré sinon ça build']},
+
+{id:'F48',name:'Split EQ Creative',role:'CREATIVE',v:'Eventide',type:'Atomic',ins:1,core:0,dose:'low',
+desc:'EQ transient/tonal séparé pour sculpting avancé.',
+ch:[{p:'SplitEQ',r:'Transient/Tonal split',s:'Sépare le signal en Transient et Tonal\nEQ chaque composant indépendamment:\n• Boost transients 3-5kHz pour punch\n• Cut tonal mud 200-400Hz\nPlus chirurgical qu\'un EQ classique'}
+],stops:['Outil avancé → comprendre la séparation transient/tonal','Commencer par écouter chaque composant en solo','Ne pas sur-traiter → subtilité']}
+];
+
+// ════════════════════════════════════════════════════════
+// FIX-IT
+// ════════════════════════════════════════════════════════
+const X=[
+{s:'Kick et bass se battent',f:'F03 (Sidechain) + F02 (Sub Control). Phase check avec Pro-Q 4 analyzer.',ids:['F03','F02']},
+{s:'Mix boueux, pas de clarté',f:'Pro-Q 4 sur CHAQUE piste: coupe 200-400Hz boxiness. HP tout sauf kick/bass à 100Hz+.',ids:['F07']},
+{s:'Drums plats et sans vie',f:'F07 (Bus Glue) + F08 (Snare) + F11 (Parallel Crush). TS + Parallel comp.',ids:['F07','F08','F11']},
+{s:'Mix trop étroit / mono',f:'F14 (MicroPitch Spread) sur les mids/highs. Vérifier pan et M/S.',ids:['F14','F15']},
+{s:'Reverb salit le low-end',f:'HP TOUS les returns à 200Hz min. Sidechain au kick. Réduis les sends.',ids:['F17','F18','F19']},
+{s:'Snare/clap disparaît',f:'F08 (Snare Enhancement) + F19 (Snare Plate). TS Attack +18%.',ids:['F08','F19']},
+{s:'Master trop fort / distortion',f:'Baisse TOUT de -3dB. Gain staging -12dBFS peaks. Pro-L max -2dB GR.',ids:['F37']},
+{s:'Son trop digital / froid',f:'F25 (Tape Warmth) sur éléments clés. Saturn 2 micro-dose Subtle Tube.',ids:['F25','F29']},
+{s:'Bass trop boomy',f:'F02 (Sub Control). Pro-MB pour tighten 60-120Hz. Vérifier room acoustics.',ids:['F02','F40']},
+{s:'Transitions ennuyeuses',f:'F20 (Throw Delay) automation. F19 (Snare Plate). I23 (Risers).',ids:['F20','F19']},
+{s:'Mix amateur / thin',f:'Gain staging: -12dBFS peaks. Bus drums F07. Master F37. Level-match tout.',ids:['F07','F37']},
+{s:'Trop d\'éléments qui clash',f:'MUTE tout. Rebuild: Kick → Bass → Drums → Hook → Pads. Un par un.',ids:[]},
+{s:'Hi-hats trop harsh',f:'F09 (HiHat Polish). HP strict 4kHz+. Decimort 2 pour adoucir.',ids:['F09']},
+{s:'Pas assez de punch',f:'F12 (TS) + F13 (Clipper) + F11 (Parallel Crush). Transient shaping.',ids:['F12','F13','F11']},
+{s:'Stereo image bancale',f:'Ozone 12 Imager check. Mono <120Hz. F15 (M/S Polish). F06 (Mono Check).',ids:['F15','F06']},
+{s:'CPU overload',f:'Freeze pistes finalisées. Bouncer les instruments lourds. Réduire Diva accuracy à FAST.',ids:[]},
+{s:'Le low-end sonne bizarre sur speakers',f:'F06 (Mono Check) sur TOUTES les pistes bass. Vérifier phase kick+bass.',ids:['F06','F02']},
+{s:'Clipping numérique (pas musical)',f:'Baisser tous les faders de 3dB. Gain stage correctement. Utiliser Pro-L 2 True Peak.',ids:['F37']}
+];
+
+// ════════════════════════════════════════════════════════
+// WIZARD
+// ════════════════════════════════════════════════════════
+const W=[
+{cat:'🔊 5 Returns essentiels',items:[
+{t:'Return A: <strong>Room</strong>',d:'ValhallaRoom | Small | 0.4s | PreDelay 10ms | HP 200Hz | LP 8kHz',c:'RetA: ValhallaRoom Small 0.4s Pre10ms HP200 LP8k'},
+{t:'Return B: <strong>Long Verb</strong>',d:'ValhallaVintageVerb | Concert Hall | 80s | 2.5s | PreDelay 30ms | HP 250Hz',c:'RetB: VintageVerb ConcertHall 80s 2.5s Pre30ms HP250'},
+{t:'Return C: <strong>Snare Plate</strong>',d:'ValhallaPlate | 3s | Pro-Q HP 300Hz LP 6kHz | Pro-C SC from snare',c:'RetC: VPlate 3s + ProQ(HP300/LP6k) + ProC(SC snare)'},
+{t:'Return D: <strong>Throw Delay</strong>',d:'ValhallaDelay | Tape | 1/4 dot | FB 35% | HP 300Hz | LP 4kHz | Send=0 default',c:'RetD: VDelay Tape 1/4dot FB35 HP300 LP4k Send0'},
+{t:'Return E: <strong>Parallel Crush</strong>',d:'Devastor 2 (Preamp+24/Thresh-24) → Decimort 2 (12bit/22k) → ProQ (HP200/LP8k) → ProC (Opto 8:1)',c:'RetE: Devastor2→Decimort2→ProQ(HP200LP8k)→ProC(Opto8:1)'}]},
+{cat:'🎛️ 4 Bus Groups',items:[
+{t:'Group: <strong>KICK+BASS</strong>',d:'Pro-Q 4 (HP 25Hz) → Pro-C 2 (Bus, 1.5:1, -2dB GR, Mix 80%)',c:'GRP KICK+BASS: ProQ(HP25) → ProC(Bus 1.5:1 -2dBGR Mix80%)'},
+{t:'Group: <strong>DRUMS</strong>',d:'Pro-Q 4 → Pro-C 2 (Bus, 2:1, Mix 80%) → Saturn 2 (Subtle Tube 10%) → Neutron TS',c:'GRP DRUMS: ProQ → ProC(Bus2:1Mix80%) → Saturn(SubTube10%) → NeutTS'},
+{t:'Group: <strong>MUSIC</strong>',d:'Pro-Q 4 (cleanup HP 80Hz) → Pro-C 2 (Opto, 2:1, -2dB GR)',c:'GRP MUSIC: ProQ(HP80) → ProC(Opto 2:1 -2dBGR)'},
+{t:'Group: <strong>MASTER</strong>',d:'Pro-Q → Pro-C 2 (Bus 1.5:1 Mix 70%) → Ozone Imager → Ozone Maximizer',c:'MASTER: ProQ(HP22) → ProC(Bus1.5:1Mix70%) → OzImager → OzMax(-14LUFS)'}]},
+{cat:'📐 Règles low-end',items:[
+{t:'<strong>Sub mono < 120Hz</strong>',d:'Pro-Q 4 M/S: Side HP @120Hz = mono en dessous. Ou Ozone Imager Band 1 Width 0%.',c:'RULE: ProQ4 M/S Side HP120Hz = mono bass'},
+{t:'<strong>Sidechain returns au kick</strong>',d:'Compressor sur chaque return (sauf Room): SC from kick, 3:1, fast attack, -3dB GR.',c:'RULE: SC returns to kick 3:1 fast -3dBGR'},
+{t:'<strong>Level-match TOUT</strong>',d:'AVANT de juger un traitement: bypass et compare au MÊME volume. Utiliser Utility ou Pro-Q.',c:'RULE: Level-match before/after every plugin'},
+{t:'<strong>HP everything</strong>',d:'Pads: HP 120Hz+ | Leads: 120Hz+ | Vocals: 80Hz+ | HH: 4kHz+ | Percs: 200Hz+ | FX: 200Hz+',c:'HP: Pads120 Leads120 Vox80 HH4k Percs200 FX200'},
+{t:'<strong>Gain staging</strong>',d:'Chaque piste peak à -12dBFS. Le master ne doit PAS clipper avant le limiteur.',c:'RULE: Each track peak -12dBFS, headroom before limiter'}]}
+];
+
+// ════════════════════════════════════════════════════════
+// MIXDOWN WORKFLOW
+// ════════════════════════════════════════════════════════
+const MX=[
+{t:'Gain Staging',d:'Avant TOUT traitement. Chaque piste peak à -12dBFS.',v:'1. Reset tous les faders à 0dB\n2. Ajuster le gain/volume de chaque clip\n3. Vérifier: peak meters ne dépassent jamais -6dBFS\n4. Laisser 6dB de headroom sur le master'},
+{t:'Fondation: Kick + Bass',d:'Le socle du track. Tout le reste se construit dessus.',v:'1. Solo Kick → chain F01 | Tune à la tonalité\n2. Solo Bass → chain F02 | HP 25Hz, mono <120Hz\n3. Kick+Bass ensemble → F03 sidechain, vérifier phase\n4. Ensemble doit sonner propre et punchy sans FX'},
+{t:'Drums',d:'Le groove complet. Chaque son dans son channel.',v:'1. Snare → F08 (crack + density)\n2. HiHats → F09 (HP 4kHz, air, Decimort subtle)\n3. Percs → F10 (character, micro-reverb)\n4. Bus Drums → F07 (glue comp parallèle, Saturn subtle)\n5. Balance avec Kick+Bass'},
+{t:'Éléments mélodiques',d:'Bass line, leads, pads, arps. Un à la fois.',v:'1. HP tout au-dessus du kick: pads 120Hz+, leads 150Hz+\n2. Leads → F14 (MicroPitch spread)\n3. Pads → F17 (Room send 15%), F25 (Tape micro-dose)\n4. Arps → F20 (Throw Delay send pour moments)'},
+{t:'Space & Depth',d:'Returns reverb et delay. Parcimonie underground.',v:'1. Room return (F17): send sur TOUT à -15 à -20dB\n2. Long Verb (F18): send sur leads/pads seulement\n3. Snare Plate (F19): send snare, automate au drop\n4. Throw Delay (F20): send = 0, automation ponctuelle\n5. SIDECHAIN tous les returns (sauf room) au kick'},
+{t:'Automation & Movement',d:'Donner vie au mix statique.',v:'1. Filter sweeps pour transitions (F32)\n2. Throw delay sends aux moments clés\n3. Volume rides sur les éléments secondaires\n4. Snare plate send: full au drop, off ailleurs\n5. Parallel crush (F11) send: drops seulement'},
+{t:'Bus Processing',d:'Coller chaque groupe ensemble.',v:'1. KICK+BASS bus: Pro-C 2 Bus 1.5:1 -2dB GR\n2. DRUMS bus: F07 chain complète\n3. MUSIC bus: Pro-C 2 Opto 2:1 gentle\n4. Vérifier que les bus ne clippent pas\n5. Balance des bus entre eux'},
+{t:'Master & Export',d:'La touche finale. Minimal processing.',v:'1. Master chain F37: Pro-Q → Pro-C → Ozone Imager → Maximizer\n2. Target: -14 LUFS streaming | -8 LUFS club\n3. GR total master: MAX -2dB\n4. Vérifier en MONO, sur laptop, sur phone\n5. Export: WAV 24bit 44.1kHz (streaming) | WAV 24bit 48kHz (club)'}
+];
+
+// ════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════
+let pg='instr',gMd='full',iF={type:'',vst:'',genre:'',mood:''},fF={role:'',v:'',type:''};
+let fav=JSON.parse(localStorage.getItem('kf3')||'{}'),wiz=JSON.parse(localStorage.getItem('kw3')||'{}');
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+const PG=[
+{id:'instr',l:'Instruments',ic:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',cnt:()=>fI().length,t:'Instruments',s:'35 presets avec chemins VST, tweaks et chaînes FX vérifiés'},
+{id:'fx',l:'FX Chains',ic:'<path d="M4 21V14m8 7V8m8 13V2"/>',cnt:()=>fF2().length,t:'FX Chains',s:'48 chaînes d\'effets avec paramètres exacts — LOW-END · PUNCH · WIDTH · SPACE · TEXTURE · MOVEMENT · DYNAMICS · CREATIVE'},
+{id:'builder',l:'Song Builder',ic:'<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',cnt:null,t:'Song Builder',s:'Génère un blueprint complet avec arrangement, instruments et FX'},
+{id:'mixdown',l:'Mixdown',ic:'<path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>',cnt:null,t:'Mixdown Workflow',s:'8 étapes de A à Z pour un mix club-ready'},
+{id:'wizard',l:'Setup Wizard',ic:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>',cnt:null,t:'Setup Wizard',s:'Configure ta session Ableton Live 12'},
+{id:'fixit',l:'Fix-It',ic:'<circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>',cnt:()=>X.length,t:'Fix-It',s:'Symptôme → Solution instantanée avec liens vers les racks'}
+];
+function rNav(){document.getElementById('sNav').innerHTML=`<div class="nlbl">Bibliothèque</div>${PG.slice(0,2).map(p=>`<div class="ni ${pg===p.id?'on':''}" onclick="go('${p.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p.ic}</svg>${p.l}${p.cnt?`<span class="cnt">${p.cnt()}</span>`:''}</div>`).join('')}<div class="nlbl" style="margin-top:6px">Production</div>${PG.slice(2,4).map(p=>`<div class="ni ${pg===p.id?'on':''}" onclick="go('${p.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p.ic}</svg>${p.l}</div>`).join('')}<div class="nlbl" style="margin-top:6px">Setup</div>${PG.slice(4).map(p=>`<div class="ni ${pg===p.id?'on':''}" onclick="go('${p.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p.ic}</svg>${p.l}</div>`).join('')}`}
+function go(p){pg=p;closeMob();render()}
+function render(){rNav();const p=PG.find(x=>x.id===pg);document.getElementById('hT').textContent=p.t;document.getElementById('hS').textContent=p.s;const c=document.getElementById('ctn');
+switch(pg){case'instr':c.innerHTML=rIP();break;case'fx':c.innerHTML=rFP();break;case'builder':c.innerHTML=rBP();break;case'mixdown':c.innerHTML=rMXP();break;case'wizard':c.innerHTML=rWP();break;case'fixit':c.innerHTML=rXP();break}}
+function gM(m){gMd=m;document.getElementById('mAll').classList.toggle('on',m==='full');document.getElementById('mCore').classList.toggle('on',m==='core');render()}
+
+// ════════════════════════════════════════════════════════
+// FILTERS
+// ════════════════════════════════════════════════════════
+function fI(){return I.filter(i=>{if(gMd==='core'&&!i.core&&!fav[i.id])return false;if(iF.type&&i.type!==iF.type)return false;if(iF.vst&&i.vst!==iF.vst)return false;if(iF.genre&&!i.g.includes(iF.genre))return false;if(iF.mood&&!i.m.includes(iF.mood))return false;return true})}
+function fF2(){return F.filter(f=>{if(gMd==='core'&&!f.core&&!fav[f.id])return false;if(fF.role&&f.role!==fF.role)return false;if(fF.v&&f.v!==fF.v)return false;if(fF.type&&f.type!==fF.type)return false;return true})}
+function sIF(k,v){iF[k]=iF[k]===v?'':v;render()}
+function sFF(k,v){fF[k]=fF[k]===v?'':v;render()}
+
+// ════════════════════════════════════════════════════════
+// RENDER: INSTRUMENTS
+// ════════════════════════════════════════════════════════
+function rIP(){const ts=[...new Set(I.map(i=>i.type))],vs=[...new Set(I.map(i=>i.vst))],gs=[...new Set(I.flatMap(i=>i.g))],ms=[...new Set(I.flatMap(i=>i.m))],items=fI();
+return`<div class="frow">${ts.map(t=>`<button class="fp ${iF.type===t?'on':''}" onclick="sIF('type','${t}')">${t}</button>`).join('')}<div class="fsep"></div>${gs.map(g=>`<button class="fp ${iF.genre===g?'on':''}" onclick="sIF('genre','${g}')">${g}</button>`).join('')}<div class="fsep"></div>${ms.map(m=>`<button class="fp fp-mood ${iF.mood===m?'on':''}" onclick="sIF('mood','${m}')">${m}</button>`).join('')}</div>${items.length?`<div class="gr">${items.map(iC).join('')}</div>`:`<div class="emp"><div class="emp-i">∅</div><div class="emp-t">Aucun résultat</div></div>`}`}
+
+function iC(i){const vc=VC[i.v]||'v-abl',vs2=VS[i.v]||i.v.slice(0,3);
+return`<div class="cd ${i.core?'core':''}" id="c-${i.id}"><div class="cd-top"><div class="vi ${vc}">${vs2}</div><div class="cd-m"><div class="cd-ir"><span class="cid">${i.id}</span><span style="color:var(--tx3);font-size:10px">${i.vst}</span></div><div class="cd-n">${i.name}</div></div><div class="cd-b"><button class="cb ${fav[i.id]?'fo':''}" onclick="event.stopPropagation();tF('${i.id}')" title="Favori">★</button><button class="cb" onclick="event.stopPropagation();cR('${i.id}')" title="Copy">⎘</button></div></div><div class="cd-t"><span class="tg tg-t">${i.type}</span>${i.g.map(g=>`<span class="tg tg-g">${g}</span>`).join('')}${i.m.map(m=>`<span class="tg tg-m">${m}</span>`).join('')}</div><div class="cd-d">${i.desc}</div><div class="cd-tog" onclick="this.parentElement.classList.toggle('open')">Détails complets<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div><div class="cd-exp"><div class="cd-body"><div class="dt"><div class="dt-l">Preset / Init</div><div class="dt-v">${i.preset}</div></div><div class="dt"><div class="dt-l">Tweaks essentiels</div><div class="dt-v">${i.tweaks}</div></div><div class="dt"><div class="dt-l">Chaîne FX</div><div class="dt-v">${i.chain}</div></div><div class="sr"><div class="sr-t">Stop Rules</div>${i.stops.map(r=>`<div class="sr-r">${r}</div>`).join('')}</div><div style="margin-top:8px"><button class="cpb" onclick="cR('${i.id}')">Copier recette</button></div></div></div></div>`}
+
+// ════════════════════════════════════════════════════════
+// RENDER: FX
+// ════════════════════════════════════════════════════════
+function rFP(){const rs=[...new Set(F.map(f=>f.role))],items=fF2();
+return`<div class="frow">${rs.map(r=>`<button class="fp ${fF.role===r?'on':''}" onclick="sFF('role','${r}')">${r}</button>`).join('')}<div class="fsep"></div><button class="fp ${fF.type==='Atomic'?'on':''}" onclick="sFF('type','Atomic')">Atomic</button><button class="fp ${fF.type==='Chain'?'on':''}" onclick="sFF('type','Chain')">Chain</button></div>${items.length?`<div class="gr">${items.map(fC).join('')}</div>`:`<div class="emp"><div class="emp-i">∅</div><div class="emp-t">Aucun résultat</div></div>`}`}
+
+function dI(d){return{micro:['d-micro','Micro'],low:['d-low','Low'],medium:['d-med','Medium'],moment:['d-moment','Moment']}[d]||['d-low','?']}
+function fC(f){const vc=VC[f.v]||'v-abl',vs2=VS[f.v]||f.v.slice(0,3),[dc,dl]=dI(f.dose);
+return`<div class="cd ${f.core?'core':''}" id="c-${f.id}"><div class="cd-top"><div class="vi ${vc}">${vs2}</div><div class="cd-m"><div class="cd-ir"><span class="cid">${f.id}</span><span style="color:var(--tx3);font-size:10px">${f.v}</span></div><div class="cd-n">${f.name}</div></div><div class="cd-b"><button class="cb ${fav[f.id]?'fo':''}" onclick="event.stopPropagation();tF('${f.id}')">★</button><button class="cb" onclick="event.stopPropagation();cR('${f.id}')">⎘</button></div></div><div class="cd-t"><span class="tg tg-r">${f.role}</span><span class="tg tg-t">${f.type}</span><span class="tg ${f.ins?'tg-i':'tg-re'}">${f.ins?'INSERT':'RETURN'}</span></div><div class="cd-d">${f.desc}</div><div class="dose"><div class="dose-t"><div class="dose-f ${dc}"></div></div><div class="dose-l">${dl}</div></div><div class="cd-tog" onclick="this.parentElement.classList.toggle('open')">Chaîne complète<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div><div class="cd-exp"><div class="cd-body">${f.ch.map((c,j)=>`<div class="cs"><div class="cs-n">${j+1}</div><div class="cs-i"><div><span class="cs-p">${c.p}</span><span class="cs-r">${c.r}</span></div><div class="cs-s">${c.s}</div></div></div>`).join('')}<div class="sr"><div class="sr-t">Stop Rules</div>${f.stops.map(r=>`<div class="sr-r">${r}</div>`).join('')}</div><div style="margin-top:8px"><button class="cpb" onclick="cR('${f.id}')">Copier recette</button></div></div></div></div>`}
+
+// ════════════════════════════════════════════════════════
+// BUILDER
+// ════════════════════════════════════════════════════════
+function rBP(){return`<div class="bw"><div class="bp"><div class="fi"><label class="fl">BPM</label><input class="fin" id="xB" type="number" value="128" min="100" max="160"></div><div class="fi"><label class="fl">Tonalité</label><select class="fsl" id="xK"><option>Dm</option><option>Am</option><option>Gm</option><option>Cm</option><option>Em</option><option>Fm</option><option>Bbm</option></select></div><div class="fi"><label class="fl">Genre</label><select class="fsl" id="xG"><option value="Electro">Electro</option><option value="House">House</option><option value="Synthwave">Synthwave</option><option value="Minimale">Minimale</option><option value="Trance">Trance</option><option value="Pop">Pop</option></select></div><div class="fi"><label class="fl">Mood</label><select class="fsl" id="xM"><option value="Dark">Dark</option><option value="Warm">Warm</option><option value="Cold">Cold</option><option value="Bright">Bright</option><option value="Melancholic">Melancholic</option><option value="Euphoric">Euphoric</option></select></div><div class="fi"><label class="fl">Énergie</label><select class="fsl" id="xE"><option value="mid">Mid — groovy</option><option value="high">High — peak time</option><option value="low">Low — deep</option></select></div><button class="gbtn" onclick="genBP()">⚡ Générer Blueprint</button></div><div class="bout" id="bO"><div class="emp" style="padding-top:80px"><div class="emp-i">⚡</div><div class="emp-t">Configure et lance le builder</div></div></div></div>`}
+
+function genBP(){const bpm=document.getElementById('xB').value,key=document.getElementById('xK').value,genre=document.getElementById('xG').value,mood=document.getElementById('xM').value,nrg=document.getElementById('xE').value;
+function pk(t,g,m){const r=I.filter(i=>i.type===t&&(i.g.includes(g)||i.m.includes(m)));return r[0]||I.find(i=>i.type===t)}
+const kick=I.find(i=>i.id==='I20'),bass=pk('Bass',genre,mood),lead=pk('Lead',genre,mood),pad=pk('Pad',genre,mood),arp=pk('Arp',genre,mood),drums=I.find(i=>i.id==='I21');
+const el=[
+{n:1,t:'Kick',s:'Le socle. Tuné, propre, punchy.',i:kick,fx:['F01','F03'],tw:[`Tune kick fondamentale sur ${key}`,`Sidechain bass → 4-6dB duck`,`HP 25Hz strict`]},
+{n:2,t:'Bass Line',s:'Groove et fondation harmonique.',i:bass,fx:['F02'],tw:[`Tonalité ${key}, octave -1/-2`,`Filter cutoff: ${nrg==='high'?'plus ouvert 50%+':'fermé 30-40%'}`,`Sidechain kick OBLIGATOIRE`]},
+{n:3,t:'Drums',s:'Snare, hats, percs. Le groove.',i:drums,fx:['F07','F08','F09'],tw:[`Snare 2&4${nrg==='high'?', ghost notes 1e-ah':''}`,`HH 1/16 velocity 80-110`,`Bus drums -3dB GR max`]},
+{n:4,t:'Lead / Hook',s:'L\'élément mémorisable.',i:lead,fx:['F14'],tw:[`Mélodies dans ${key}, phrases 2-4 bars`,`MicroPitch ±8ct pour width`,`${mood==='Dark'?'Range basse, minimal':'Mid range, mémorisable'}`]},
+{n:5,t:'Pad / Atmosphere',s:'Le lit sonore. Texture, pas attention.',i:pad,fx:['F17','F18'],tw:[`HP au-dessus du kick +1 oct`,`Room send -18dB`,`${mood==='Dark'?'Minimal, sombre':'Mouvement lent, chaud'}`]}];
+if(arp)el.push({n:6,t:'Arp / Groove',s:'Mouvement mélodique secondaire.',i:arp,fx:['F20'],tw:[`1/16 synced ${bpm} BPM`,`Throw delay pour transitions`,`Volume SOUS le lead`]});
+document.getElementById('bO').innerHTML=`<div style="margin-bottom:14px"><div style="font-size:15px;font-weight:700">${genre} · ${mood} — ${bpm} BPM — ${key}</div><div style="color:var(--tx2);font-size:11px;margin-top:2px">Blueprint Kapman · Énergie ${nrg}</div></div>${el.map(e=>`<div class="bb"><div class="bh"><div class="bn">${e.n}</div><div class="bt">${e.t}</div></div><div class="bs">${e.s}</div>${e.i?`<div style="padding:10px;background:var(--bg0);border:1px solid var(--bg3);border-radius:var(--r)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-weight:600;font-size:12px">${e.i.name}</span><span style="font-family:var(--mono);font-size:9px;color:var(--tx3)">${e.i.id} · ${e.i.vst}</span></div><div style="font-family:var(--mono);font-size:10.5px;color:var(--tx2);line-height:1.6">${e.tw.join('\n')}</div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:6px"><button class="cpb" onclick="cR('${e.i.id}')">Copy ${e.i.id}</button>${e.fx.map(f=>`<button class="cpb" onclick="cR('${f}')">Copy ${f}</button>`).join('')}<button class="cpb" onclick="jT('${e.i.id}')">→ ${e.i.id}</button></div></div>`:''}</div>`).join('')}<div class="bb" style="background:var(--amberD);border-color:rgba(245,158,11,.15)"><div style="font-weight:700;color:var(--amber);margin-bottom:5px">⚡ Rappels Kapman</div><div style="font-family:var(--mono);font-size:10.5px;color:var(--tx2);line-height:1.65">Level-match TOUJOURS\nGain staging -12dBFS par piste\nLess is more — si ça n'a pas sa place, COUPE\nSub mono <120Hz · HP tout sauf bass\nReturns sidechain au kick\nTarget: -14 LUFS streaming / -8 LUFS club\nFreeze les pistes finalisées pour CPU</div></div>`}
+
+// ════════════════════════════════════════════════════════
+// MIXDOWN
+// ════════════════════════════════════════════════════════
+function rMXP(){return MX.map((s,i)=>`<div class="mx-step"><div class="mx-n">${i+1}</div><div class="mx-c"><div class="mx-t">${s.t}</div><div class="mx-d">${s.d}</div><div class="mx-v">${s.v}</div></div></div>`).join('')}
+
+// ════════════════════════════════════════════════════════
+// WIZARD
+// ════════════════════════════════════════════════════════
+function rWP(){return W.map((c,ci)=>`<div class="wc"><div class="wct">${c.cat}</div>${c.items.map((it,si)=>{const k=ci+'-'+si,d=wiz[k];return`<div class="ws ${d?'dn':''}"><button class="wch ${d?'ok':''}" onclick="tW('${k}',this)">✓</button><div style="flex:1"><div style="font-size:12px;line-height:1.45">${it.t}</div><div style="color:var(--tx3);font-size:10px;margin-top:2px;font-family:var(--mono)">${it.d}</div><button class="cpb" style="margin-top:5px" onclick="cT(\`${it.c.replace(/`/g,"'")}\`)">Copier</button></div></div>`}).join('')}</div>`).join('')}
+function tW(k,b){wiz[k]=!wiz[k];localStorage.setItem('kw3',JSON.stringify(wiz));b.classList.toggle('ok');b.closest('.ws').classList.toggle('dn')}
+
+// ════════════════════════════════════════════════════════
+// FIX-IT
+// ════════════════════════════════════════════════════════
+function rXP(){return`<div class="fg">${X.map(f=>`<div class="fc"><div class="fs">${f.s}</div><div class="ff">${f.f}</div>${f.ids.length?`<div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:6px">${f.ids.map(id=>`<button class="cpb" onclick="jT('${id}')">→ ${id}</button>`).join('')}</div>`:''}</div>`).join('')}</div>`}
+
+// ════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════
+function toast(m){const t=document.getElementById('tst');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
+function cT(t){navigator.clipboard.writeText(t).then(()=>toast('✓ Copié'))}
+function tF(id){fav[id]=!fav[id];if(!fav[id])delete fav[id];localStorage.setItem('kf3',JSON.stringify(fav));render()}
+function cR(id){const i=I.find(x=>x.id===id),f=F.find(x=>x.id===id);if(i)cT(`[${i.id}] ${i.name} (${i.vst})\n\nPRESET:\n${i.preset}\n\nTWEAKS:\n${i.tweaks}\n\nCHAIN:\n${i.chain}\n\nSTOP RULES:\n${i.stops.map(r=>'× '+r).join('\n')}`);else if(f)cT(`[${f.id}] ${f.name} (${f.role} · ${f.type})\n\nCHAIN:\n${f.ch.map((c,j)=>`${j+1}. ${c.p} — ${c.r}: ${c.s}`).join('\n')}\n\nSTOP RULES:\n${f.stops.map(r=>'× '+r).join('\n')}`)}
+function jT(id){closeCmd();closeMob();if(I.find(x=>x.id===id)){pg='instr';iF={type:'',vst:'',genre:'',mood:''}}else if(F.find(x=>x.id===id)){pg='fx';fF={role:'',v:'',type:''}}render();setTimeout(()=>{const el=document.getElementById('c-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('open');el.style.boxShadow='0 0 0 2px var(--blue)';setTimeout(()=>el.style.boxShadow='',2500)}},80)}
+
+// ════════════════════════════════════════════════════════
+// COMMAND PALETTE
+// ════════════════════════════════════════════════════════
+let cS=0;
+function aI(){return[...I.map(i=>({id:i.id,name:i.name,meta:`${i.vst} · ${i.type} · ${i.g.join('/')} · ${i.m.join('/')}`})),...F.map(f=>({id:f.id,name:f.name,meta:`${f.role} · ${f.v} · ${f.type}`}))]}
+function openCmd(){document.getElementById('cmdBg').classList.add('open');const i=document.getElementById('cmdI');i.value='';i.focus();cS=0;rCmd('')}
+function closeCmd(){document.getElementById('cmdBg').classList.remove('open')}
+function rCmd(q){const c=document.getElementById('cmdL');let it=aI();if(q){const ql=q.toLowerCase();it=it.filter(i=>i.id.toLowerCase().includes(ql)||i.name.toLowerCase().includes(ql)||i.meta.toLowerCase().includes(ql))}if(!it.length){c.innerHTML='<div class="cmd-e">Aucun résultat</div>';return}it=it.slice(0,12);c.innerHTML=it.map((i,j)=>`<div class="cmd-r ${j===cS?'sel':''}" onclick="jT('${i.id}')"><div class="cmd-ic">${i.id}</div><div class="cmd-tx"><div class="cmd-nm">${i.name}</div><div class="cmd-mt">${i.meta}</div></div></div>`).join('')}
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd();return}if(e.key==='/'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();openCmd();return}if(!document.getElementById('cmdBg').classList.contains('open'))return;if(e.key==='Escape'){closeCmd();return}const rs=document.querySelectorAll('.cmd-r');if(e.key==='ArrowDown'){e.preventDefault();cS=Math.min(cS+1,rs.length-1);rs.forEach((r,i)=>r.classList.toggle('sel',i===cS))}if(e.key==='ArrowUp'){e.preventDefault();cS=Math.max(cS-1,0);rs.forEach((r,i)=>r.classList.toggle('sel',i===cS))}if(e.key==='Enter'){e.preventDefault();rs[cS]?.click()}});
+document.getElementById('cmdI').addEventListener('input',e=>{cS=0;rCmd(e.target.value)});
+function openMob(){document.getElementById('side').classList.add('mo');document.getElementById('moo').classList.add('on')}
+function closeMob(){document.getElementById('side').classList.remove('mo');document.getElementById('moo').classList.remove('on')}
+render();
+</script>
+</body>
+</html>
