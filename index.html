@@ -1,404 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="dark" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kapman Toolkit</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Kapman Toolkit — production decision platform for Ableton sessions.">
+  <link rel="icon" href="assets/kapman-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <svg aria-hidden="true" class="sprite" xmlns="http://www.w3.org/2000/svg">
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-signal" viewBox="0 0 24 24"><path d="M4 17h2M8 14h2M12 10h2M16 7h2M20 4h.01" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 20V14M8 20v-9M12 20V7M16 20V4M20 20V2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
-    <symbol id="i-stack" viewBox="0 0 24 24"><path d="m12 3 8 4.5-8 4.5L4 7.5 12 3Zm8 9-8 4.5L4 12m16 4.5L12 21l-8-4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a4.5 4.5 0 0 0 5.66 5.66L12 20.31a2 2 0 1 1-2.83-2.83l8.15-8.15A4.5 4.5 0 0 0 14.5 6.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 12c1.2 0 1.8-6 3-6s1.8 12 3 12 1.8-9 3-9 1.8 6 3 6 1.8-3 3-3 1.8 6 3 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4m0 0c4-2 6 2 10 0v9c-4 2-6-2-10 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="m20 20-4.2-4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
-    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 5 13h6l-1 9 9-12h-6l0-8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-note" viewBox="0 0 24 24"><path d="M8 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm0 0V6l12-2v10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 14.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H9l2 2h8.5A1.5 1.5 0 0 1 21 9.5v9A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
-    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.2 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
-    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <svg width="0" height="0" aria-hidden="true" class="sprite">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H14v-6H10v6H3V10.5Z" fill="currentColor"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><path d="M7 5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Zm10 9a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM8.5 7.5h5.5a4 4 0 1 1 0 8H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-recipe" viewBox="0 0 24 24"><path d="M6 4h12v4H6zM4 10h16v10H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 7h8M8 14h8M8 18h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-library" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8h4M10 12h4M10 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-fix" viewBox="0 0 24 24"><path d="M14.5 5a4.5 4.5 0 0 0-4.3 5.8L4.2 16.7 7.3 19.8l5.9-6a4.5 4.5 0 1 0 1.3-8.8Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15 8 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-mix" viewBox="0 0 24 24"><path d="M4 15V9m5 9V6m6 12V8m5 10V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="4" cy="15" r="1.7" fill="currentColor"/><circle cx="9" cy="18" r="1.7" fill="currentColor"/><circle cx="15" cy="8" r="1.7" fill="currentColor"/><circle cx="20" cy="5" r="1.7" fill="currentColor"/></symbol>
+    <symbol id="i-finish" viewBox="0 0 24 24"><path d="M6 4h12v16H6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m8 12 2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-session" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.6 6.2.9-4.5 4.3 1.1 6.2L12 17.1 6.4 20l1.1-6.2L3 9.5l6.2-.9L12 3Z" fill="currentColor"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 17V6m0 0-4 4m4-4 4 4M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2.5-7 4 14 4-11 2 4h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-3-6 3V4Z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   </svg>
 
+  <div class="backdrop"></div>
   <div class="app-shell">
-    <aside class="rail">
-      <div class="brand-block">
-        <img src="assets/kapman-mark.svg" alt="Kapman Toolkit" class="brand-mark" />
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <img src="assets/kapman-mark.svg" class="brand-logo" alt="Kapman Toolkit">
         <div>
-          <div class="eyebrow">Kapman Toolkit</div>
-          <div class="rail-subtitle">Production decision app</div>
+          <div class="brand-name">KAPMAN</div>
+          <div class="brand-sub">Toolkit 2026</div>
         </div>
       </div>
 
-      <nav class="rail-nav" aria-label="Primary">
-        <button class="nav-link is-active" data-page="overview" data-search="overview dashboard home"><span class="nav-icon"><svg><use href="#i-home"></use></svg></span><span>Overview</span></button>
-        <button class="nav-link" data-page="mixcheck" data-search="mix check waveform stereo crest wav"><span class="nav-icon mix"><svg><use href="#i-wave"></use></svg></span><span>Mix Check</span></button>
-        <button class="nav-link" data-page="routes" data-search="routes low end groove arrangement decisions"><span class="nav-icon routes"><svg><use href="#i-bolt"></use></svg></span><span>Routes</span></button>
-        <button class="nav-link" data-page="library" data-search="plugin library fabfilter arturia valhalla d16 u-he xln"><span class="nav-icon library"><svg><use href="#i-folder"></use></svg></span><span>Library</span></button>
-        <button class="nav-link" data-page="finish" data-search="finish export reference checklist"><span class="nav-icon finish"><svg><use href="#i-flag"></use></svg></span><span>Finish</span></button>
-      </nav>
+      <div class="search-box">
+        <svg class="icon"><use href="#i-search"></use></svg>
+        <input id="searchInput" type="search" placeholder="Search plugin, route, issue…" aria-label="Search toolkit">
+      </div>
 
-      <div class="rail-card glass">
-        <div class="tiny-label">Session</div>
-        <div class="rail-metric"><span>Mode</span><strong>Static / GitHub</strong></div>
-        <div class="rail-metric"><span>Search</span><strong>⌘ / Ctrl + K</strong></div>
-        <div class="rail-metric"><span>Storage</span><strong>Local only</strong></div>
+      <nav class="side-nav" id="nav"></nav>
+
+      <div class="side-section">
+        <div class="side-label">Vendor dock</div>
+        <div id="vendorDock" class="vendor-dock"></div>
+      </div>
+
+      <div class="side-footer">
+        <button class="rail-toggle" id="railToggle">
+          <svg class="icon"><use href="#i-grid"></use></svg>
+          <span>Focus mode</span>
+        </button>
       </div>
     </aside>
 
-    <div class="main-shell">
-      <header class="topbar glass">
-        <label class="searchbar" aria-label="Search">
-          <svg><use href="#i-search"></use></svg>
-          <input id="globalSearch" type="search" placeholder="Search route, plugin, issue, move…" />
-          <kbd>⌘K</kbd>
-        </label>
+    <main class="main">
+      <header class="topbar">
+        <button id="mobileNav" class="icon-btn mobile-only" aria-label="Open navigation"><svg class="icon"><use href="#i-grid"></use></svg></button>
+        <div>
+          <div class="eyebrow" id="eyebrow">Dashboard</div>
+          <h1 class="page-title" id="pageTitle">Kapman Toolkit</h1>
+        </div>
         <div class="topbar-actions">
-          <button class="ghost-btn" id="focusMixBtn">Open Mix Check</button>
-          <button class="ghost-btn" id="collapseBtn">Collapse all</button>
+          <button id="favoritesBtn" class="ghost-btn"><svg class="icon"><use href="#i-star"></use></svg><span>Favorites</span></button>
+          <button id="mixBtn" class="primary-btn"><svg class="icon"><use href="#i-mix"></use></svg><span>Mix Check</span></button>
         </div>
       </header>
 
-      <main class="workspace">
-        <section class="page is-active" id="overview">
-          <div class="hero-grid">
-            <article class="hero-card hero-main glass theme-overview">
-              <div class="tiny-label">Now</div>
-              <h1>Fast decisions. Fewer bad moves.</h1>
-              <p>Start from signal, not guesswork.</p>
-              <div class="hero-actions">
-                <button class="primary-btn" data-jump="mixcheck">Run Mix Check</button>
-                <button class="ghost-btn" data-jump="routes">Open Routes</button>
-              </div>
-              <div class="stat-row">
-                <div class="stat-chip"><span>Mix</span><strong>Measured</strong></div>
-                <div class="stat-chip"><span>Routes</span><strong>4 focused</strong></div>
-                <div class="stat-chip"><span>Vendors</span><strong>7 stacks</strong></div>
-              </div>
-            </article>
-            <article class="hero-card glass theme-mix quick-launch" data-jump="mixcheck">
-              <div class="tiny-label">Flagship</div>
-              <h3>Mix Check</h3>
-              <p>Waveform, meters, triggered actions.</p>
-            </article>
-            <article class="hero-card glass theme-routes" data-jump="routes">
-              <div class="tiny-label">Workflows</div>
-              <h3>Routes</h3>
-              <p>Low end, groove, contrast, finish.</p>
-            </article>
-            <article class="hero-card glass theme-library" data-jump="library">
-              <div class="tiny-label">Plugins</div>
-              <h3>Library</h3>
-              <p>FabFilter, Arturia, Valhalla, D16, u-he, XLN.</p>
-            </article>
-            <article class="hero-card glass theme-finish" data-jump="finish">
-              <div class="tiny-label">Close</div>
-              <h3>Finish</h3>
-              <p>Reference, export, stop tweaking.</p>
-            </article>
-          </div>
+      <section id="mainStage" class="stage"></section>
+    </main>
 
-          <div class="dashboard-grid">
-            <article class="panel glass lane-panel">
-              <div class="panel-head">
-                <div>
-                  <div class="tiny-label">Lanes</div>
-                  <h2>Pick one job</h2>
-                </div>
-              </div>
-              <div class="lane-grid">
-                <button class="lane-card low" data-route="route-lowend">
-                  <strong>Low end</strong>
-                  <span>Kick, bass, mono focus</span>
-                </button>
-                <button class="lane-card lead" data-route="route-leads">
-                  <strong>Leads</strong>
-                  <span>Center, width, motion</span>
-                </button>
-                <button class="lane-card groove" data-route="route-groove">
-                  <strong>Groove</strong>
-                  <span>Pocket, subtraction, lift</span>
-                </button>
-                <button class="lane-card finish" data-route="route-finish">
-                  <strong>Finish</strong>
-                  <span>Reference, export, stop rule</span>
-                </button>
-              </div>
-            </article>
-
-            <article class="panel glass vendor-panel">
-              <div class="panel-head">
-                <div>
-                  <div class="tiny-label">Vendor dock</div>
-                  <h2>Your stack</h2>
-                </div>
-              </div>
-              <div class="vendor-strip">
-                <div class="vendor-plate fab"><span class="mono">FF</span><span>FabFilter</span></div>
-                <div class="vendor-plate art"><span class="mono">AR</span><span>Arturia</span></div>
-                <div class="vendor-plate val"><span class="mono">VH</span><span>Valhalla</span></div>
-                <div class="vendor-plate d16"><span class="mono">D16</span><span>D16</span></div>
-                <div class="vendor-plate uhe"><span class="mono">UH</span><span>u-he</span></div>
-                <div class="vendor-plate xln"><span class="mono">XL</span><span>XLN</span></div>
-                <div class="vendor-plate abl"><span class="mono">LV</span><span>Live 12</span></div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="page" id="mixcheck">
-          <div class="page-header">
-            <div>
-              <div class="tiny-label">Measured only</div>
-              <h1>Mix Check</h1>
-            </div>
-            <div class="status-pill" id="statusPill">Awaiting file</div>
-          </div>
-
-          <div class="mix-layout">
-            <article class="panel glass upload-panel">
-              <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose WAV file">
-                <div class="drop-inner">
-                  <div class="drop-badge"><svg><use href="#i-wave"></use></svg></div>
-                  <h3>Drop WAV / AIFF</h3>
-                  <p>Local analysis. Nothing leaves the browser.</p>
-                  <button class="primary-btn" id="chooseFileBtn">Choose file</button>
-                  <input id="audioFileInput" type="file" accept="audio/wav,audio/wave,audio/x-wav,audio/aiff,audio/x-aiff,.wav,.aif,.aiff" hidden />
-                </div>
-              </div>
-
-              <div class="file-meta" id="fileMeta">
-                <span class="meta-pill">No file loaded</span>
-              </div>
-
-              <div class="signal-stage">
-                <div class="signal-card waveform-shell">
-                  <div class="signal-head">
-                    <span>Waveform</span>
-                    <span id="waveHint">Measured peak envelope</span>
-                  </div>
-                  <canvas id="waveCanvas" width="1200" height="260"></canvas>
-                </div>
-                <div class="signal-card spectrum-shell">
-                  <div class="signal-head">
-                    <span>Band map</span>
-                    <span id="spectrumHint">Coarse spectral shares</span>
-                  </div>
-                  <canvas id="spectrumCanvas" width="800" height="260"></canvas>
-                </div>
-              </div>
-            </article>
-
-            <aside class="mix-side">
-              <article class="panel glass metrics-panel">
-                <div class="panel-head compact">
-                  <div>
-                    <div class="tiny-label">Snapshot</div>
-                    <h2>Measured signals</h2>
-                  </div>
-                </div>
-                <div class="metric-grid" id="metricGrid">
-                  <div class="metric-card"><span>Peak</span><strong>—</strong><small>dBFS</small></div>
-                  <div class="metric-card"><span>RMS</span><strong>—</strong><small>dBFS</small></div>
-                  <div class="metric-card"><span>Crest</span><strong>—</strong><small>dB</small></div>
-                  <div class="metric-card"><span>Correlation</span><strong>—</strong><small>stereo</small></div>
-                  <div class="metric-card"><span>Low side</span><strong>—</strong><small>&lt;120 Hz</small></div>
-                  <div class="metric-card"><span>Dyn spread</span><strong>—</strong><small>dB</small></div>
-                </div>
-              </article>
-
-              <article class="panel glass issue-panel">
-                <div class="panel-head compact">
-                  <div>
-                    <div class="tiny-label">Triggered</div>
-                    <h2>What needs attention</h2>
-                  </div>
-                </div>
-                <div class="issue-list" id="issueList">
-                  <div class="issue-empty">Upload a file to generate measured checks.</div>
-                </div>
-              </article>
-            </aside>
-          </div>
-
-          <div class="bottom-grid">
-            <article class="panel glass evidence-panel">
-              <div class="panel-head compact">
-                <div>
-                  <div class="tiny-label">Evidence</div>
-                  <h2>Signal → rule</h2>
-                </div>
-              </div>
-              <div class="evidence-table" id="evidenceTable">
-                <div class="evidence-row evidence-head"><span>Signal</span><span>Measured</span><span>Rule</span><span>Read</span></div>
-              </div>
-            </article>
-
-            <article class="panel glass actions-panel">
-              <div class="panel-head compact">
-                <div>
-                  <div class="tiny-label">Next moves</div>
-                  <h2>Short actions only</h2>
-                </div>
-              </div>
-              <div class="action-list" id="actionList">
-                <div class="issue-empty">No triggered actions yet.</div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="page" id="routes">
-          <div class="page-header">
-            <div>
-              <div class="tiny-label">Workflow cards</div>
-              <h1>Routes</h1>
-            </div>
-          </div>
-          <div class="route-stack">
-            <details class="route-card glass" id="route-lowend" open>
-              <summary>
-                <span class="route-tone low"></span>
-                <div>
-                  <strong>Low End Ownership</strong>
-                  <small>Kick, bass, mono, subtraction</small>
-                </div>
-                <svg class="chev"><use href="#i-chevron"></use></svg>
-              </summary>
-              <div class="route-body">
-                <ol>
-                  <li>Solo kick and bass only.</li>
-                  <li>Decide who owns 40–90 Hz.</li>
-                  <li>Center lows first, widen later.</li>
-                </ol>
-                <div class="route-footer"><span class="tag">Stop rule</span><p>Stop when both read clearly at low volume.</p></div>
-              </div>
-            </details>
-
-            <details class="route-card glass" id="route-leads">
-              <summary>
-                <span class="route-tone lead"></span>
-                <div>
-                  <strong>Lead Focus</strong>
-                  <small>Center, width, motion</small>
-                </div>
-                <svg class="chev"><use href="#i-chevron"></use></svg>
-              </summary>
-              <div class="route-body">
-                <ol>
-                  <li>Choose one center voice.</li>
-                  <li>Add width from support, not from everything.</li>
-                  <li>Automate one motion source only.</li>
-                </ol>
-                <div class="route-footer"><span class="tag">Stop rule</span><p>Stop when the hook survives in mono.</p></div>
-              </div>
-            </details>
-
-            <details class="route-card glass" id="route-groove">
-              <summary>
-                <span class="route-tone groove"></span>
-                <div>
-                  <strong>Groove Lift</strong>
-                  <small>Contrast, pocket, subtraction</small>
-                </div>
-                <svg class="chev"><use href="#i-chevron"></use></svg>
-              </summary>
-              <div class="route-body">
-                <ol>
-                  <li>Mute one busy layer first.</li>
-                  <li>Push swing or nudge one percussive lane.</li>
-                  <li>Use automation for contrast, not clutter.</li>
-                </ol>
-                <div class="route-footer"><span class="tag">Stop rule</span><p>Stop when the loop moves without adding a new sound.</p></div>
-              </div>
-            </details>
-
-            <details class="route-card glass" id="route-finish">
-              <summary>
-                <span class="route-tone finish"></span>
-                <div>
-                  <strong>Finish Tonight</strong>
-                  <small>Reference, bounce, leave it alone</small>
-                </div>
-                <svg class="chev"><use href="#i-chevron"></use></svg>
-              </summary>
-              <div class="route-body">
-                <ol>
-                  <li>Run Mix Check once.</li>
-                  <li>Apply two fixes max.</li>
-                  <li>Compare against one reference and export.</li>
-                </ol>
-                <div class="route-footer"><span class="tag">Stop rule</span><p>Stop after the second bounce. No third micro-fix pass.</p></div>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        <section class="page" id="library">
-          <div class="page-header">
-            <div>
-              <div class="tiny-label">Plugin browser</div>
-              <h1>Library</h1>
-            </div>
-          </div>
-          <div class="library-grid" id="libraryGrid">
-            <article class="plugin-card glass" data-search="fabfilter pro q 3 eq surgical dynamic"><div class="vendor-head fab"><span class="mono">FF</span><strong>FabFilter</strong></div><h3>Pro-Q 3</h3><p>Surgical EQ. Dynamic touch. Fast cleanup.</p><div class="plugin-tags"><span>EQ</span><span>Cleanup</span></div></article>
-            <article class="plugin-card glass" data-search="fabfilter pro c 2 compression bus"><div class="vendor-head fab"><span class="mono">FF</span><strong>FabFilter</strong></div><h3>Pro-C 2</h3><p>Bus control. Tight or transparent.</p><div class="plugin-tags"><span>Comp</span><span>Bus</span></div></article>
-            <article class="plugin-card glass" data-search="fabfilter saturn 2 saturation tone"><div class="vendor-head fab"><span class="mono">FF</span><strong>FabFilter</strong></div><h3>Saturn 2</h3><p>Harmonics, movement, controlled dirt.</p><div class="plugin-tags"><span>Saturator</span><span>Tone</span></div></article>
-            <article class="plugin-card glass" data-search="valhalla vintage verb room space"><div class="vendor-head val"><span class="mono">VH</span><strong>Valhalla</strong></div><h3>VintageVerb</h3><p>Space with vibe. Short or cinematic.</p><div class="plugin-tags"><span>Reverb</span><span>Space</span></div></article>
-            <article class="plugin-card glass" data-search="d16 decimort crunch sampler grit"><div class="vendor-head d16"><span class="mono">D16</span><strong>D16</strong></div><h3>Decimort 2</h3><p>Crunch, aliasing, texture.</p><div class="plugin-tags"><span>Texture</span><span>Crunch</span></div></article>
-            <article class="plugin-card glass" data-search="arturia mini v bass lead retro"><div class="vendor-head art"><span class="mono">AR</span><strong>Arturia</strong></div><h3>Mini V</h3><p>Weighty mono. Lead and bass staple.</p><div class="plugin-tags"><span>Synth</span><span>Mono</span></div></article>
-            <article class="plugin-card glass" data-search="uhe diva warm analog lush"><div class="vendor-head uhe"><span class="mono">UH</span><strong>u-he</strong></div><h3>Diva</h3><p>Premium analog-style body and depth.</p><div class="plugin-tags"><span>Synth</span><span>Warm</span></div></article>
-            <article class="plugin-card glass" data-search="xln addictive drums transient punch"><div class="vendor-head xln"><span class="mono">XL</span><strong>XLN</strong></div><h3>Addictive Drums</h3><p>Drum realism and snappy tops.</p><div class="plugin-tags"><span>Drums</span><span>Punch</span></div></article>
-          </div>
-        </section>
-
-        <section class="page" id="finish">
-          <div class="page-header">
-            <div>
-              <div class="tiny-label">Close the session</div>
-              <h1>Finish</h1>
-            </div>
-          </div>
-          <div class="finish-grid">
-            <article class="panel glass checklist-panel">
-              <div class="panel-head compact"><div><div class="tiny-label">Reference</div><h2>Last check</h2></div></div>
-              <label class="check-row"><input type="checkbox" /> One reference only</label>
-              <label class="check-row"><input type="checkbox" /> Low end still clear at low volume</label>
-              <label class="check-row"><input type="checkbox" /> Main hook still obvious in mono</label>
-            </article>
-            <article class="panel glass checklist-panel">
-              <div class="panel-head compact"><div><div class="tiny-label">Export</div><h2>Bounce</h2></div></div>
-              <label class="check-row"><input type="checkbox" /> Peaks below target</label>
-              <label class="check-row"><input type="checkbox" /> No limiter panic move</label>
-              <label class="check-row"><input type="checkbox" /> File name is final and clean</label>
-            </article>
-            <article class="panel glass notes-panel">
-              <div class="panel-head compact"><div><div class="tiny-label">Session note</div><h2>Leave yourself one clear note</h2></div></div>
-              <textarea id="sessionNote" placeholder="Example: next pass = fix hat harshness, nothing else."></textarea>
-              <button class="primary-btn" id="saveNoteBtn">Save note</button>
-            </article>
-          </div>
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <div class="command-palette hidden" id="commandPalette" role="dialog" aria-modal="true" aria-label="Command palette">
-    <div class="palette-card glass">
-      <div class="palette-top">
-        <svg><use href="#i-search"></use></svg>
-        <input type="search" id="paletteInput" placeholder="Jump to page or search content…" />
-        <button class="palette-close" id="closePaletteBtn"><svg><use href="#i-x"></use></svg></button>
+    <aside class="inspector" id="inspector">
+      <div class="inspector-head">
+        <div>
+          <div class="inspector-kicker" id="inspectorKicker">Select an item</div>
+          <div class="inspector-title" id="inspectorTitle">Inspector</div>
+        </div>
+        <button id="closeInspector" class="icon-btn" aria-label="Close details"><svg class="icon"><use href="#i-close"></use></svg></button>
       </div>
-      <div class="palette-list" id="paletteList"></div>
-    </div>
+      <div id="inspectorBody" class="inspector-body"></div>
+    </aside>
   </div>
 
+  <div id="toast" class="toast"></div>
   <script src="app.js"></script>
 </body>
 </html>
