@@ -1,94 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kapman Toolkit</title>
-  <meta name="description" content="Kapman Toolkit — production decision platform for Ableton sessions.">
-  <link rel="icon" href="assets/kapman-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kapman Studio</title>
+  <meta name="description" content="Kapman Studio — production, sound design, mix decisions." />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <svg width="0" height="0" aria-hidden="true" class="sprite">
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H14v-6H10v6H3V10.5Z" fill="currentColor"/></symbol>
-    <symbol id="i-route" viewBox="0 0 24 24"><path d="M7 5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Zm10 9a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM8.5 7.5h5.5a4 4 0 1 1 0 8H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-recipe" viewBox="0 0 24 24"><path d="M6 4h12v4H6zM4 10h16v10H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 7h8M8 14h8M8 18h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-library" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8h4M10 12h4M10 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-fix" viewBox="0 0 24 24"><path d="M14.5 5a4.5 4.5 0 0 0-4.3 5.8L4.2 16.7 7.3 19.8l5.9-6a4.5 4.5 0 1 0 1.3-8.8Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15 8 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-mix" viewBox="0 0 24 24"><path d="M4 15V9m5 9V6m6 12V8m5 10V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="4" cy="15" r="1.7" fill="currentColor"/><circle cx="9" cy="18" r="1.7" fill="currentColor"/><circle cx="15" cy="8" r="1.7" fill="currentColor"/><circle cx="20" cy="5" r="1.7" fill="currentColor"/></symbol>
-    <symbol id="i-finish" viewBox="0 0 24 24"><path d="M6 4h12v16H6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m8 12 2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-session" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.6 6.2.9-4.5 4.3 1.1 6.2L12 17.1 6.4 20l1.1-6.2L3 9.5l6.2-.9L12 3Z" fill="currentColor"/></symbol>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 17V6m0 0-4 4m4-4 4 4M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2.5-7 4 14 4-11 2 4h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-note" viewBox="0 0 24 24"><path d="M6 4h12v16l-6-3-6 3V4Z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-  </svg>
+  <div class="noise"></div>
 
-  <div class="backdrop"></div>
+  <div id="gate" class="gate is-open" aria-modal="true" role="dialog" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <div class="gate-mark">
+        <img src="assets/kapman-mark.svg" alt="Kapman logo" />
+      </div>
+      <div class="gate-copy">
+        <p class="eyebrow" data-i18n="gateBadge">Private preview</p>
+        <h1 id="gateTitle" data-i18n="gateTitle">Kapman Studio</h1>
+        <p class="gate-text" data-i18n="gateBody">Enter password to open the toolkit.</p>
+      </div>
+      <div class="gate-actions">
+        <input id="passwordInput" type="password" autocomplete="current-password" data-i18n-placeholder="gatePlaceholder" placeholder="Password" />
+        <button id="enterBtn" class="btn btn-solid" data-i18n="gateEnter">Enter</button>
+      </div>
+      <p id="gateHint" class="gate-hint" data-i18n="gateHint">Tip: you can change the password in app.js later.</p>
+      <p id="gateError" class="gate-error" aria-live="polite"></p>
+    </div>
+  </div>
+
   <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand-row">
-        <img src="assets/kapman-mark.svg" class="brand-logo" alt="Kapman Toolkit">
-        <div>
-          <div class="brand-name">KAPMAN</div>
-          <div class="brand-sub">Toolkit 2026</div>
-        </div>
-      </div>
-
-      <div class="search-box">
-        <svg class="icon"><use href="#i-search"></use></svg>
-        <input id="searchInput" type="search" placeholder="Search plugin, route, issue…" aria-label="Search toolkit">
-      </div>
-
-      <nav class="side-nav" id="nav"></nav>
-
-      <div class="side-section">
-        <div class="side-label">Vendor dock</div>
-        <div id="vendorDock" class="vendor-dock"></div>
-      </div>
-
-      <div class="side-footer">
-        <button class="rail-toggle" id="railToggle">
-          <svg class="icon"><use href="#i-grid"></use></svg>
-          <span>Focus mode</span>
+    <aside class="rail">
+      <div class="rail-top">
+        <button id="railToggle" class="icon-btn rail-toggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
         </button>
+        <a class="brand-mini" href="#">
+          <img src="assets/kapman-mark.svg" alt="Kapman logo" />
+          <div>
+            <strong>KAPMAN</strong>
+            <span>Studio</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="rail-nav">
+        <button class="nav-item is-active" data-page="home">
+          <span class="nav-ico">◧</span>
+          <span data-i18n="navHome">Home</span>
+        </button>
+        <button class="nav-item" data-page="library">
+          <span class="nav-ico">⌘</span>
+          <span data-i18n="navLibrary">Library</span>
+        </button>
+        <button class="nav-item" data-page="sound">
+          <span class="nav-ico">◇</span>
+          <span data-i18n="navSound">Sound Design</span>
+        </button>
+        <button class="nav-item" data-page="mix">
+          <span class="nav-ico">▥</span>
+          <span data-i18n="navMix">Mix Check</span>
+        </button>
+        <button class="nav-item" data-page="finish">
+          <span class="nav-ico">✓</span>
+          <span data-i18n="navFinish">Finish</span>
+        </button>
+      </nav>
+
+      <div class="rail-bottom">
+        <div class="small-kpis">
+          <div>
+            <strong id="kpiPlugins">0</strong>
+            <span data-i18n="kpiPlugins">plugins</span>
+          </div>
+          <div>
+            <strong id="kpiRecipes">0</strong>
+            <span data-i18n="kpiRecipes">recipes</span>
+          </div>
+        </div>
       </div>
     </aside>
 
-    <main class="main">
+    <div class="main-wrap">
       <header class="topbar">
-        <button id="mobileNav" class="icon-btn mobile-only" aria-label="Open navigation"><svg class="icon"><use href="#i-grid"></use></svg></button>
-        <div>
-          <div class="eyebrow" id="eyebrow">Dashboard</div>
-          <h1 class="page-title" id="pageTitle">Kapman Toolkit</h1>
+        <div class="title-block">
+          <p class="eyebrow" data-i18n="topEyebrow">Production decision system</p>
+          <h2 id="pageTitle">Home</h2>
         </div>
-        <div class="topbar-actions">
-          <button id="favoritesBtn" class="ghost-btn"><svg class="icon"><use href="#i-star"></use></svg><span>Favorites</span></button>
-          <button id="mixBtn" class="primary-btn"><svg class="icon"><use href="#i-mix"></use></svg><span>Mix Check</span></button>
+
+        <div class="top-controls">
+          <label class="search-wrap" aria-label="Search">
+            <span>⌕</span>
+            <input id="globalSearch" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search plug-ins, recipes, roles..." />
+          </label>
+
+          <div class="segmented" aria-label="Language switch">
+            <button id="langEN" class="seg-btn is-active">EN</button>
+            <button id="langFR" class="seg-btn">FR</button>
+          </div>
+
+          <button id="themeBtn" class="icon-btn" data-i18n="themeToggle">Light</button>
+          <button id="focusBtn" class="icon-btn" data-i18n="focusToggle">Focus</button>
         </div>
       </header>
 
-      <section id="mainStage" class="stage"></section>
-    </main>
+      <main class="stage">
+        <section class="page is-active" data-page="home">
+          <div class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow" data-i18n="heroEyebrow">Private workflow cockpit</p>
+              <h1 data-i18n="heroTitle">Choose faster. Design deeper. Finish cleaner.</h1>
+              <p class="hero-sub" data-i18n="heroSub">A lean production app for plug-in choice, sound design moves and pre-master checks.</p>
+              <div class="hero-actions">
+                <button class="btn btn-solid quick-nav" data-target="library" data-i18n="heroBtnLibrary">Open Library</button>
+                <button class="btn btn-ghost quick-nav" data-target="sound" data-i18n="heroBtnSound">Open Sound Design</button>
+                <button class="btn btn-ghost quick-nav" data-target="mix" data-i18n="heroBtnMix">Run Mix Check</button>
+              </div>
+            </div>
 
-    <aside class="inspector" id="inspector">
-      <div class="inspector-head">
-        <div>
-          <div class="inspector-kicker" id="inspectorKicker">Select an item</div>
-          <div class="inspector-title" id="inspectorTitle">Inspector</div>
-        </div>
-        <button id="closeInspector" class="icon-btn" aria-label="Close details"><svg class="icon"><use href="#i-close"></use></svg></button>
-      </div>
-      <div id="inspectorBody" class="inspector-body"></div>
-    </aside>
+            <div class="hero-visual">
+              <div class="orb orb-a"></div>
+              <div class="orb orb-b"></div>
+              <div class="hero-panel glass-panel">
+                <div class="hero-stat-row">
+                  <div>
+                    <span data-i18n="heroStat1">Selected stack</span>
+                    <strong>Serum → Saturn 2 → Pro-Q 4</strong>
+                  </div>
+                  <button class="mini-chip quick-nav" data-target="sound" data-i18n="heroJump">Jump in</button>
+                </div>
+                <div class="hero-line"></div>
+                <div class="hero-grid">
+                  <article class="micro-card">
+                    <p data-i18n="microCard1Title">Fast lane</p>
+                    <strong data-i18n="microCard1Value">Dark bass stack</strong>
+                  </article>
+                  <article class="micro-card">
+                    <p data-i18n="microCard2Title">Check now</p>
+                    <strong data-i18n="microCard2Value">Low-end mono</strong>
+                  </article>
+                  <article class="micro-card">
+                    <p data-i18n="microCard3Title">Sound focus</p>
+                    <strong data-i18n="microCard3Value">Movement + tension</strong>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <section class="vendor-strip-wrap">
+            <div class="section-head compact">
+              <h3 data-i18n="vendorsTitle">Vendor rail</h3>
+              <span data-i18n="vendorsSub">Fast entry points</span>
+            </div>
+            <div id="vendorRail" class="vendor-strip"></div>
+          </section>
+
+          <section class="home-grid">
+            <article class="feature-card glass-panel quick-nav" data-target="library">
+              <div class="feature-head">
+                <span class="feature-ico">⌘</span>
+                <p data-i18n="homeCard1Label">Library</p>
+              </div>
+              <h3 data-i18n="homeCard1Title">Browse by role, not by brand noise</h3>
+              <p data-i18n="homeCard1Body">Open one grid. Pick a role. Use the inspector.</p>
+            </article>
+            <article class="feature-card glass-panel quick-nav" data-target="sound">
+              <div class="feature-head">
+                <span class="feature-ico">◇</span>
+                <p data-i18n="homeCard2Label">Sound design</p>
+              </div>
+              <h3 data-i18n="homeCard2Title">Get stacks for bass, leads, motion and texture</h3>
+              <p data-i18n="homeCard2Body">Recipes stay short. Details stay contextual.</p>
+            </article>
+            <article class="feature-card glass-panel quick-nav" data-target="mix">
+              <div class="feature-head">
+                <span class="feature-ico">▥</span>
+                <p data-i18n="homeCard3Label">Mix check</p>
+              </div>
+              <h3 data-i18n="homeCard3Title">See measured signals, not fake guru talk</h3>
+              <p data-i18n="homeCard3Body">Waveform, balance, stereo and triggered actions.</p>
+            </article>
+          </section>
+        </section>
+
+        <section class="page" data-page="library">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow" data-i18n="libraryEyebrow">Expanded plug-in coverage</p>
+              <h1 data-i18n="libraryTitle">Library</h1>
+            </div>
+            <div class="page-head-actions">
+              <div id="modeChips" class="chip-row"></div>
+              <div id="vendorChips" class="chip-row chip-row--secondary"></div>
+            </div>
+          </div>
+
+          <div class="content-layout">
+            <div>
+              <div id="pluginGrid" class="plugin-grid"></div>
+            </div>
+            <aside class="inspector glass-panel" id="inspector">
+              <div class="inspector-empty" id="inspectorEmpty">
+                <p class="eyebrow" data-i18n="inspectorEyebrow">Inspector</p>
+                <h3 data-i18n="inspectorTitle">Pick one item</h3>
+                <p data-i18n="inspectorBody">You get details here so the grid stays clean.</p>
+              </div>
+              <div class="inspector-body hidden" id="inspectorBody"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" data-page="sound">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow" data-i18n="soundEyebrow">Creative moves</p>
+              <h1 data-i18n="soundTitle">Sound Design</h1>
+            </div>
+          </div>
+
+          <section class="route-band glass-panel">
+            <div class="section-head compact">
+              <h3 data-i18n="routeBandTitle">Quick routes</h3>
+              <span data-i18n="routeBandSub">One problem, one direction</span>
+            </div>
+            <div id="routeGrid" class="route-grid"></div>
+          </section>
+
+          <section class="recipe-band">
+            <div class="section-head compact">
+              <h3 data-i18n="recipesTitle">Recipes</h3>
+              <span data-i18n="recipesSub">Short stacks with a stop rule</span>
+            </div>
+            <div id="recipeGrid" class="recipe-grid"></div>
+          </section>
+        </section>
+
+        <section class="page" data-page="mix">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow" data-i18n="mixEyebrow">Measured only</p>
+              <h1 data-i18n="mixTitle">Mix Check</h1>
+            </div>
+          </div>
+
+          <div class="mix-shell glass-panel">
+            <div class="upload-row">
+              <label class="upload-box" for="audioFile">
+                <div>
+                  <p class="eyebrow" data-i18n="uploadEyebrow">Drop audio</p>
+                  <h3 data-i18n="uploadTitle">WAV / AIFF / MP3</h3>
+                  <p data-i18n="uploadBody">Client-side analysis only. Nothing leaves your browser.</p>
+                </div>
+                <span class="btn btn-ghost" data-i18n="uploadBtn">Choose file</span>
+                <input id="audioFile" type="file" accept="audio/*,.wav,.aiff,.aif,.mp3" hidden />
+              </label>
+            </div>
+
+            <div class="mix-canvas-wrap">
+              <canvas id="waveform"></canvas>
+              <div class="meter-side">
+                <div class="metric-card">
+                  <span data-i18n="metricPeak">Peak</span>
+                  <strong id="metricPeak">—</strong>
+                </div>
+                <div class="metric-card">
+                  <span data-i18n="metricRms">RMS</span>
+                  <strong id="metricRms">—</strong>
+                </div>
+                <div class="metric-card">
+                  <span data-i18n="metricCrest">Crest</span>
+                  <strong id="metricCrest">—</strong>
+                </div>
+                <div class="metric-card">
+                  <span data-i18n="metricStereo">Stereo</span>
+                  <strong id="metricStereo">—</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="band-bar" id="bandBar"></div>
+            <div id="mixIssues" class="issue-strip"></div>
+            <div id="mixActions" class="action-list"></div>
+          </div>
+        </section>
+
+        <section class="page" data-page="finish">
+          <div class="page-head">
+            <div>
+              <p class="eyebrow" data-i18n="finishEyebrow">End game</p>
+              <h1 data-i18n="finishTitle">Finish</h1>
+            </div>
+          </div>
+
+          <div class="finish-grid">
+            <article class="glass-panel checklist-card">
+              <h3 data-i18n="finishCard1">Before export</h3>
+              <ul id="checklistA" class="checklist"></ul>
+            </article>
+            <article class="glass-panel checklist-card">
+              <h3 data-i18n="finishCard2">Reference pass</h3>
+              <ul id="checklistB" class="checklist"></ul>
+            </article>
+            <article class="glass-panel checklist-card">
+              <h3 data-i18n="finishCard3">Sound design sanity</h3>
+              <ul id="checklistC" class="checklist"></ul>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script src="app.js"></script>
 </body>
 </html>
