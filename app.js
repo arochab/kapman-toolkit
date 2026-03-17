@@ -1,4 +1,4 @@
-const PASSWORD = "kapman";
+const PASSWORD = "62!NjC3e";
 // ↑ SINGLE source of truth for the access password.
 // Change it here and only here.
 // localStorage key: 'kapman-gate' (value 'ok' = authenticated)
