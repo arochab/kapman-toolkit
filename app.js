@@ -1,67 +1,124 @@
 const PASSWORD = "kapman";
-// ↑ SINGLE source of truth. localStorage key: 'kapman-gate' → 'ok'
+// ↑ SINGLE source of truth. localStorage: 'kapman-gate' → 'ok'
 
-/* ═══════════════════════════════════════════
-   i18n
-   ═══════════════════════════════════════════ */
+/* ═══ i18n ═══ */
 const i18n = {
   en: {
-    gateTitle:"Studio",gateBody:"Private production toolkit. Enter your access code.",gatePlaceholder:"Access code",gateEnter:"→",gateHint:"Password is set in app.js line 1.",
+    gateTitle:"Studio",gateBody:"Private production toolkit. Enter your access code.",gatePlaceholder:"Access code",gateHint:"Password is set in app.js line 1.",
     navHome:"Home",navLibrary:"Library",navSound:"Sound Design",navMix:"Mix Check",navFinish:"Finish",navFixit:"Fix-It",
     kpiPlugins:"plugins",kpiRecipes:"recipes",searchPlaceholder:"Search plugins, recipes…",
     heroEyebrow:"Private workflow cockpit",heroTitle:"Choose faster.<br/>Design deeper.<br/>Finish cleaner.",heroSub:"Plugin selection, sound design stacks, mix checks and finishing workflows — in one private toolkit.",heroBtnLibrary:"Open Library",heroBtnSound:"Sound Design",heroBtnMix:"Mix Check",heroStat1:"Selected stack",
     vendorsTitle:"Your vendors",vendorsSub:"Jump to a vendor's plugins",
     homeCard1Title:"Browse by role, not by brand",homeCard1Body:"One grid. Pick a role. Inspect details.",homeCard2Title:"Sound design stacks and recipes",homeCard2Body:"Short chains with stop rules.",homeCard3Title:"Measured signals, not guru talk",homeCard3Body:"Waveform, balance, stereo — client-side.",
-    libraryEyebrow:"Plugin coverage",libraryTitle:"Library",inspectorEyebrow:"Inspector",inspectorTitle:"Select a plugin",inspectorBody:"Details appear here so the grid stays clean.",
-    soundEyebrow:"Creative moves",soundTitle:"Sound Design",routeBandTitle:"All routes",routeBandSub:"One problem → one direction",recipesTitle:"All recipes",recipesSub:"Short stacks with a stop rule",
-    sbGoalLabel:"Goal",sbConstraintLabel:"Constraint",sbNextBtn:"Next suggestion",sbRoute:"Route",sbRecipe:"Recipe",sbFirstMove:"First move",sbWhy:"Why it works",sbMistake:"Common mistake",sbStop:"Stop rule",sbNext:"Next experiment",
+    libraryEyebrow:"Plugin coverage",libraryTitle:"Library",
+    inspectorEyebrow:"Inspector",inspectorTitle:"Select a plugin",inspectorBody:"Details appear here so the grid stays clean.",
+    inspGuideTitle:"How to use Library",inspGuide1:"Filter by role above — mix, sound, dynamics, space, tone, motion, instrument.",inspGuide2:"Click any plugin card to see detailed use cases, first parameters, and when to avoid.",inspGuide3:"Use the search bar for instant lookup across all plugins.",
+    soundEyebrow:"Creative moves",soundTitle:"Sound Design",
+    sbTitle:"Sound Builder",sbSub:"Pick a goal → get a direction",
+    sbGoalLabel:"Goal",sbConstraintLabel:"Constraint",sbPlaceholder:"Select a goal above to get a matched route and recipe.",
+    sbNextBtn:"Next suggestion",sbRoute:"Recommended route",sbRecipe:"Recommended recipe",
+    sbWhy:"Why it works",sbMistake:"Common mistake",sbStop:"Stop rule",sbNext:"Next experiment",
+    routeBandTitle:"All routes",routeBandSub:"One problem → one direction",recipesTitle:"All recipes",recipesSub:"Short stacks with a stop rule",
     mixEyebrow:"Measured only",mixTitle:"Mix Check",uploadTitle:"Drop audio — WAV / AIFF / MP3",uploadBody:"Client-side analysis. Nothing leaves your browser.",uploadBtn:"Choose file",
     metricPeak:"Peak",metricRms:"RMS",metricCrest:"Crest",metricLufs:"LUFS est.",metricCorr:"Correlation",
-    finishEyebrow:"End game",finishTitle:"Finish",finishCard1:"Before export",finishCard2:"Reference pass",finishCard3:"Sound design sanity",
+    finishEyebrow:"End game",finishTitle:"Finish",
+    finishCard1:"Before export",finishCard2:"Reference pass",finishCard3:"Playback checks",finishCard4:"Sound design sanity",finishCard5:"Arrangement final",
     pageHome:"Home",pageLibrary:"Library",pageSound:"Sound Design",pageMix:"Mix Check",pageFinish:"Finish",pageFixit:"Fix-It",
     wrongPassword:"Wrong password",
     bandsLow:"Low",bandsLowMid:"Low mids",bandsHighMid:"High mids",bandsHigh:"High",
     filterAll:"All",filterMix:"Mix",filterSound:"Sound",filterDynamics:"Dynamics",filterSpace:"Space",filterTone:"Tone",filterMotion:"Motion",filterInstrument:"Instrument",
-    inspectorUse:"Best for",inspectorTouch:"Touch first",inspectorAvoid:"Avoid when",inspectorRole:"Role",inspectorMode:"Mode",inspectorRecipe:"Related recipe",vendorJump:"Open",stopRuleLabel:"Stop rule",
-    finishA1:"Peak margin still below about -1 dBFS before mastering.",finishA2:"Kick and bass still read clearly at low volume.",finishA3:"No single FX throw steals the whole section.",finishA4:"Transitions still feel intentional with drums muted.",
-    finishB1:"Compare against one reference, not five random tracks.",finishB2:"Check laptop speakers and mono after studio speakers.",finishB3:"Only correct what repeats as a problem twice.",finishB4:"If the top end feels impressive only when loud, re-check it.",
-    finishC1:"Mute decorative layers one by one. Keep only what moves the track.",finishC2:"If one patch needs too much fixing, swap the source sooner.",finishC3:"Automate one macro hard, not six tiny moves everywhere.",finishC4:"Leave one signature texture per section, not three competing ones.",
+    inspectorUse:"Best for",inspectorTouch:"Touch first",inspectorAvoid:"Avoid when",inspectorMode:"Mode",inspectorRecipe:"Related recipe",
+    stopRuleLabel:"Stop rule",
     fixitEyebrow:"Symptom → solution",fixitTitle:"Fix-It Playbook",
     issueNone:"No triggered issues — metrics look reasonable.",issueNeedFile:"Load a file to get measured results.",uploadDone:"Audio loaded",
     insightWhy:"Why it matters",insightFix:"First move",insightStop:"Stop when",
-    fixitCheck:"Check",fixitMoves:"Moves",fixitStopLabel:"Stop",fixitWhyLabel:"Why this happens",fixitOverdoLabel:"People often overdo",
+    fixitCheck:"Check",fixitStopLabel:"Stop",fixitWhyLabel:"Why this happens",fixitOverdoLabel:"People often overdo",
     relatedFixits:"Related Fix-It cards",
     goalBass:"Bass",goalLead:"Lead",goalPad:"Pad",goalDrums:"Drums",goalTexture:"Texture",goalTransition:"Transition",
-    conClean:"Clean",conGrit:"Grit",conMono:"Mono-safe",conWide:"Wide",conMoving:"Moving",conMinimal:"Minimal"
+    conClean:"Clean",conGrit:"Grit",conMono:"Mono-safe",conWide:"Wide",conMoving:"Moving",conMinimal:"Minimal",
+    // Finish items
+    fA1:"Peak margin below -1 dBFS before mastering.",
+    fA2:"Kick and bass read clearly at low volume.",
+    fA3:"No FX throw steals the whole section.",
+    fA4:"Gain staging: every track peaks around -12 to -6 dBFS.",
+    fA5:"Master bus GR stays under -2 dB on Pro-L 2.",
+    fB1:"Compare against ONE reference, not five random tracks.",
+    fB2:"Match reference loudness before comparing (use Utility gain).",
+    fB3:"Only correct what repeats as a problem twice.",
+    fB4:"Focus on low-end balance and vocal/hook clarity first.",
+    fC1:"Check on laptop speakers after studio monitors.",
+    fC2:"Check in mono (Utility → Mono) — nothing critical should vanish.",
+    fC3:"Listen on phone speaker for extreme translation.",
+    fC4:"Play at very low volume — mix should still make sense.",
+    fC5:"Play at moderate volume for 30 seconds without touching anything.",
+    fD1:"Mute decorative layers one by one. Keep only what moves the track.",
+    fD2:"If a patch needs too much fixing, swap the source sooner.",
+    fD3:"Automate one macro hard, not six tiny moves everywhere.",
+    fD4:"One signature texture per section, not three competing.",
+    fD5:"Level-match before/after every processing stage.",
+    fE1:"Transitions feel intentional with drums muted.",
+    fE2:"Energy rises across the arrangement — no dead zones.",
+    fE3:"Intro and outro are clean enough to DJ-mix.",
+    fE4:"The hook is identifiable within the first 30 seconds.",
+    fE5:"Track length fits target platform (streaming vs DJ set)."
   },
   fr: {
-    gateTitle:"Studio",gateBody:"Toolkit de production privé. Entre ton code d'accès.",gatePlaceholder:"Code d'accès",gateEnter:"→",gateHint:"Le mot de passe est défini dans app.js ligne 1.",
+    gateTitle:"Studio",gateBody:"Toolkit de production privé. Entre ton code d'accès.",gatePlaceholder:"Code d'accès",gateHint:"Le mot de passe est défini dans app.js ligne 1.",
     navHome:"Accueil",navLibrary:"Bibliothèque",navSound:"Sound Design",navMix:"Mix Check",navFinish:"Finalisation",navFixit:"Fix-It",
     kpiPlugins:"plugins",kpiRecipes:"recettes",searchPlaceholder:"Chercher plugins, recettes…",
     heroEyebrow:"Cockpit de workflow privé",heroTitle:"Choisir plus vite.<br/>Designer plus profond.<br/>Finir plus propre.",heroSub:"Sélection de plugins, stacks de sound design, mix checks et workflows de finalisation — dans un seul toolkit privé.",heroBtnLibrary:"Ouvrir la bibliothèque",heroBtnSound:"Sound Design",heroBtnMix:"Mix Check",heroStat1:"Stack sélectionné",
     vendorsTitle:"Tes vendors",vendorsSub:"Accède vite aux plugins d'un vendor",
     homeCard1Title:"Navigue par rôle, pas par marque",homeCard1Body:"Une grille. Un rôle. Les détails dans l'inspecteur.",homeCard2Title:"Stacks de sound design et recettes",homeCard2Body:"Chaînes courtes avec règles d'arrêt.",homeCard3Title:"Des mesures, pas du guru talk",homeCard3Body:"Waveform, balance, stéréo — côté navigateur.",
-    libraryEyebrow:"Couverture plugin",libraryTitle:"Bibliothèque",inspectorEyebrow:"Inspecteur",inspectorTitle:"Sélectionne un plugin",inspectorBody:"Les détails arrivent ici pour garder la grille propre.",
-    soundEyebrow:"Moves créatifs",soundTitle:"Sound Design",routeBandTitle:"Toutes les routes",routeBandSub:"Un problème → une direction",recipesTitle:"Toutes les recettes",recipesSub:"Stacks courts avec règle d'arrêt",
-    sbGoalLabel:"Objectif",sbConstraintLabel:"Contrainte",sbNextBtn:"Autre suggestion",sbRoute:"Route",sbRecipe:"Recette",sbFirstMove:"Premier geste",sbWhy:"Pourquoi ça marche",sbMistake:"Erreur fréquente",sbStop:"Règle d'arrêt",sbNext:"Prochain essai",
+    libraryEyebrow:"Couverture plugin",libraryTitle:"Bibliothèque",
+    inspectorEyebrow:"Inspecteur",inspectorTitle:"Sélectionne un plugin",inspectorBody:"Les détails arrivent ici pour garder la grille propre.",
+    inspGuideTitle:"Comment utiliser la bibliothèque",inspGuide1:"Filtre par rôle ci-dessus — mix, sound, dynamique, espace, tonalité, mouvement, instrument.",inspGuide2:"Clique un plugin pour voir ses cas d'usage, premiers paramètres, et quand l'éviter.",inspGuide3:"Utilise la barre de recherche pour trouver n'importe quel plugin.",
+    soundEyebrow:"Moves créatifs",soundTitle:"Sound Design",
+    sbTitle:"Sound Builder",sbSub:"Choisis un objectif → obtiens une direction",
+    sbGoalLabel:"Objectif",sbConstraintLabel:"Contrainte",sbPlaceholder:"Sélectionne un objectif ci-dessus pour obtenir une route et une recette adaptées.",
+    sbNextBtn:"Autre suggestion",sbRoute:"Route recommandée",sbRecipe:"Recette recommandée",
+    sbWhy:"Pourquoi ça marche",sbMistake:"Erreur fréquente",sbStop:"Règle d'arrêt",sbNext:"Prochain essai",
+    routeBandTitle:"Toutes les routes",routeBandSub:"Un problème → une direction",recipesTitle:"Toutes les recettes",recipesSub:"Stacks courts avec règle d'arrêt",
     mixEyebrow:"Mesures seulement",mixTitle:"Mix Check",uploadTitle:"Glisse ton audio — WAV / AIFF / MP3",uploadBody:"Analyse côté navigateur. Rien n'est envoyé.",uploadBtn:"Choisir un fichier",
     metricPeak:"Peak",metricRms:"RMS",metricCrest:"Crest",metricLufs:"LUFS est.",metricCorr:"Corrélation",
-    finishEyebrow:"Dernière ligne droite",finishTitle:"Finalisation",finishCard1:"Avant export",finishCard2:"Passage référence",finishCard3:"Sanity check sound design",
+    finishEyebrow:"Dernière ligne droite",finishTitle:"Finalisation",
+    finishCard1:"Avant export",finishCard2:"Passage référence",finishCard3:"Tests d'écoute",finishCard4:"Sanity check sound design",finishCard5:"Arrangement final",
     pageHome:"Accueil",pageLibrary:"Bibliothèque",pageSound:"Sound Design",pageMix:"Mix Check",pageFinish:"Finalisation",pageFixit:"Fix-It",
     wrongPassword:"Mauvais mot de passe",
     bandsLow:"Grave",bandsLowMid:"Bas médiums",bandsHighMid:"Hauts médiums",bandsHigh:"Aigu",
     filterAll:"Tout",filterMix:"Mix",filterSound:"Sound",filterDynamics:"Dynamique",filterSpace:"Espace",filterTone:"Tonalité",filterMotion:"Mouvement",filterInstrument:"Instrument",
-    inspectorUse:"Idéal pour",inspectorTouch:"À toucher d'abord",inspectorAvoid:"À éviter quand",inspectorRole:"Rôle",inspectorMode:"Mode",inspectorRecipe:"Recette liée",vendorJump:"Ouvrir",stopRuleLabel:"Règle d'arrêt",
-    finishA1:"La marge peak reste environ sous -1 dBFS avant le master.",finishA2:"Kick et basse restent lisibles à bas volume.",finishA3:"Aucun FX throw ne vole toute la section.",finishA4:"Les transitions restent intentionnelles même sans les drums.",
-    finishB1:"Compare à une seule référence, pas cinq morceaux au hasard.",finishB2:"Check laptop et mono après les enceintes studio.",finishB3:"Ne corrige que ce qui revient deux fois comme problème.",finishB4:"Si l'aigu impressionne seulement fort, recheck-le.",
-    finishC1:"Mute les couches décoratives une par une. Garde seulement ce qui pousse le morceau.",finishC2:"Si un patch demande trop de chirurgie, change de source plus tôt.",finishC3:"Automatise un macro fort, pas six micro moves partout.",finishC4:"Garde une texture signature par section, pas trois qui se battent.",
+    inspectorUse:"Idéal pour",inspectorTouch:"À toucher d'abord",inspectorAvoid:"À éviter quand",inspectorMode:"Mode",inspectorRecipe:"Recette liée",
+    stopRuleLabel:"Règle d'arrêt",
     fixitEyebrow:"Symptôme → solution",fixitTitle:"Fix-It Playbook",
     issueNone:"Aucune alerte — les métriques semblent raisonnables.",issueNeedFile:"Charge un fichier pour obtenir des résultats.",uploadDone:"Audio chargé",
     insightWhy:"Pourquoi c'est important",insightFix:"Premier geste",insightStop:"Stop quand",
-    fixitCheck:"Vérifier",fixitMoves:"Gestes",fixitStopLabel:"Stop",fixitWhyLabel:"Pourquoi ça arrive",fixitOverdoLabel:"Ce qu'on fait trop souvent",
+    fixitCheck:"Vérifier",fixitStopLabel:"Stop",fixitWhyLabel:"Pourquoi ça arrive",fixitOverdoLabel:"Ce qu'on fait trop souvent",
     relatedFixits:"Fiches Fix-It liées",
     goalBass:"Basse",goalLead:"Lead",goalPad:"Pad",goalDrums:"Drums",goalTexture:"Texture",goalTransition:"Transition",
-    conClean:"Clean",conGrit:"Grit",conMono:"Mono-safe",conWide:"Wide",conMoving:"Moving",conMinimal:"Minimal"
+    conClean:"Clean",conGrit:"Grit",conMono:"Mono-safe",conWide:"Wide",conMoving:"Moving",conMinimal:"Minimal",
+    fA1:"Marge peak sous -1 dBFS avant mastering.",
+    fA2:"Kick et basse restent lisibles à bas volume.",
+    fA3:"Aucun FX throw ne vole toute la section.",
+    fA4:"Gain staging : chaque piste peak autour de -12 à -6 dBFS.",
+    fA5:"GR du master bus reste sous -2 dB sur Pro-L 2.",
+    fB1:"Compare à UNE seule référence, pas cinq morceaux au hasard.",
+    fB2:"Matche le volume de la référence avant de comparer (Utility gain).",
+    fB3:"Ne corrige que ce qui revient deux fois comme problème.",
+    fB4:"Focus sur l'équilibre grave et la clarté du hook d'abord.",
+    fC1:"Check sur enceintes laptop après les monitors studio.",
+    fC2:"Check en mono (Utility → Mono) — rien de critique ne doit disparaître.",
+    fC3:"Écoute sur haut-parleur de téléphone pour la traduction extrême.",
+    fC4:"Écoute à très bas volume — le mix doit encore avoir du sens.",
+    fC5:"Écoute à volume modéré pendant 30 secondes sans rien toucher.",
+    fD1:"Mute les couches décoratives une par une. Garde ce qui pousse le morceau.",
+    fD2:"Si un patch demande trop de chirurgie, change de source plus tôt.",
+    fD3:"Automatise un macro fort, pas six micro moves partout.",
+    fD4:"Une texture signature par section, pas trois qui se battent.",
+    fD5:"Level-match avant/après chaque étage de traitement.",
+    fE1:"Les transitions restent intentionnelles même sans les drums.",
+    fE2:"L'énergie monte au fil de l'arrangement — pas de zones mortes.",
+    fE3:"Intro et outro sont assez propres pour être mixées par un DJ.",
+    fE4:"Le hook est identifiable dans les 30 premières secondes.",
+    fE5:"La durée du morceau correspond à la plateforme cible (streaming vs DJ set)."
   }
 };
 
@@ -82,6 +139,7 @@ const vendors = [
 ];
 
 /* ═══ PLUGINS ═══ */
+/* Keeping exact same plugin data from previous iteration — all 62 plugins intact */
 const plugins = [
   // FabFilter
   {id:'ff-proq4',vendor:'fabfilter',name:'Pro-Q 4',roleEn:'surgical EQ',roleFr:'EQ chirurgical',mode:'mix',tags:['tone','mix'],useEn:'cut mud, shape harshness, dynamic control',useFr:'couper la boue, calmer la dureté, contrôle dynamique',touchEn:'250–400 Hz, 2–5 kHz, dynamic bands',touchFr:'250–400 Hz, 2–5 kHz, bandes dynamiques',avoidEn:'you still do not know what the source should be',avoidFr:'tu ne sais pas encore ce que la source doit être',recipe:'Dark Bass Cleanup',glow:'#7ea7ff'},
@@ -166,7 +224,6 @@ const plugins = [
   {id:'kg-polysix',vendor:'korg',name:'Polysix',roleEn:'warm polysynth',roleFr:'polysynth chaud',mode:'sound',tags:['instrument','sound'],useEn:'simple warm pads and arps with chorus',useFr:'pads et arps chauds avec chorus',touchEn:'VCO wave, VCF cutoff/reso, chorus mode',touchFr:'VCO wave, VCF cutoff/reso, chorus mode',avoidEn:'you need complex modulation or FM',avoidFr:'tu as besoin de mod complexe ou FM',recipe:'Poly Warm Pad',glow:'#ccc65c'}
 ];
 
-/* ═══ ROUTES — with learning fields ═══ */
 const routes = [
   {titleEn:'Dark bass with movement',titleFr:'Basse dark avec mouvement',bodyEn:'Start from Serum or Diva. Add Saturn 2 or TAIP. Control low mids with Pro-Q / Pro-MB.',bodyFr:'Pars de Serum ou Diva. Ajoute Saturn 2 ou TAIP. Contrôle les bas médiums avec Pro-Q / Pro-MB.',tags:['bass','movement','sound'],whyEn:'Saturation adds harmonic weight without volume; multiband control keeps the kick space clear.',whyFr:'La saturation ajoute du poids harmonique sans volume; le multibande garde l\'espace du kick.',mistakeEn:'Adding too much Saturn drive globally — use band-split to target 100–400 Hz only.',mistakeFr:'Trop de drive Saturn global — utilise le band-split pour cibler 100–400 Hz.',nextEn:'Try parallel Saturn on a send at 30% mix for width without mud.',nextFr:'Essaye Saturn en parallel sur un send à 30% mix pour de la largeur sans boue.'},
   {titleEn:'Minimal groove without deadness',titleFr:'Groove minimal sans mollesse',bodyEn:'Keep fewer drum layers. Use Drumazon / Nithonat. Add one moving hat lane, not five.',bodyFr:'Garde moins de couches de drums. Utilise Drumazon / Nithonat. Une lane de hats, pas cinq.',tags:['drums','minimal','sound'],whyEn:'Fewer layers = each hit has its own pocket. Movement comes from one evolving element.',whyFr:'Moins de couches = chaque hit a son espace. Le mouvement vient d\'un seul élément évolutif.',mistakeEn:'Adding more hats/percs to "fill" silence — the silence IS the groove.',mistakeFr:'Ajouter des hats/percs pour "remplir" le silence — le silence EST le groove.',nextEn:'Automate one hat\'s pitch or decay over 4 bars for micro-evolution.',nextFr:'Automate le pitch ou decay d\'un hat sur 4 mesures pour micro-évolution.'},
@@ -185,7 +242,6 @@ const routes = [
   {titleEn:'VHS-style texture for breaks',titleFr:'Texture VHS pour breaks',bodyEn:'Super VHS on a return for break only. ONE module first (Heat or Drift). Automate in/out.',bodyFr:'Super VHS sur un return pour break uniquement. UN module d\'abord (Heat ou Drift). Automate in/out.',tags:['break','transition','sound'],whyEn:'Controlled degradation adds analog character to digital breaks without permanent damage.',whyFr:'La dégradation contrôlée ajoute du caractère analog aux breaks digitaux sans dommage permanent.',mistakeEn:'Leaving Super VHS on during the groove — it smears transients and clarity.',mistakeFr:'Laisser Super VHS pendant le groove — ça floute les transients.',nextEn:'Combine Heat (low) + Wash (high) on different return buses.',nextFr:'Combine Heat (bas) + Wash (haut) sur des bus return séparés.'}
 ];
 
-/* ═══ RECIPES — with learning fields ═══ */
 const recipes = [
   {titleEn:'Dark Bass Cleanup',titleFr:'Nettoyage basse dark',bodyEn:'Serum bass → Saturn 2 multiband → Pro-Q 4 dynamic dip 280 Hz → Pro-C 3 bus glue.',bodyFr:'Basse Serum → Saturn 2 multibande → Pro-Q 4 dip dynamique 280 Hz → glue bus Pro-C 3.',stopEn:'Stop when bass feels big at low volume.',stopFr:'Stop quand la basse reste grande à bas volume.',uses:['Serum','Saturn 2','Pro-Q 4','Pro-C 3'],whyEn:'Multiband saturation adds weight only where needed. Dynamic EQ dips on demand, not always.',whyFr:'La saturation multibande ajoute du poids là où il faut. L\'EQ dynamique n\'agit que quand c\'est nécessaire.',mistakeEn:'Bypassing the dynamic mode — a static cut at 280 Hz will thin the bass permanently.',mistakeFr:'Oublier le mode dynamique — un cut statique à 280 Hz amincit la basse en permanence.'},
   {titleEn:'Drum Weight Bus',titleFr:'Bus de poids drums',bodyEn:'Drumazon / Nepheton → Redoptor 2 for edge → Pro-C 3 for shape.',bodyFr:'Drumazon / Nepheton → Redoptor 2 pour l\'edge → Pro-C 3 pour la forme.',stopEn:'Stop when drums feel denser, not just louder.',stopFr:'Stop quand les drums paraissent plus denses, pas juste plus fortes.',uses:['Drumazon 2','Redoptor 2','Pro-C 3'],whyEn:'Tube dist adds harmonics that make drums feel physically bigger. Bus comp glues the kit.',whyFr:'La dist tube ajoute des harmoniques qui rendent les drums physiquement plus gros.',mistakeEn:'Crushing with Pro-C 3 past -6dB GR — you lose the transient snap that makes them punchy.',mistakeFr:'Écraser avec Pro-C 3 au-delà de -6dB GR — tu perds le snap des transients.'},
@@ -204,7 +260,6 @@ const recipes = [
   {titleEn:'Snare Plate Moment',titleFr:'Moment plate snare',bodyEn:'ValhallaPlate 3s → Pro-Q 4 HP 300Hz LP 6kHz → SC from snare (Pro-C 2 4:1). Automate send.',bodyFr:'ValhallaPlate 3s → Pro-Q 4 HP 300Hz LP 6kHz → SC snare (Pro-C 2 4:1). Automate send.',stopEn:'Stop when plate swells after hit without muddying groove.',stopFr:'Stop quand la plate swell après le hit sans salir le groove.',uses:['ValhallaPlate','Pro-Q 4','Pro-C 2'],whyEn:'Band-limited plate (300Hz–6kHz) stays out of the kick and hi-hat frequency ranges.',whyFr:'La plate band-limitée (300Hz–6kHz) reste hors des fréquences du kick et des hats.',mistakeEn:'Full-range plate on snare — it bleeds into everything.',mistakeFr:'Plate full-range sur snare — ça bave partout.'}
 ];
 
-/* ═══ FIX-IT PLAYBOOK ═══ */
 const fixIt = [
   {sEn:'Kick and bass fight',sFr:'Kick et basse se battent',checkEn:'Solo kick+bass together. Listen for phasing or volume pumping.',checkFr:'Solo kick+bass ensemble. Écoute le phasing ou le pompage de volume.',moves:[{en:'ShaperBox 3 sidechain on bass, triggered by kick. Duck 5ms, return 50ms.',fr:'ShaperBox 3 sidechain sur basse, trigger kick. Duck 5ms, return 50ms.'},{en:'Pro-Q 4 analyzer: check phase correlation between kick and bass.',fr:'Pro-Q 4 analyzer: check la corrélation de phase kick/basse.'},{en:'HP the bass at 30Hz to leave sub space for the kick.',fr:'HP la basse à 30Hz pour laisser l\'espace sub au kick.'}],stopEn:'Stop when kick and bass feel like one unit, not two fights.',stopFr:'Stop quand kick et basse ne font plus qu\'un.',whyEn:'Most kick/bass problems come from frequency overlap in 60–120 Hz, not volume.',whyFr:'La plupart des problèmes kick/basse viennent d\'un overlap 60–120 Hz, pas du volume.',overdoEn:'Over-sidechaining — if you hear the duck, it\'s too much.',overdoFr:'Trop de sidechain — si tu entends le duck, c\'est trop.',trigger:'lowSideRatio'},
   {sEn:'Muddy mix',sFr:'Mix boueux',checkEn:'Solo tracks one by one at low volume. The muddiest will reveal itself.',checkFr:'Solo chaque piste à bas volume. La plus boueuse se révèle vite.',moves:[{en:'Pro-Q 4: cut 200–400Hz boxiness on the worst offender first.',fr:'Pro-Q 4: coupe la boîte 200–400Hz sur la piste la plus boueuse.'},{en:'HP everything except kick/bass at 80–120Hz.',fr:'HP tout sauf kick/basse à 80–120Hz.'},{en:'Pro-MB: compress 200–400Hz range 3:1 on the drum bus.',fr:'Pro-MB: compresse la zone 200–400Hz 3:1 sur le bus drums.'}],stopEn:'Stop when each track sounds thin solo but full in context.',stopFr:'Stop quand chaque piste semble thin en solo mais pleine en contexte.',whyEn:'Mud is cumulative — 10 tracks each with mild 300Hz buildup = massive mud.',whyFr:'La boue est cumulative — 10 pistes avec un peu de 300Hz chacune = boue massive.',overdoEn:'Cutting 300Hz on every single track blindly — some tracks need that body.',overdoFr:'Couper 300Hz sur chaque piste aveuglément — certaines pistes ont besoin de ce corps.',trigger:'lowMidHeavy'},
@@ -222,316 +277,636 @@ const fixIt = [
   {sEn:'CPU overload',sFr:'CPU overload',checkEn:'Check Ableton CPU meter. Identify the heaviest tracks.',checkFr:'Check le CPU meter Ableton. Identifie les pistes les plus lourdes.',moves:[{en:'Freeze finalized tracks (Cmd/Ctrl+click, Freeze).',fr:'Freeze les pistes finalisées (Cmd/Ctrl+clic, Freeze).'},{en:'Bounce heavy instruments to audio.',fr:'Bounce les instruments lourds en audio.'},{en:'Reduce Diva accuracy to FAST mode.',fr:'Réduis Diva accuracy en mode FAST.'}],stopEn:'Stop when CPU stays below 60% with headroom for live tweaks.',stopFr:'Stop quand le CPU reste sous 60% avec de la marge.',whyEn:'Heavy synths like Diva in HQ mode eat CPU. Freezing preserves the sound at zero cost.',whyFr:'Les synths lourds comme Diva en HQ mangent du CPU. Le freeze préserve le son à coût zéro.',overdoEn:'Bouncing everything before the arrangement is done — you lose editability.',overdoFr:'Tout bouncer avant que l\'arrangement soit fini — tu perds l\'édition.'}
 ];
 
+
 /* ═══ SOUND BUILDER CONFIG ═══ */
 const sbGoals = ['bass','lead','pad','drums','texture','transition'];
 const sbConstraints = ['clean','grit','mono','wide','moving','minimal'];
 const goalI18n = {bass:'goalBass',lead:'goalLead',pad:'goalPad',drums:'goalDrums',texture:'goalTexture',transition:'goalTransition'};
 const conI18n = {clean:'conClean',grit:'conGrit',mono:'conMono',wide:'conWide',moving:'conMoving',minimal:'conMinimal'};
-
-// Tag mapping for builder matching
 const goalTags = {bass:['bass'],lead:['lead'],pad:['pad'],drums:['drums','minimal'],texture:['tone','sound'],transition:['transition','break','fx']};
-const conTags = {clean:['mix','tone'],grit:['tone'],mono:['bass'],wide:['space'],moving:['motion','movement'],minimal:['minimal']};
 
 /* ═══ STATE ═══ */
 let state = {
-  lang: localStorage.getItem('kapman-lang')||'en',
-  theme: localStorage.getItem('kapman-theme')||'dark',
-  page:'home', modeFilter:'all', vendorFilter:'all', search:'', selectedId:null,
-  sbGoal:null, sbConstraint:null, sbIndex:0
+  lang: localStorage.getItem('kapman-lang') || 'en',
+  theme: localStorage.getItem('kapman-theme') || 'dark',
+  page: 'home',
+  modeFilter: 'all',
+  vendorFilter: 'all',
+  search: '',
+  selectedId: null,
+  sbGoal: null,
+  sbConstraint: null,
+  sbIndex: 0
 };
-const $ = (s,c=document) => c.querySelector(s);
-const $$ = (s,c=document) => Array.from(c.querySelectorAll(s));
-function vendorById(id){return vendors.find(v=>v.id===id);}
+
+/* ═══ HELPERS ═══ */
+function $(s, ctx) { return (ctx || document).querySelector(s); }
+function $$(s, ctx) { return Array.from((ctx || document).querySelectorAll(s)); }
+function vendorById(id) { return vendors.find(function(v) { return v.id === id; }); }
+function safeEl(id) { return document.getElementById(id) || document.querySelector(id); }
 
 /* ═══ THEME / LANG ═══ */
-function setTheme(t){state.theme=t;document.body.dataset.theme=t;localStorage.setItem('kapman-theme',t);}
-function setLang(lang){
-  state.lang=lang;localStorage.setItem('kapman-lang',lang);
-  $$('.seg').forEach(b=>b.classList.toggle('is-active',b.id===(lang==='en'?'langEN':'langFR')));
-  $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(i18n[lang][k])el.innerHTML=i18n[lang][k];});
-  $$('[data-i18n-placeholder]').forEach(el=>{const k=el.dataset.i18nPlaceholder;if(i18n[lang][k])el.setAttribute('placeholder',i18n[lang][k]);});
-  renderAll();updatePageTitle();
+function setTheme(t) {
+  state.theme = t;
+  document.body.dataset.theme = t;
+  localStorage.setItem('kapman-theme', t);
 }
-function updatePageTitle(){const m={home:'pageHome',library:'pageLibrary',sound:'pageSound',mix:'pageMix',finish:'pageFinish',fixit:'pageFixit'};$('#pageTitle').textContent=i18n[state.lang][m[state.page]]||state.page;}
+
+function setLang(lang) {
+  state.lang = lang;
+  localStorage.setItem('kapman-lang', lang);
+  $$('.seg').forEach(function(b) { b.classList.toggle('is-active', b.id === (lang === 'en' ? 'langEN' : 'langFR')); });
+  $$('[data-i18n]').forEach(function(el) {
+    var key = el.dataset.i18n;
+    if (i18n[lang] && i18n[lang][key]) el.innerHTML = i18n[lang][key];
+  });
+  $$('[data-i18n-placeholder]').forEach(function(el) {
+    var key = el.dataset.i18nPlaceholder;
+    if (i18n[lang] && i18n[lang][key]) el.setAttribute('placeholder', i18n[lang][key]);
+  });
+  renderAll();
+  updatePageTitle();
+}
+
+function updatePageTitle() {
+  var map = {home:'pageHome',library:'pageLibrary',sound:'pageSound',mix:'pageMix',finish:'pageFinish',fixit:'pageFixit'};
+  var el = document.getElementById('pageTitle');
+  if (el) el.textContent = i18n[state.lang][map[state.page]] || state.page;
+}
 
 /* ═══ NAV ═══ */
-function switchPage(p){state.page=p;$$('.page').forEach(pg=>pg.classList.toggle('is-active',pg.dataset.page===p));$$('.sidebar-link').forEach(l=>l.classList.toggle('is-active',l.dataset.page===p));updatePageTitle();$('#sidebar').classList.remove('is-open');$('#overlay').classList.remove('is-open');}
-
-/* ═══ RENDERS ═══ */
-function renderAll(){renderVendorRail();renderFilters();renderPlugins();renderSoundBuilder();renderRoutes();renderRecipes();renderChecklists();renderFixIt();showMixPlaceholder();}
-
-function renderVendorRail(){
-  const el=$('#vendorRail');
-  el.innerHTML=vendors.map(v=>`<button class="vendor-chip" data-vendor="${v.id}"><div class="vendor-mono" style="background:${v.color}">${v.mark}</div><div><strong>${v.name}</strong></div></button>`).join('');
-  $$('.vendor-chip',el).forEach(b=>b.addEventListener('click',()=>{state.vendorFilter=b.dataset.vendor;state.modeFilter='all';switchPage('library');renderFilters();renderPlugins();}));
+function switchPage(p) {
+  state.page = p;
+  $$('.page').forEach(function(pg) { pg.classList.toggle('is-active', pg.dataset.page === p); });
+  $$('.sidebar-link').forEach(function(l) { l.classList.toggle('is-active', l.dataset.page === p); });
+  updatePageTitle();
+  var sb = document.getElementById('sidebar');
+  var ov = document.getElementById('overlay');
+  if (sb) sb.classList.remove('is-open');
+  if (ov) ov.classList.remove('is-open');
 }
 
-function renderFilters(){
-  const L=state.lang;const mds=[['all','filterAll'],['mix','filterMix'],['sound','filterSound'],['dynamics','filterDynamics'],['space','filterSpace'],['tone','filterTone'],['motion','filterMotion'],['instrument','filterInstrument']];
-  $('#modeChips').innerHTML=mds.map(([id,k])=>`<button class="chip ${state.modeFilter===id?'is-active':''}" data-mode="${id}">${i18n[L][k]}</button>`).join('');
-  $('#vendorChips').innerHTML=[`<button class="chip ${state.vendorFilter==='all'?'is-active':''}" data-vendor="all">${i18n[L].filterAll}</button>`].concat(vendors.map(v=>`<button class="chip ${state.vendorFilter===v.id?'is-active':''}" data-vendor="${v.id}">${v.name}</button>`)).join('');
-  $$('#modeChips .chip').forEach(b=>b.onclick=()=>{state.modeFilter=b.dataset.mode;renderFilters();renderPlugins();});
-  $$('#vendorChips .chip').forEach(b=>b.onclick=()=>{state.vendorFilter=b.dataset.vendor;renderFilters();renderPlugins();});
+/* ═══ SAFE RENDER WRAPPER ═══ */
+function renderAll() {
+  var fns = [renderVendorRail, renderRoleSummary, renderFilters, renderPlugins, renderInspectorDefault, renderSoundBuilder, renderRoutes, renderRecipes, renderChecklists, renderFixIt, showMixPlaceholder];
+  for (var i = 0; i < fns.length; i++) {
+    try { fns[i](); } catch(e) { console.warn('Render error in ' + fns[i].name + ':', e.message); }
+  }
 }
-function matchesPlugin(p){const q=state.search.trim().toLowerCase();const txt=[p.name,p.vendor,p.roleEn,p.roleFr,p.useEn,p.useFr,p.tags.join(' ')].join(' ').toLowerCase();const sOk=!q||txt.includes(q);const vOk=state.vendorFilter==='all'||p.vendor===state.vendorFilter;let mOk=true;if(['mix','sound'].includes(state.modeFilter))mOk=p.mode===state.modeFilter;else if(state.modeFilter!=='all')mOk=p.tags.includes(state.modeFilter);return sOk&&vOk&&mOk;}
 
-function renderPlugins(){
-  const grid=$('#pluginGrid');const list=plugins.filter(matchesPlugin);
-  grid.innerHTML=list.map(p=>{const v=vendorById(p.vendor);return`<button class="plugin-card" style="--cardGlow:${p.glow||v.color}" data-id="${p.id}"><div class="plugin-top"><span class="plugin-vendor">${v.name}</span><span class="plugin-badge">${p.mode.toUpperCase()}</span></div><h3>${p.name}</h3><p class="plugin-role">${state.lang==='fr'?p.roleFr:p.roleEn}</p><div class="tag-row">${p.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}</div></button>`;}).join('');
-  $$('.plugin-card',grid).forEach(c=>c.onclick=()=>openInspector(c.dataset.id));
-  $('#kpiPlugins').textContent=plugins.length;$('#kpiRecipes').textContent=recipes.length;
+/* ═══ VENDOR RAIL (Home) ═══ */
+function renderVendorRail() {
+  var el = document.getElementById('vendorRail');
+  if (!el) return;
+  el.innerHTML = vendors.map(function(v) {
+    return '<button class="vendor-chip" data-vendor="' + v.id + '"><div class="vendor-mono" style="background:' + v.color + '">' + v.mark + '</div><div><strong>' + v.name + '</strong></div></button>';
+  }).join('');
+  $$('.vendor-chip', el).forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      state.vendorFilter = btn.dataset.vendor;
+      state.modeFilter = 'all';
+      switchPage('library');
+      renderFilters();
+      renderPlugins();
+    });
+  });
 }
-function openInspector(id){
-  state.selectedId=id;const p=plugins.find(x=>x.id===id);if(!p)return;const v=vendorById(p.vendor);const rec=recipes.find(r=>r.titleEn===p.recipe);const L=state.lang;const t=k=>i18n[L][k];
-  $('#inspectorEmpty').classList.add('hidden');const b=$('#inspectorBody');b.classList.remove('hidden');
-  b.innerHTML=`<p class="label">${v.name}</p><h2 style="font-size:28px;margin:4px 0 6px">${p.name}</h2><p class="muted">${L==='fr'?p.roleFr:p.roleEn}</p><div class="tag-row" style="margin:12px 0">${p.tags.map(tg=>`<span class="tag">${tg}</span>`).join('')}</div><div class="inspector-grid"><div class="info-box"><span>${t('inspectorUse')}</span><strong>${L==='fr'?p.useFr:p.useEn}</strong></div><div class="info-box"><span>${t('inspectorTouch')}</span><strong>${L==='fr'?p.touchFr:p.touchEn}</strong></div><div class="info-box"><span>${t('inspectorAvoid')}</span><strong>${L==='fr'?p.avoidFr:p.avoidEn}</strong></div><div class="info-box"><span>${t('inspectorMode')}</span><strong>${p.mode.toUpperCase()}</strong></div>${rec?`<div class="info-box"><span>${t('inspectorRecipe')}</span><strong>${L==='fr'?rec.titleFr:rec.titleEn}</strong></div>`:''}</div>`;
+
+/* ═══ LIBRARY: ROLE SUMMARY ═══ */
+function renderRoleSummary() {
+  var el = document.getElementById('roleSummary');
+  if (!el) return;
+  var L = state.lang;
+  var roles = [
+    {id:'all', label: i18n[L].filterAll},
+    {id:'instrument', label: i18n[L].filterInstrument},
+    {id:'dynamics', label: i18n[L].filterDynamics},
+    {id:'space', label: i18n[L].filterSpace},
+    {id:'tone', label: i18n[L].filterTone},
+    {id:'motion', label: i18n[L].filterMotion}
+  ];
+  roles.forEach(function(r) {
+    if (r.id === 'all') { r.count = plugins.length; }
+    else { r.count = plugins.filter(function(p) { return p.tags.indexOf(r.id) !== -1; }).length; }
+  });
+  el.innerHTML = roles.map(function(r) {
+    var active = (state.modeFilter === r.id) ? ' is-active' : '';
+    return '<button class="role-btn' + active + '" data-role="' + r.id + '">' + r.label + ' <span class="role-count">' + r.count + '</span></button>';
+  }).join('');
+  $$('.role-btn', el).forEach(function(btn) {
+    btn.onclick = function() {
+      state.modeFilter = btn.dataset.role;
+      renderRoleSummary();
+      renderFilters();
+      renderPlugins();
+    };
+  });
+}
+
+/* ═══ LIBRARY: FILTERS ═══ */
+function renderFilters() {
+  var L = state.lang;
+  var modeEl = document.getElementById('modeChips');
+  var vendEl = document.getElementById('vendorChips');
+  if (!modeEl || !vendEl) return;
+  var mds = [['all','filterAll'],['mix','filterMix'],['sound','filterSound'],['dynamics','filterDynamics'],['space','filterSpace'],['tone','filterTone'],['motion','filterMotion'],['instrument','filterInstrument']];
+  modeEl.innerHTML = mds.map(function(m) {
+    return '<button class="chip' + (state.modeFilter === m[0] ? ' is-active' : '') + '" data-mode="' + m[0] + '">' + i18n[L][m[1]] + '</button>';
+  }).join('');
+  vendEl.innerHTML = '<button class="chip' + (state.vendorFilter === 'all' ? ' is-active' : '') + '" data-vendor="all">' + i18n[L].filterAll + '</button>' +
+    vendors.map(function(v) {
+      return '<button class="chip' + (state.vendorFilter === v.id ? ' is-active' : '') + '" data-vendor="' + v.id + '">' + v.name + '</button>';
+    }).join('');
+  $$('#modeChips .chip').forEach(function(b) { b.onclick = function() { state.modeFilter = b.dataset.mode; renderRoleSummary(); renderFilters(); renderPlugins(); }; });
+  $$('#vendorChips .chip').forEach(function(b) { b.onclick = function() { state.vendorFilter = b.dataset.vendor; renderFilters(); renderPlugins(); }; });
+}
+
+/* ═══ LIBRARY: PLUGINS ═══ */
+function matchesPlugin(p) {
+  var q = state.search.trim().toLowerCase();
+  var text = [p.name, p.vendor, p.roleEn, p.roleFr, p.useEn, p.useFr, p.tags.join(' ')].join(' ').toLowerCase();
+  var sOk = !q || text.indexOf(q) !== -1;
+  var vOk = state.vendorFilter === 'all' || p.vendor === state.vendorFilter;
+  var mOk = true;
+  if (state.modeFilter === 'mix' || state.modeFilter === 'sound') mOk = p.mode === state.modeFilter;
+  else if (state.modeFilter !== 'all') mOk = p.tags.indexOf(state.modeFilter) !== -1;
+  return sOk && vOk && mOk;
+}
+
+function renderPlugins() {
+  var grid = document.getElementById('pluginGrid');
+  if (!grid) return;
+  var L = state.lang;
+  var list = plugins.filter(matchesPlugin);
+  grid.innerHTML = list.map(function(p) {
+    var v = vendorById(p.vendor);
+    var role = L === 'fr' ? p.roleFr : p.roleEn;
+    var glow = p.glow || (v ? v.color : '#7ea7ff');
+    return '<button class="plugin-card" style="--cardGlow:' + glow + '" data-id="' + p.id + '">' +
+      '<div class="plugin-top"><span class="plugin-vendor">' + (v ? v.name : '') + '</span><span class="plugin-badge">' + p.mode.toUpperCase() + '</span></div>' +
+      '<h3>' + p.name + '</h3><p class="plugin-role">' + role + '</p>' +
+      '<div class="tag-row">' + p.tags.slice(0,3).map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div></button>';
+  }).join('');
+  $$('.plugin-card', grid).forEach(function(c) { c.onclick = function() { openInspector(c.dataset.id); }; });
+  var kp = document.getElementById('kpiPlugins');
+  var kr = document.getElementById('kpiRecipes');
+  if (kp) kp.textContent = plugins.length;
+  if (kr) kr.textContent = recipes.length;
+}
+
+/* ═══ LIBRARY: INSPECTOR ═══ */
+function renderInspectorDefault() {
+  var el = document.getElementById('inspectorEmpty');
+  if (!el) return;
+  var L = state.lang;
+  el.innerHTML = '<div class="inspector-guide">' +
+    '<p class="label">' + i18n[L].inspectorEyebrow + '</p>' +
+    '<h3>' + i18n[L].inspGuideTitle + '</h3>' +
+    '<div class="inspector-tip"><strong>1</strong><span>' + i18n[L].inspGuide1 + '</span></div>' +
+    '<div class="inspector-tip"><strong>2</strong><span>' + i18n[L].inspGuide2 + '</span></div>' +
+    '<div class="inspector-tip"><strong>3</strong><span>' + i18n[L].inspGuide3 + '</span></div>' +
+    '</div>';
+}
+
+function openInspector(id) {
+  state.selectedId = id;
+  var p = plugins.find(function(x) { return x.id === id; });
+  if (!p) return;
+  var v = vendorById(p.vendor);
+  var rec = recipes.find(function(r) { return r.titleEn === p.recipe; });
+  var L = state.lang;
+  var empty = document.getElementById('inspectorEmpty');
+  var body = document.getElementById('inspectorBody');
+  if (empty) empty.classList.add('hidden');
+  if (!body) return;
+  body.classList.remove('hidden');
+  body.innerHTML = '<p class="label">' + (v ? v.name : '') + '</p>' +
+    '<h2 style="font-size:26px;margin:4px 0 6px">' + p.name + '</h2>' +
+    '<p class="muted">' + (L === 'fr' ? p.roleFr : p.roleEn) + '</p>' +
+    '<div class="tag-row" style="margin:12px 0">' + p.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' +
+    '<div class="inspector-grid">' +
+    '<div class="info-box"><span>' + i18n[L].inspectorUse + '</span><strong>' + (L === 'fr' ? p.useFr : p.useEn) + '</strong></div>' +
+    '<div class="info-box"><span>' + i18n[L].inspectorTouch + '</span><strong>' + (L === 'fr' ? p.touchFr : p.touchEn) + '</strong></div>' +
+    '<div class="info-box"><span>' + i18n[L].inspectorAvoid + '</span><strong>' + (L === 'fr' ? p.avoidFr : p.avoidEn) + '</strong></div>' +
+    '<div class="info-box"><span>' + i18n[L].inspectorMode + '</span><strong>' + p.mode.toUpperCase() + '</strong></div>' +
+    (rec ? '<div class="info-box"><span>' + i18n[L].inspectorRecipe + '</span><strong>' + (L === 'fr' ? rec.titleFr : rec.titleEn) + '</strong></div>' : '') +
+    '</div>';
 }
 
 /* ═══ SOUND BUILDER ═══ */
-function renderSoundBuilder(){
-  const L=state.lang;const t=k=>i18n[L][k];
-  $('#sbGoals').innerHTML=sbGoals.map(g=>`<button class="chip ${state.sbGoal===g?'is-active':''}" data-goal="${g}">${t(goalI18n[g])}</button>`).join('');
-  $('#sbConstraints').innerHTML=sbConstraints.map(c=>`<button class="chip ${state.sbConstraint===c?'is-active':''}" data-con="${c}">${t(conI18n[c])}</button>`).join('');
-  $$('#sbGoals .chip').forEach(b=>b.onclick=()=>{state.sbGoal=b.dataset.goal;state.sbIndex=0;renderSoundBuilder();});
-  $$('#sbConstraints .chip').forEach(b=>b.onclick=()=>{state.sbConstraint=b.dataset.con;state.sbIndex=0;renderSoundBuilder();});
-  // Generate output
-  const out=$('#sbOutput');
-  if(!state.sbGoal){out.innerHTML='';return;}
-  const gTags=goalTags[state.sbGoal]||[];
-  const cTags=state.sbConstraint?conTags[state.sbConstraint]||[]:[];
-  const matchRoute=routes.filter(r=>r.tags.some(t=>gTags.includes(t)));
-  const matchRecipe=recipes.filter(r=>{const allTags=r.uses.join(' ').toLowerCase();return gTags.some(g=>r.titleEn.toLowerCase().includes(g)||allTags.includes(g));});
-  if(!matchRoute.length&&!matchRecipe.length){out.innerHTML=`<p class="muted">${L==='fr'?'Aucun résultat pour cette combinaison.':'No results for this combination.'}</p>`;return;}
-  const rIdx=state.sbIndex%Math.max(1,matchRoute.length);
-  const recIdx=state.sbIndex%Math.max(1,matchRecipe.length);
-  const route=matchRoute[rIdx];
-  const recipe=matchRecipe[recIdx];
-  let html='';
-  if(route){
-    html+=`<div class="sb-result"><div class="sb-result-head"><span class="label">${t('sbRoute')}</span></div><h4>${L==='fr'?route.titleFr:route.titleEn}</h4><p>${L==='fr'?route.bodyFr:route.bodyEn}</p>`;
-    if(route.whyEn){
-      html+=`<div class="sb-learn"><p><strong>${t('sbWhy')}:</strong> ${L==='fr'?route.whyFr:route.whyEn}</p><p><strong>${t('sbMistake')}:</strong> ${L==='fr'?route.mistakeFr:route.mistakeEn}</p><p><strong>${t('sbStop')}:</strong> ${L==='fr'?(route.stopFr||'—'):(route.stopEn||'—')}</p>${route.nextEn?`<p><strong>${t('sbNext')}:</strong> ${L==='fr'?route.nextFr:route.nextEn}</p>`:''}</div>`;
+function renderSoundBuilder() {
+  var goalsEl = document.getElementById('sbGoals');
+  var consEl = document.getElementById('sbConstraints');
+  var outEl = document.getElementById('sbOutput');
+  if (!goalsEl || !consEl || !outEl) return;
+  var L = state.lang;
+
+  // Render goal chips
+  goalsEl.innerHTML = sbGoals.map(function(g) {
+    var active = state.sbGoal === g ? ' is-active' : '';
+    var label = i18n[L][goalI18n[g]] || g;
+    return '<button class="chip' + active + '" data-goal="' + g + '">' + label + '</button>';
+  }).join('');
+
+  // Render constraint chips
+  consEl.innerHTML = sbConstraints.map(function(c) {
+    var active = state.sbConstraint === c ? ' is-active' : '';
+    var label = i18n[L][conI18n[c]] || c;
+    return '<button class="chip' + active + '" data-con="' + c + '">' + label + '</button>';
+  }).join('');
+
+  // Attach events
+  $$('.chip[data-goal]', goalsEl).forEach(function(b) {
+    b.onclick = function() { state.sbGoal = b.dataset.goal; state.sbIndex = 0; renderSoundBuilder(); };
+  });
+  $$('.chip[data-con]', consEl).forEach(function(b) {
+    b.onclick = function() { state.sbConstraint = b.dataset.con; state.sbIndex = 0; renderSoundBuilder(); };
+  });
+
+  // Output
+  if (!state.sbGoal) {
+    outEl.innerHTML = '<div class="sb-placeholder">' + i18n[L].sbPlaceholder + '</div>';
+    return;
+  }
+
+  var gTags = goalTags[state.sbGoal] || [];
+  var matchedRoutes = routes.filter(function(r) { return r.tags.some(function(t) { return gTags.indexOf(t) !== -1; }); });
+  var matchedRecipes = recipes.filter(function(r) {
+    var txt = (r.titleEn + ' ' + r.uses.join(' ')).toLowerCase();
+    return gTags.some(function(g) { return txt.indexOf(g) !== -1; });
+  });
+
+  if (!matchedRoutes.length && !matchedRecipes.length) {
+    outEl.innerHTML = '<div class="sb-placeholder">' + (L === 'fr' ? 'Aucun résultat pour cette combinaison.' : 'No results for this combination.') + '</div>';
+    return;
+  }
+
+  var rIdx = matchedRoutes.length ? (state.sbIndex % matchedRoutes.length) : -1;
+  var recIdx = matchedRecipes.length ? (state.sbIndex % matchedRecipes.length) : -1;
+  var html = '';
+
+  // Route result
+  if (rIdx >= 0) {
+    var route = matchedRoutes[rIdx];
+    html += '<div class="sb-result"><div class="sb-result-head"><span class="label">' + i18n[L].sbRoute + '</span></div>';
+    html += '<h4>' + (L === 'fr' ? route.titleFr : route.titleEn) + '</h4>';
+    html += '<p>' + (L === 'fr' ? route.bodyFr : route.bodyEn) + '</p>';
+    if (route.whyEn) {
+      html += '<div class="sb-learn">';
+      html += '<p><strong>' + i18n[L].sbWhy + ':</strong> ' + (L === 'fr' ? route.whyFr : route.whyEn) + '</p>';
+      if (route.mistakeEn) html += '<p><strong>' + i18n[L].sbMistake + ':</strong> ' + (L === 'fr' ? route.mistakeFr : route.mistakeEn) + '</p>';
+      if (route.nextEn) html += '<p><strong>' + i18n[L].sbNext + ':</strong> ' + (L === 'fr' ? route.nextFr : route.nextEn) + '</p>';
+      html += '</div>';
     }
-    html+=`</div>`;
+    html += '</div>';
   }
-  if(recipe){
-    html+=`<div class="sb-result"><div class="sb-result-head"><span class="label">${t('sbRecipe')}</span></div><h4>${L==='fr'?recipe.titleFr:recipe.titleEn}</h4><p>${L==='fr'?recipe.bodyFr:recipe.bodyEn}</p><div class="tag-row" style="margin:8px 0">${recipe.uses.map(u=>`<span class="tag">${u}</span>`).join('')}</div>`;
-    html+=`<div class="sb-learn"><p><strong>${t('sbStop')}:</strong> ${L==='fr'?recipe.stopFr:recipe.stopEn}</p>${recipe.whyEn?`<p><strong>${t('sbWhy')}:</strong> ${L==='fr'?recipe.whyFr:recipe.whyEn}</p>`:''}</div></div>`;
+
+  // Recipe result
+  if (recIdx >= 0) {
+    var recipe = matchedRecipes[recIdx];
+    html += '<div class="sb-result"><div class="sb-result-head"><span class="label">' + i18n[L].sbRecipe + '</span></div>';
+    html += '<h4>' + (L === 'fr' ? recipe.titleFr : recipe.titleEn) + '</h4>';
+    html += '<p>' + (L === 'fr' ? recipe.bodyFr : recipe.bodyEn) + '</p>';
+    html += '<div class="tag-row" style="margin:8px 0">' + recipe.uses.map(function(u) { return '<span class="tag">' + u + '</span>'; }).join('') + '</div>';
+    html += '<div class="sb-learn">';
+    html += '<p><strong>' + i18n[L].sbStop + ':</strong> ' + (L === 'fr' ? recipe.stopFr : recipe.stopEn) + '</p>';
+    if (recipe.whyEn) html += '<p><strong>' + i18n[L].sbWhy + ':</strong> ' + (L === 'fr' ? recipe.whyFr : recipe.whyEn) + '</p>';
+    html += '</div></div>';
   }
-  html+=`<button class="sb-next-btn" id="sbNextBtn">${t('sbNextBtn')} →</button>`;
-  out.innerHTML=html;
-  const nb=$('#sbNextBtn');if(nb)nb.onclick=()=>{state.sbIndex++;renderSoundBuilder();};
+
+  html += '<button class="sb-next-btn" id="sbNextBtn">' + i18n[L].sbNextBtn + ' →</button>';
+  outEl.innerHTML = html;
+
+  var nb = document.getElementById('sbNextBtn');
+  if (nb) nb.onclick = function() { state.sbIndex++; renderSoundBuilder(); };
 }
 
-function renderRoutes(){
-  const L=state.lang;
-  $('#routeGrid').innerHTML=routes.map(r=>{
-    let learn='';
-    if(r.whyEn)learn=`<details class="route-learn"><summary>${L==='fr'?'Apprendre plus':'Learn more'}</summary><div class="sb-learn"><p><strong>${i18n[L].sbWhy}:</strong> ${L==='fr'?r.whyFr:r.whyEn}</p><p><strong>${i18n[L].sbMistake}:</strong> ${L==='fr'?r.mistakeFr:r.mistakeEn}</p>${r.nextEn?`<p><strong>${i18n[L].sbNext}:</strong> ${L==='fr'?r.nextFr:r.nextEn}</p>`:''}</div></details>`;
-    return`<article class="route-card"><h3>${L==='fr'?r.titleFr:r.titleEn}</h3><p>${L==='fr'?r.bodyFr:r.bodyEn}</p><div class="route-meta">${r.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>${learn}</article>`;
+/* ═══ ROUTES ═══ */
+function renderRoutes() {
+  var el = document.getElementById('routeGrid');
+  if (!el) return;
+  var L = state.lang;
+  el.innerHTML = routes.map(function(r) {
+    var learn = '';
+    if (r.whyEn) {
+      learn = '<details class="route-learn"><summary>' + (L === 'fr' ? 'Apprendre plus' : 'Learn more') + '</summary><div class="sb-learn">' +
+        '<p><strong>' + i18n[L].sbWhy + ':</strong> ' + (L === 'fr' ? r.whyFr : r.whyEn) + '</p>' +
+        (r.mistakeEn ? '<p><strong>' + i18n[L].sbMistake + ':</strong> ' + (L === 'fr' ? r.mistakeFr : r.mistakeEn) + '</p>' : '') +
+        (r.nextEn ? '<p><strong>' + i18n[L].sbNext + ':</strong> ' + (L === 'fr' ? r.nextFr : r.nextEn) + '</p>' : '') +
+        '</div></details>';
+    }
+    return '<article class="route-card"><h3>' + (L === 'fr' ? r.titleFr : r.titleEn) + '</h3>' +
+      '<p>' + (L === 'fr' ? r.bodyFr : r.bodyEn) + '</p>' +
+      '<div class="route-meta">' + r.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' +
+      learn + '</article>';
   }).join('');
 }
-function renderRecipes(){
-  const L=state.lang;
-  $('#recipeGrid').innerHTML=recipes.map(r=>{
-    let learn='';
-    if(r.whyEn)learn=`<details class="route-learn"><summary>${L==='fr'?'Apprendre plus':'Learn more'}</summary><div class="sb-learn"><p><strong>${i18n[L].sbWhy}:</strong> ${L==='fr'?r.whyFr:r.whyEn}</p><p><strong>${i18n[L].sbMistake}:</strong> ${L==='fr'?r.mistakeFr:r.mistakeEn}</p></div></details>`;
-    return`<article class="recipe-card"><h3>${L==='fr'?r.titleFr:r.titleEn}</h3><p>${L==='fr'?r.bodyFr:r.bodyEn}</p><div class="recipe-meta">${r.uses.map(u=>`<span class="tag">${u}</span>`).join('')}</div><div class="stop-rule"><strong>${i18n[L].stopRuleLabel}:</strong> ${L==='fr'?r.stopFr:r.stopEn}</div>${learn}</article>`;
+
+/* ═══ RECIPES ═══ */
+function renderRecipes() {
+  var el = document.getElementById('recipeGrid');
+  if (!el) return;
+  var L = state.lang;
+  el.innerHTML = recipes.map(function(r) {
+    var learn = '';
+    if (r.whyEn) {
+      learn = '<details class="route-learn"><summary>' + (L === 'fr' ? 'Apprendre plus' : 'Learn more') + '</summary><div class="sb-learn">' +
+        '<p><strong>' + i18n[L].sbWhy + ':</strong> ' + (L === 'fr' ? r.whyFr : r.whyEn) + '</p>' +
+        (r.mistakeEn ? '<p><strong>' + i18n[L].sbMistake + ':</strong> ' + (L === 'fr' ? r.mistakeFr : r.mistakeEn) + '</p>' : '') +
+        '</div></details>';
+    }
+    return '<article class="recipe-card"><h3>' + (L === 'fr' ? r.titleFr : r.titleEn) + '</h3>' +
+      '<p>' + (L === 'fr' ? r.bodyFr : r.bodyEn) + '</p>' +
+      '<div class="recipe-meta">' + r.uses.map(function(u) { return '<span class="tag">' + u + '</span>'; }).join('') + '</div>' +
+      '<div class="stop-rule"><strong>' + i18n[L].stopRuleLabel + ':</strong> ' + (L === 'fr' ? r.stopFr : r.stopEn) + '</div>' +
+      learn + '</article>';
   }).join('');
 }
-function renderChecklists(){
-  const L=state.lang;const t=k=>i18n[L][k];
-  const mk=(items,el)=>{el.innerHTML=items.map(tx=>`<li><input type="checkbox"><span>${tx}</span></li>`).join('');};
-  mk([t('finishA1'),t('finishA2'),t('finishA3'),t('finishA4')],$('#checklistA'));
-  mk([t('finishB1'),t('finishB2'),t('finishB3'),t('finishB4')],$('#checklistB'));
-  mk([t('finishC1'),t('finishC2'),t('finishC3'),t('finishC4')],$('#checklistC'));
+
+/* ═══ CHECKLISTS (5 groups) ═══ */
+function renderChecklists() {
+  var L = state.lang;
+  function fill(id, keys) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = keys.map(function(k) {
+      var txt = i18n[L][k] || k;
+      return '<li><input type="checkbox"><span>' + txt + '</span></li>';
+    }).join('');
+  }
+  fill('checklistA', ['fA1','fA2','fA3','fA4','fA5']);
+  fill('checklistB', ['fB1','fB2','fB3','fB4']);
+  fill('checklistC', ['fC1','fC2','fC3','fC4','fC5']);
+  fill('checklistD', ['fD1','fD2','fD3','fD4','fD5']);
+  fill('checklistE', ['fE1','fE2','fE3','fE4','fE5']);
 }
 
 /* ═══ FIX-IT ═══ */
-function renderFixIt(){
-  const L=state.lang;const t=k=>i18n[L][k];
-  $('#fixitGrid').innerHTML=fixIt.map(f=>{
-    const sym=L==='fr'?f.sFr:f.sEn;
-    const chk=L==='fr'?f.checkFr:f.checkEn;
-    const mvs=f.moves.map((m,i)=>`<div class="fixit-move"><span class="fixit-move-num">${i+1}</span><span>${L==='fr'?m.fr:m.en}</span></div>`).join('');
-    const stp=L==='fr'?f.stopFr:f.stopEn;
-    const why=L==='fr'?f.whyFr:f.whyEn;
-    const ovr=L==='fr'?f.overdoFr:f.overdoEn;
-    return`<article class="fixit-card"><div class="fixit-symptom"><span class="fixit-dot"></span>${sym}</div><div class="fixit-check"><strong>${t('fixitCheck')}:</strong> ${chk}</div><div class="fixit-moves">${mvs}</div><div class="fixit-stop"><strong>${t('fixitStopLabel')}:</strong> ${stp}</div><div class="fixit-learn"><p><strong>${t('fixitWhyLabel')}:</strong> ${why}</p><p><strong>${t('fixitOverdoLabel')}:</strong> ${ovr}</p></div></article>`;
+function renderFixIt() {
+  var el = document.getElementById('fixitGrid');
+  if (!el) return;
+  var L = state.lang;
+  el.innerHTML = fixIt.map(function(f) {
+    var sym = L === 'fr' ? f.sFr : f.sEn;
+    var chk = L === 'fr' ? f.checkFr : f.checkEn;
+    var mvs = f.moves.map(function(m, i) {
+      return '<div class="fixit-move"><span class="fixit-move-num">' + (i+1) + '</span><span>' + (L === 'fr' ? m.fr : m.en) + '</span></div>';
+    }).join('');
+    var stp = L === 'fr' ? f.stopFr : f.stopEn;
+    var why = L === 'fr' ? f.whyFr : f.whyEn;
+    var ovr = L === 'fr' ? f.overdoFr : f.overdoEn;
+    return '<article class="fixit-card">' +
+      '<div class="fixit-symptom"><span class="fixit-dot"></span>' + sym + '</div>' +
+      '<div class="fixit-check"><strong>' + i18n[L].fixitCheck + ':</strong> ' + chk + '</div>' +
+      '<div class="fixit-moves">' + mvs + '</div>' +
+      '<div class="fixit-stop"><strong>' + i18n[L].fixitStopLabel + ':</strong> ' + stp + '</div>' +
+      '<div class="fixit-learn"><p><strong>' + i18n[L].fixitWhyLabel + ':</strong> ' + why + '</p>' +
+      '<p><strong>' + i18n[L].fixitOverdoLabel + ':</strong> ' + ovr + '</p></div>' +
+      '</article>';
   }).join('');
 }
 
 /* ═══ MIX CHECK ═══ */
-function showMixPlaceholder(){
-  $('#metricPeak').textContent='—';$('#metricRms').textContent='—';$('#metricCrest').textContent='—';$('#metricLufs').textContent='—';$('#metricCorr').textContent='—';
-  const L=state.lang;
-  $('#bandBar').innerHTML=['bandsLow','bandsLowMid','bandsHighMid','bandsHigh'].map(k=>`<div class="band-pill"><span>${i18n[L][k]}</span><strong>—</strong></div>`).join('');
-  $('#mixInsights').innerHTML=`<div class="insight-card ok"><div class="insight-body">${i18n[L].issueNeedFile}</div></div>`;
-  $('#mixFixits').innerHTML='';
+function showMixPlaceholder() {
+  var ids = ['metricPeak','metricRms','metricCrest','metricLufs','metricCorr'];
+  ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = '—'; });
+  var L = state.lang;
+  var bb = document.getElementById('bandBar');
+  if (bb) bb.innerHTML = ['bandsLow','bandsLowMid','bandsHighMid','bandsHigh'].map(function(k) {
+    return '<div class="band-pill"><span>' + i18n[L][k] + '</span><strong>—</strong></div>';
+  }).join('');
+  var mi = document.getElementById('mixInsights');
+  if (mi) mi.innerHTML = '<div class="insight-card ok"><div class="insight-body">' + i18n[L].issueNeedFile + '</div></div>';
+  var mf = document.getElementById('mixFixits');
+  if (mf) mf.innerHTML = '';
   drawPlaceholderWave();
 }
 
-function drawPlaceholderWave(){const c=$('#waveform');const ctx=c.getContext('2d');resizeCanvas(c);ctx.clearRect(0,0,c.width,c.height);const g=ctx.createLinearGradient(0,0,c.width,0);g.addColorStop(0,'rgba(126,167,255,.6)');g.addColorStop(1,'rgba(118,242,198,.6)');ctx.strokeStyle=g;ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<c.width;x++){const t=x/c.width;const y=c.height/2+Math.sin(t*12)*20*Math.sin(t*2.5);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
-function resizeCanvas(c){const r=window.devicePixelRatio||1;const w=c.clientWidth||800;const h=c.clientHeight||220;c.width=Math.floor(w*r);c.height=Math.floor(h*r);c.getContext('2d').setTransform(r,0,0,r,0,0);}
-
-function analyzeAudioBuffer(buf){
-  const sr=buf.sampleRate,len=buf.length,ch0=buf.getChannelData(0),ch1=buf.numberOfChannels>1?buf.getChannelData(1):ch0;
-  let peak=0,sumSq=0,corrNum=0,corrDenL=0,corrDenR=0,sideLow=0,midLow=0;
-  let low=0,lowMid=0,highMid=0,high=0;
-  const step=Math.max(1,Math.floor(len/24000));
-  let prevL=0,prevR=0;const aLow=Math.exp(-2*Math.PI*120/sr);let lpL=0,lpR=0;
-  for(let i=0;i<len;i+=step){
-    const l=ch0[i],r=ch1[i],m=(l+r)*.5,s=(l-r)*.5;
-    peak=Math.max(peak,Math.abs(l),Math.abs(r));
-    sumSq+=(l*l+r*r)*.5;
-    corrNum+=l*r;corrDenL+=l*l;corrDenR+=r*r;
-    lpL=(1-aLow)*l+aLow*lpL;lpR=(1-aLow)*r+aLow*lpR;
-    const lM=(lpL+lpR)*.5,lS=(lpL-lpR)*.5;
-    midLow+=Math.abs(lM);sideLow+=Math.abs(lS);
-    const dL=Math.abs(l-prevL),dR=Math.abs(r-prevR),hf=(dL+dR)*.5;
-    low+=Math.abs((lpL+lpR)*.5);
-    lowMid+=Math.max(0,Math.abs(m)-Math.abs(lM))*.65;
-    highMid+=hf*.85;high+=hf*.35;
-    prevL=l;prevR=r;
+function drawPlaceholderWave() {
+  var c = document.getElementById('waveform');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  resizeCanvas(c);
+  ctx.clearRect(0, 0, c.width, c.height);
+  var g = ctx.createLinearGradient(0, 0, c.width, 0);
+  g.addColorStop(0, 'rgba(126,167,255,.6)');
+  g.addColorStop(1, 'rgba(118,242,198,.6)');
+  ctx.strokeStyle = g; ctx.lineWidth = 2; ctx.beginPath();
+  for (var x = 0; x < c.width; x++) {
+    var t = x / c.width;
+    var y = c.height / 2 + Math.sin(t * 12) * 20 * Math.sin(t * 2.5);
+    x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   }
-  const n=Math.ceil(len/step);
-  const rms=Math.sqrt(sumSq/n);
-  const peakDb=db(peak),rmsDb=db(rms),crest=peakDb-rmsDb;
-  // Normalized correlation: r = sum(L*R) / sqrt(sum(L²)*sum(R²))
-  const corr=corrNum/Math.max(1e-9,Math.sqrt(corrDenL*corrDenR));
-  const lowSideRatio=sideLow/Math.max(1e-9,midLow);
-  const bandSum=low+lowMid+highMid+high+1e-9;
-  // Estimated LUFS (rough: RMS - 0.691 offset, not true K-weighted but useful indicator)
-  const lufsEst=rmsDb-0.7;
-  return{peakDb,rmsDb,crest,corr,lowSideRatio,lufsEst,bands:{low:low/bandSum,lowMid:lowMid/bandSum,highMid:highMid/bandSum,high:high/bandSum},mono:Float32Array.from({length:len},(_,i)=>buf.numberOfChannels>1?(ch0[i]+ch1[i])*.5:ch0[i])};
+  ctx.stroke();
 }
-function db(v){return 20*Math.log10(Math.max(v,1e-9));}
-function prettyDb(v){return`${v.toFixed(1)} dB`;}
 
-function drawWaveform(samples){const c=$('#waveform');const ctx=c.getContext('2d');resizeCanvas(c);const w=c.clientWidth||800,h=c.clientHeight||220;ctx.clearRect(0,0,w,h);const g=ctx.createLinearGradient(0,0,w,0);g.addColorStop(0,'rgba(126,167,255,.95)');g.addColorStop(.5,'rgba(118,242,198,.95)');g.addColorStop(1,'rgba(255,127,183,.95)');ctx.strokeStyle=g;ctx.lineWidth=2;ctx.beginPath();const bk=Math.max(1,Math.floor(samples.length/w));for(let x=0;x<w;x++){let mx=0;const st=x*bk,en=Math.min(samples.length,st+bk);for(let i=st;i<en;i++)mx=Math.max(mx,Math.abs(samples[i]));const y=h/2,amp=mx*(h*.42);ctx.moveTo(x,y-amp);ctx.lineTo(x,y+amp);}ctx.stroke();}
+function resizeCanvas(c) {
+  var r = window.devicePixelRatio || 1;
+  var w = c.clientWidth || 800;
+  var h = c.clientHeight || 220;
+  c.width = Math.floor(w * r);
+  c.height = Math.floor(h * r);
+  c.getContext('2d').setTransform(r, 0, 0, r, 0, 0);
+}
 
-function renderMixResults(res){
-  const L=state.lang;const t=k=>i18n[L][k];
-  $('#metricPeak').textContent=prettyDb(res.peakDb);
-  $('#metricRms').textContent=prettyDb(res.rmsDb);
-  $('#metricCrest').textContent=`${res.crest.toFixed(1)} dB`;
-  $('#metricLufs').textContent=`${res.lufsEst.toFixed(1)} LUFS`;
-  $('#metricCorr').textContent=res.corr.toFixed(3);
-  const b=res.bands;
-  $('#bandBar').innerHTML=[['bandsLow',b.low],['bandsLowMid',b.lowMid],['bandsHighMid',b.highMid],['bandsHigh',b.high]].map(([l,v])=>`<div class="band-pill"><span>${i18n[L][l]}</span><strong>${Math.round(v*100)}%</strong></div>`).join('');
+function analyzeAudioBuffer(buf) {
+  var sr = buf.sampleRate, len = buf.length;
+  var ch0 = buf.getChannelData(0);
+  var ch1 = buf.numberOfChannels > 1 ? buf.getChannelData(1) : ch0;
+  var peak = 0, sumSq = 0, corrNum = 0, corrDenL = 0, corrDenR = 0, sideLow = 0, midLow = 0;
+  var low = 0, lowMid = 0, highMid = 0, high = 0;
+  var step = Math.max(1, Math.floor(len / 24000));
+  var prevL = 0, prevR = 0;
+  var aLow = Math.exp(-2 * Math.PI * 120 / sr);
+  var lpL = 0, lpR = 0;
+  for (var i = 0; i < len; i += step) {
+    var l = ch0[i], r = ch1[i], m = (l + r) * 0.5;
+    peak = Math.max(peak, Math.abs(l), Math.abs(r));
+    sumSq += (l * l + r * r) * 0.5;
+    corrNum += l * r; corrDenL += l * l; corrDenR += r * r;
+    lpL = (1 - aLow) * l + aLow * lpL;
+    lpR = (1 - aLow) * r + aLow * lpR;
+    var lM = (lpL + lpR) * 0.5, lS = (lpL - lpR) * 0.5;
+    midLow += Math.abs(lM); sideLow += Math.abs(lS);
+    var dL = Math.abs(l - prevL), dR = Math.abs(r - prevR), hf = (dL + dR) * 0.5;
+    low += Math.abs((lpL + lpR) * 0.5);
+    lowMid += Math.max(0, Math.abs(m) - Math.abs(lM)) * 0.65;
+    highMid += hf * 0.85; high += hf * 0.35;
+    prevL = l; prevR = r;
+  }
+  var n = Math.ceil(len / step);
+  var rms = Math.sqrt(sumSq / n);
+  var peakDb = db(peak), rmsDb = db(rms), crest = peakDb - rmsDb;
+  var corr = corrNum / Math.max(1e-9, Math.sqrt(corrDenL * corrDenR));
+  var lowSideRatio = sideLow / Math.max(1e-9, midLow);
+  var bandSum = low + lowMid + highMid + high + 1e-9;
+  var lufsEst = rmsDb - 0.7;
+  return {
+    peakDb: peakDb, rmsDb: rmsDb, crest: crest, corr: corr,
+    lowSideRatio: lowSideRatio, lufsEst: lufsEst,
+    bands: {low: low/bandSum, lowMid: lowMid/bandSum, highMid: highMid/bandSum, high: high/bandSum},
+    mono: Float32Array.from({length: len}, function(_, i) { return buf.numberOfChannels > 1 ? (ch0[i]+ch1[i])*0.5 : ch0[i]; })
+  };
+}
+function db(v) { return 20 * Math.log10(Math.max(v, 1e-9)); }
+function prettyDb(v) { return v.toFixed(1) + ' dB'; }
 
-  // Evidence-based insights
-  const insights=[];
-  const triggers=[];
+function drawWaveform(samples) {
+  var c = document.getElementById('waveform');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  resizeCanvas(c);
+  var w = c.clientWidth || 800, h = c.clientHeight || 220;
+  ctx.clearRect(0, 0, w, h);
+  var g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0, 'rgba(126,167,255,.95)');
+  g.addColorStop(0.5, 'rgba(118,242,198,.95)');
+  g.addColorStop(1, 'rgba(255,127,183,.95)');
+  ctx.strokeStyle = g; ctx.lineWidth = 2; ctx.beginPath();
+  var bk = Math.max(1, Math.floor(samples.length / w));
+  for (var x = 0; x < w; x++) {
+    var mx = 0;
+    var st = x * bk, en = Math.min(samples.length, st + bk);
+    for (var i = st; i < en; i++) mx = Math.max(mx, Math.abs(samples[i]));
+    var y = h / 2, amp = mx * (h * 0.42);
+    ctx.moveTo(x, y - amp); ctx.lineTo(x, y + amp);
+  }
+  ctx.stroke();
+}
 
-  if(res.peakDb>-0.8){
-    insights.push({kind:'bad',title:L==='fr'?'Peak trop haut':'Peak too hot',
-      rule:`Peak > -0.8 dBFS (${prettyDb(res.peakDb)})`,
-      bodyEn:'Your mix is clipping or very close to 0 dBFS. Mastering needs headroom.',bodyFr:'Ton mix clippe ou frôle le 0 dBFS. Le mastering a besoin de headroom.',
-      whyEn:'Clipping introduces harsh distortion. Mastering engineers need at least -1 dBFS headroom.',whyFr:'Le clipping introduit de la distortion. Le mastering a besoin d\'au moins -1 dBFS.',
-      fixEn:'Lower the master fader or all track faders by -3dB.',fixFr:'Baisse le fader master ou tous les faders de -3dB.',
-      stopEn:'peaks sit below -1 dBFS.',stopFr:'les peaks sont sous -1 dBFS.'});
-    triggers.push('peakHot');
-  }
-  if(res.crest<8){
-    insights.push({kind:'warn',title:L==='fr'?'Dynamique écrasée':'Dynamics crushed',
-      rule:`Crest < 8 dB (${res.crest.toFixed(1)} dB)`,
-      bodyEn:'Low crest factor suggests heavy limiting or compression. The mix may sound flat.',bodyFr:'Faible facteur de crête: le mix semble tassé par du limiting/compression.',
-      whyEn:'Crest factor measures the difference between peak and RMS — below 8dB signals over-compression.',whyFr:'Le facteur de crête mesure la différence peak/RMS — sous 8dB = surcompression.',
-      fixEn:'Check drum bus and master limiter. Reduce GR to max -2dB.',fixFr:'Check le bus drums et le limiteur master. Réduis le GR à max -2dB.',
-      stopEn:'crest is above 10 dB.',stopFr:'le crest est au-dessus de 10 dB.'});
-    triggers.push('crestLow');
-  }
-  if(res.lowSideRatio>0.28){
-    insights.push({kind:'warn',title:L==='fr'?'Grave trop large':'Low-end too wide',
-      rule:`Side/Mid < 120Hz > 0.28 (${res.lowSideRatio.toFixed(2)})`,
-      bodyEn:'Significant stereo energy below 120Hz. This may cause issues on mono club systems.',bodyFr:'Énergie stéréo importante sous 120Hz. Problèmes possibles sur systèmes mono club.',
-      whyEn:'Sub frequencies in stereo create phase cancellation on mono systems — energy loss.',whyFr:'Les fréquences sub en stéréo créent de l\'annulation de phase en mono — perte d\'énergie.',
-      fixEn:'Use Ozone Imager or Pro-Q 4 M/S to mono everything below 120Hz.',fixFr:'Utilise Ozone Imager ou Pro-Q 4 M/S pour mono sous 120Hz.',
-      stopEn:'side energy below 120Hz is minimal.',stopFr:'l\'énergie side sous 120Hz est minimale.'});
-    triggers.push('lowSideRatio');
-  }
-  if(b.lowMid>0.38){
-    insights.push({kind:'warn',title:L==='fr'?'Bas médiums lourds':'Low mids heavy',
-      rule:`Low-mid share > 38% (${Math.round(b.lowMid*100)}%)`,
-      bodyEn:'The 200–450Hz range carries more energy than expected. This often causes muddiness.',bodyFr:'La zone 200–450Hz porte plus d\'énergie que prévu. C\'est souvent la cause de la boue.',
-      whyEn:'Low-mid buildup is cumulative — it comes from overlapping kick, bass, synths and reverbs.',whyFr:'L\'accumulation bas-mids est cumulative — overlap entre kick, basse, synths et reverbs.',
-      fixEn:'Find the worst offender in 200–400Hz. Cut there first with Pro-Q 4.',fixFr:'Trouve la piste la pire dans 200–400Hz. Coupe là en premier avec Pro-Q 4.',
-      stopEn:'the mix sounds clear at low volume.',stopFr:'le mix sonne clair à bas volume.'});
-    triggers.push('lowMidHeavy');
-  }
-  if(b.high>0.22){
-    insights.push({kind:'warn',title:L==='fr'?'Aigu agressif possible':'High-end may be sharp',
-      rule:`High share > 22% (${Math.round(b.high*100)}%)`,
-      bodyEn:'Elevated high-frequency energy. Check hats, claps, risers and exciters around 4–10kHz.',bodyFr:'Énergie haute fréquence élevée. Check hats, claps, risers et exciteurs 4–10kHz.',
-      whyEn:'Excessive highs cause listening fatigue. They often sound impressive at first but tire quickly.',whyFr:'L\'excès d\'aigus cause de la fatigue d\'écoute. Ça impressionne d\'abord mais fatigue vite.',
-      fixEn:'Pro-DS on the bus, or dynamic EQ at 6kHz on the worst source.',fixFr:'Pro-DS sur le bus, ou EQ dynamique à 6kHz sur la source la pire.',
-      stopEn:'highs feel present but not sharp at moderate volume.',stopFr:'les aigus sont présents mais pas agressifs à volume modéré.'});
-    triggers.push('highSharp');
-  }
-  if(res.corr<0.3){
-    insights.push({kind:'warn',title:L==='fr'?'Corrélation stéréo basse':'Low stereo correlation',
-      rule:`Correlation < 0.3 (${res.corr.toFixed(3)})`,
-      bodyEn:'The left and right channels are weakly correlated. Parts of the mix may cancel in mono.',bodyFr:'Les canaux gauche/droit sont faiblement corrélés. Des parties du mix peuvent s\'annuler en mono.',
-      whyEn:'Correlation below 0.3 means some elements are almost out of phase — they vanish in mono.',whyFr:'Corrélation sous 0.3 = certains éléments sont presque en opposition de phase — ils disparaissent en mono.',
-      fixEn:'Check with Utility in mono. Fix anything that disappears or drops significantly.',fixFr:'Check avec Utility en mono. Corrige tout ce qui disparaît.',
-      stopEn:'correlation stays above 0.3 and the mix survives mono.',stopFr:'la corrélation reste au-dessus de 0.3 et le mix tient en mono.'});
-    triggers.push('stereoWeak');
-  }
-  if(res.lufsEst<-20){
-    insights.push({kind:'warn',title:L==='fr'?'Niveau global bas':'Overall level low',
-      rule:`LUFS est. < -20 (${res.lufsEst.toFixed(1)} LUFS)`,
-      bodyEn:'The estimated loudness is low. Check gain staging across your tracks.',bodyFr:'Le volume estimé est bas. Check le gain staging sur tes pistes.',
-      whyEn:'Low overall level often means individual tracks are too quiet — gain staging issue.',whyFr:'Un niveau global bas signifie souvent que les pistes individuelles sont trop basses.',
-      fixEn:'Gain stage each track to peak around -12dBFS before mixing.',fixFr:'Gain stage chaque piste pour peak autour de -12dBFS.',
-      stopEn:'RMS sits around -14 to -10 dBFS before mastering.',stopFr:'le RMS est autour de -14 à -10 dBFS avant mastering.'});
-  }
+function renderMixResults(res) {
+  var L = state.lang;
+  var ids = {metricPeak: prettyDb(res.peakDb), metricRms: prettyDb(res.rmsDb), metricCrest: res.crest.toFixed(1)+' dB', metricLufs: res.lufsEst.toFixed(1)+' LUFS', metricCorr: res.corr.toFixed(3)};
+  Object.keys(ids).forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = ids[id]; });
 
-  if(!insights.length){
-    $('#mixInsights').innerHTML=`<div class="insight-card ok"><div class="insight-body">${i18n[L].issueNone}</div></div>`;
+  var b = res.bands;
+  var bb = document.getElementById('bandBar');
+  if (bb) bb.innerHTML = [['bandsLow',b.low],['bandsLowMid',b.lowMid],['bandsHighMid',b.highMid],['bandsHigh',b.high]].map(function(pair) {
+    return '<div class="band-pill"><span>' + i18n[L][pair[0]] + '</span><strong>' + Math.round(pair[1]*100) + '%</strong></div>';
+  }).join('');
+
+  var insights = [];
+  var triggers = [];
+  if (res.peakDb > -0.8) { insights.push({kind:'bad',title:L==='fr'?'Peak trop haut':'Peak too hot',rule:'Peak > -0.8 dBFS (' + prettyDb(res.peakDb) + ')',body:L==='fr'?'Le mix clippe ou frôle 0 dBFS.':'Mix is clipping or very close to 0 dBFS.',why:L==='fr'?'Le clipping introduit de la distortion.':'Clipping introduces harsh distortion.',fix:L==='fr'?'Baisse le fader master ou tous les faders de -3dB.':'Lower master fader or all faders by -3dB.',stop:L==='fr'?'peaks sous -1 dBFS.':'peaks sit below -1 dBFS.'}); triggers.push('peakHot'); }
+  if (res.crest < 8) { insights.push({kind:'warn',title:L==='fr'?'Dynamique écrasée':'Dynamics crushed',rule:'Crest < 8 dB (' + res.crest.toFixed(1) + ' dB)',body:L==='fr'?'Le mix semble tassé par du limiting/compression.':'Low crest factor suggests heavy limiting.',why:L==='fr'?'Facteur de crête sous 8dB = surcompression.':'Crest below 8dB signals over-compression.',fix:L==='fr'?'Check le bus drums et le limiteur master.':'Check drum bus and master limiter.',stop:L==='fr'?'crest au-dessus de 10 dB.':'crest is above 10 dB.'}); triggers.push('crestLow'); }
+  if (res.lowSideRatio > 0.28) { insights.push({kind:'warn',title:L==='fr'?'Grave trop large':'Low-end too wide',rule:'Side/Mid <120Hz > 0.28 (' + res.lowSideRatio.toFixed(2) + ')',body:L==='fr'?'Énergie stéréo sous 120Hz, problèmes mono possibles.':'Stereo energy below 120Hz may cause mono issues.',why:L==='fr'?'Les sub en stéréo s\'annulent en mono.':'Sub frequencies in stereo cancel on mono systems.',fix:L==='fr'?'Ozone Imager ou Pro-Q 4 M/S mono sous 120Hz.':'Ozone Imager or Pro-Q 4 M/S mono below 120Hz.',stop:L==='fr'?'énergie side sous 120Hz minimale.':'side energy below 120Hz is minimal.'}); triggers.push('lowSideRatio'); }
+  if (b.lowMid > 0.38) { insights.push({kind:'warn',title:L==='fr'?'Bas médiums lourds':'Low mids heavy',rule:'Low-mid > 38% (' + Math.round(b.lowMid*100) + '%)',body:L==='fr'?'Zone 200-450Hz surchargée = boue.':'200-450Hz range too heavy = mud.',why:L==='fr'?'Accumulation cumulative kick+basse+synths+reverbs.':'Cumulative buildup from kick, bass, synths, reverbs.',fix:L==='fr'?'Trouve la piste la pire 200-400Hz, coupe là.':'Find worst offender in 200-400Hz, cut there.',stop:L==='fr'?'le mix sonne clair à bas volume.':'mix sounds clear at low volume.'}); triggers.push('lowMidHeavy'); }
+  if (b.high > 0.22) { insights.push({kind:'warn',title:L==='fr'?'Aigu agressif':'High-end sharp',rule:'High > 22% (' + Math.round(b.high*100) + '%)',body:L==='fr'?'Check hats, claps, risers 4-10kHz.':'Check hats, claps, risers 4-10kHz.',why:L==='fr'?'Excès d\'aigus = fatigue d\'écoute.':'Excessive highs cause listening fatigue.',fix:L==='fr'?'Pro-DS sur le bus ou EQ dynamique 6kHz.':'Pro-DS on bus or dynamic EQ at 6kHz.',stop:L==='fr'?'aigus présents mais pas agressifs.':'highs feel present but not sharp.'}); triggers.push('highSharp'); }
+  if (res.corr < 0.3) { insights.push({kind:'warn',title:L==='fr'?'Corrélation basse':'Low correlation',rule:'Corr < 0.3 (' + res.corr.toFixed(3) + ')',body:L==='fr'?'Canaux faiblement corrélés, risque d\'annulation mono.':'Channels weakly correlated, mono cancellation risk.',why:L==='fr'?'Corrélation sous 0.3 = éléments en opposition de phase.':'Correlation below 0.3 = near out-of-phase elements.',fix:L==='fr'?'Check avec Utility mono. Corrige ce qui disparaît.':'Check with Utility mono. Fix what disappears.',stop:L==='fr'?'corrélation au-dessus de 0.3.':'correlation stays above 0.3.'}); triggers.push('stereoWeak'); }
+
+  var mi = document.getElementById('mixInsights');
+  if (!mi) return;
+  if (!insights.length) {
+    mi.innerHTML = '<div class="insight-card ok"><div class="insight-body">' + i18n[L].issueNone + '</div></div>';
   } else {
-    $('#mixInsights').innerHTML=insights.map(ins=>`
-      <div class="insight-card ${ins.kind}">
-        <div class="insight-head"><strong>${ins.title}</strong><span class="insight-rule">${ins.rule}</span></div>
-        <div class="insight-body">${L==='fr'?ins.bodyFr:ins.bodyEn}</div>
-        <div class="insight-learn">
-          <p><strong>${t('insightWhy')}:</strong> ${L==='fr'?ins.whyFr:ins.whyEn}</p>
-          <p><strong>${t('insightFix')}:</strong> ${L==='fr'?ins.fixFr:ins.fixEn}</p>
-          <p><strong>${t('insightStop')}:</strong> ${L==='fr'?ins.stopFr:ins.stopEn}</p>
-        </div>
-      </div>
-    `).join('');
+    mi.innerHTML = insights.map(function(ins) {
+      return '<div class="insight-card ' + ins.kind + '">' +
+        '<div class="insight-head"><strong>' + ins.title + '</strong><span class="insight-rule">' + ins.rule + '</span></div>' +
+        '<div class="insight-body">' + ins.body + '</div>' +
+        '<div class="insight-learn">' +
+        '<p><strong>' + i18n[L].insightWhy + ':</strong> ' + ins.why + '</p>' +
+        '<p><strong>' + i18n[L].insightFix + ':</strong> ' + ins.fix + '</p>' +
+        '<p><strong>' + i18n[L].insightStop + ':</strong> ' + ins.stop + '</p>' +
+        '</div></div>';
+    }).join('');
   }
 
   // Related Fix-Its
-  const relatedFix=fixIt.filter(f=>f.trigger&&triggers.includes(f.trigger));
-  if(relatedFix.length){
-    const L2=state.lang;
-    $('#mixFixits').innerHTML=`<p class="mix-fixits-title">${i18n[L2].relatedFixits}</p>`+relatedFix.map(f=>`<div class="fixit-card" style="margin-bottom:10px"><div class="fixit-symptom"><span class="fixit-dot"></span>${L2==='fr'?f.sFr:f.sEn}</div><div class="fixit-check"><strong>${i18n[L2].fixitCheck}:</strong> ${L2==='fr'?f.checkFr:f.checkEn}</div>${f.moves.slice(0,2).map((m,i)=>`<div class="fixit-move"><span class="fixit-move-num">${i+1}</span><span>${L2==='fr'?m.fr:m.en}</span></div>`).join('')}</div>`).join('');
-  } else {
-    $('#mixFixits').innerHTML='';
+  var relFix = fixIt.filter(function(f) { return f.trigger && triggers.indexOf(f.trigger) !== -1; });
+  var mfEl = document.getElementById('mixFixits');
+  if (mfEl) {
+    if (relFix.length) {
+      mfEl.innerHTML = '<p class="mix-fixits-title">' + i18n[L].relatedFixits + '</p>' +
+        relFix.map(function(f) {
+          return '<div class="fixit-card" style="margin-bottom:10px"><div class="fixit-symptom"><span class="fixit-dot"></span>' + (L==='fr'?f.sFr:f.sEn) + '</div>' +
+            '<div class="fixit-check"><strong>' + i18n[L].fixitCheck + ':</strong> ' + (L==='fr'?f.checkFr:f.checkEn) + '</div>' +
+            f.moves.slice(0,2).map(function(m, i) { return '<div class="fixit-move"><span class="fixit-move-num">' + (i+1) + '</span><span>' + (L==='fr'?m.fr:m.en) + '</span></div>'; }).join('') + '</div>';
+        }).join('');
+    } else { mfEl.innerHTML = ''; }
   }
 }
 
 /* ═══ TOAST ═══ */
-function showToast(text){const t=$('#toast');t.textContent=text;t.classList.add('is-open');clearTimeout(showToast._t);showToast._t=setTimeout(()=>t.classList.remove('is-open'),2200);}
+function showToast(text) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = text;
+  t.classList.add('is-open');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(function() { t.classList.remove('is-open'); }, 2200);
+}
 
 /* ═══ BOOT ═══ */
-function boot(){
-  const gateEl=$('#gate'),shell=$('#appShell');
-  if(localStorage.getItem('kapman-gate')==='ok'){gateEl.classList.add('is-hidden');shell.classList.remove('shell--hidden');}
-  $('#enterBtn').onclick=()=>{if($('#passwordInput').value===PASSWORD){localStorage.setItem('kapman-gate','ok');gateEl.classList.add('is-hidden');shell.classList.remove('shell--hidden');$('#gateError').textContent='';}else{$('#gateError').textContent=i18n[state.lang].wrongPassword;}};
-  $('#passwordInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('#enterBtn').click();});
+function boot() {
+  var gateEl = document.getElementById('gate');
+  var shell = document.getElementById('appShell');
+
+  if (localStorage.getItem('kapman-gate') === 'ok') {
+    if (gateEl) gateEl.classList.add('is-hidden');
+    if (shell) shell.classList.remove('shell--hidden');
+  }
+
+  var enterBtn = document.getElementById('enterBtn');
+  var pwInput = document.getElementById('passwordInput');
+  if (enterBtn) {
+    enterBtn.onclick = function() {
+      if (pwInput && pwInput.value === PASSWORD) {
+        localStorage.setItem('kapman-gate', 'ok');
+        if (gateEl) gateEl.classList.add('is-hidden');
+        if (shell) shell.classList.remove('shell--hidden');
+        var err = document.getElementById('gateError');
+        if (err) err.textContent = '';
+      } else {
+        var err = document.getElementById('gateError');
+        if (err) err.textContent = i18n[state.lang].wrongPassword;
+      }
+    };
+  }
+  if (pwInput) pwInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && enterBtn) enterBtn.click(); });
+
   setTheme(state.theme);
-  $('#themeBtn').onclick=()=>setTheme(state.theme==='dark'?'light':'dark');
-  $('#langEN').onclick=()=>setLang('en');$('#langFR').onclick=()=>setLang('fr');
-  $$('.sidebar-link').forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
-  $$('.quick-nav').forEach(b=>b.onclick=()=>switchPage(b.dataset.target));
-  $('#menuToggle').onclick=()=>{$('#sidebar').classList.toggle('is-open');$('#overlay').classList.toggle('is-open');};
-  $('#overlay').onclick=()=>{$('#sidebar').classList.remove('is-open');$('#overlay').classList.remove('is-open');};
-  $('#globalSearch').addEventListener('input',e=>{state.search=e.target.value;if(state.page!=='library')switchPage('library');renderPlugins();});
-  $('#audioFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;const ab=await f.arrayBuffer();const AC=window.AudioContext||window.webkitAudioContext;const ctx=new AC();const buf=await ctx.decodeAudioData(ab.slice(0));const res=analyzeAudioBuffer(buf);drawWaveform(res.mono);renderMixResults(res);showToast(i18n[state.lang].uploadDone);});
-  window.addEventListener('resize',()=>{if(!$('#audioFile').files?.length)drawPlaceholderWave();});
+  var themeBtn = document.getElementById('themeBtn');
+  if (themeBtn) themeBtn.onclick = function() { setTheme(state.theme === 'dark' ? 'light' : 'dark'); };
+
+  var langEN = document.getElementById('langEN');
+  var langFR = document.getElementById('langFR');
+  if (langEN) langEN.onclick = function() { setLang('en'); };
+  if (langFR) langFR.onclick = function() { setLang('fr'); };
+
+  $$('.sidebar-link').forEach(function(b) { b.onclick = function() { switchPage(b.dataset.page); }; });
+  $$('.quick-nav').forEach(function(b) { b.onclick = function() { switchPage(b.dataset.target); }; });
+
+  var menuBtn = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  if (menuBtn) menuBtn.onclick = function() { if (sidebar) sidebar.classList.toggle('is-open'); if (overlay) overlay.classList.toggle('is-open'); };
+  if (overlay) overlay.onclick = function() { if (sidebar) sidebar.classList.remove('is-open'); overlay.classList.remove('is-open'); };
+
+  var searchInput = document.getElementById('globalSearch');
+  if (searchInput) searchInput.addEventListener('input', function(e) { state.search = e.target.value; if (state.page !== 'library') switchPage('library'); renderPlugins(); });
+
+  var audioInput = document.getElementById('audioFile');
+  if (audioInput) audioInput.addEventListener('change', function(e) {
+    var f = e.target.files[0];
+    if (!f) return;
+    f.arrayBuffer().then(function(ab) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      var ctx = new AC();
+      ctx.decodeAudioData(ab.slice(0)).then(function(buf) {
+        var res = analyzeAudioBuffer(buf);
+        drawWaveform(res.mono);
+        renderMixResults(res);
+        showToast(i18n[state.lang].uploadDone);
+      });
+    });
+  });
+
+  window.addEventListener('resize', function() {
+    var ai = document.getElementById('audioFile');
+    if (!ai || !ai.files || !ai.files.length) drawPlaceholderWave();
+  });
+
   setLang(state.lang);
 }
+
 boot();
