@@ -1,4 +1,4 @@
-const PASSWORD = "kapman";
+const PASSWORD = "62!NjC3e";
 
 const i18n = {
   en: {
