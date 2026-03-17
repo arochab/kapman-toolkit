@@ -341,3 +341,11 @@ body[data-focus="on"] .page[data-page="home"] .hero{opacity:1}
   .hero-panel{position:relative;right:auto;left:auto;bottom:auto;margin:18px}
   .hero-visual{min-height:auto;padding-bottom:18px}
 }
+
+/* ─── Fix-It ─── */
+.fixit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.fixit-card{padding:18px;transition:border-color .15s}
+.fixit-card:hover{border-color:var(--accent)}
+.fixit-symptom{font-weight:600;font-size:.9rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
+.fixit-dot{width:6px;height:6px;border-radius:50%;background:var(--red,#ef4444);flex-shrink:0}
+.fixit-fix{font-size:.8rem;color:var(--muted);line-height:1.5;font-family:monospace}

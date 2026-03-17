@@ -1,4 +1,4 @@
-const PASSWORD = "62!NjC3e";
+const PASSWORD = "kapman";
 
 const i18n = {
   en: {
@@ -117,7 +117,11 @@ const i18n = {
     finishC1: "Mute decorative layers one by one. Keep only what moves the track.",
     finishC2: "If one patch needs too much fixing, swap the source sooner.",
     finishC3: "Automate one macro hard, not six tiny moves everywhere.",
-    finishC4: "Leave one signature texture per section, not three competing ones."
+    finishC4: "Leave one signature texture per section, not three competing ones.",
+    pageFixit: "Fix-It",
+    navFixit: "Fix-It",
+    fixitEyebrow: "Symptom to solution",
+    fixitTitle: "Fix-It"
   },
   fr: {
     gateBadge: "Aperçu privé",
@@ -235,7 +239,11 @@ const i18n = {
     finishC1: "Mute les couches décoratives une par une. Garde seulement ce qui pousse le morceau.",
     finishC2: "Si un patch demande trop de chirurgie, change de source plus tôt.",
     finishC3: "Automatise un macro fort, pas six micro moves partout.",
-    finishC4: "Garde une texture signature par section, pas trois qui se battent."
+    finishC4: "Garde une texture signature par section, pas trois qui se battent.",
+    pageFixit: "Fix-It",
+    navFixit: "Fix-It",
+    fixitEyebrow: "Symptome vers solution",
+    fixitTitle: "Fix-It"
   }
 };
 
@@ -244,9 +252,15 @@ const vendors = [
   { id: 'd16', mark: 'D16', name: 'D16', pitchEn: 'Machine energy and edge', pitchFr: 'Énergie machine et mordant', glow: '#ff8b6e' },
   { id: 'eventide', mark: 'EV', name: 'Eventide', pitchEn: 'Space, pitch and weirdness', pitchFr: 'Espace, pitch et étrangeté', glow: '#8d83ff' },
   { id: 'xfer', mark: 'XF', name: 'Xfer', pitchEn: 'Modern synth control', pitchFr: 'Contrôle synth moderne', glow: '#76f2c6' },
-  { id: 'baby-audio', mark: 'BA', name: 'Baby Audio', pitchEn: 'Creative polish fast', pitchFr: 'Polish créatif rapide', glow: '#ff7fb7' }
+  { id: 'baby-audio', mark: 'BA', name: 'Baby Audio', pitchEn: 'Creative polish fast', pitchFr: 'Polish créatif rapide', glow: '#ff7fb7' },
+  { id: 'uhe', mark: 'UH', name: 'u-he', pitchEn: 'Analog soul in code', pitchFr: 'Âme analogique en code', glow: '#b695e6' },
+  { id: 'arturia', mark: 'AR', name: 'Arturia', pitchEn: 'Classic synths reborn', pitchFr: 'Classiques ressuscités', glow: '#5cc5e6' },
+  { id: 'valhalla', mark: 'VL', name: 'Valhalla', pitchEn: 'Reverb and space mastery', pitchFr: 'Maîtrise reverb et espace', glow: '#6dd69e' },
+  { id: 'izotope', mark: 'IZ', name: 'iZotope', pitchEn: 'Intelligent mixing and mastering', pitchFr: 'Mix et master intelligent', glow: '#5ce6a5' },
+  { id: 'cableguys', mark: 'CG', name: 'Cableguys', pitchEn: 'Modulation and volume shaping', pitchFr: 'Modulation et shaping de volume', glow: '#5c9ee6' },
+  { id: 'devious', mark: 'DM', name: 'Devious Machines', pitchEn: 'Creative multi-FX chaos', pitchFr: 'Chaos multi-FX créatif', glow: '#e65c5c' },
+  { id: 'korg', mark: 'KG', name: 'KORG', pitchEn: 'Iconic polysynth character', pitchFr: 'Caractère polysynth iconique', glow: '#ccc65c' }
 ];
-
 const plugins = [
   {id:'ff-proq4', vendor:'fabfilter', name:'Pro-Q 4', roleEn:'surgical EQ', roleFr:'EQ chirurgical', mode:'mix', tags:['tone','mix'], useEn:'cut mud, shape harshness, dynamic control', useFr:'couper la boue, calmer la dureté, contrôle dynamique', touchEn:'250–400 Hz, 2–5 kHz, dynamic bands', touchFr:'250–400 Hz, 2–5 kHz, bandes dynamiques', avoidEn:'you still do not know what the source should be', avoidFr:'tu ne sais pas encore ce que la source doit être', recipe:'Dark Bass Cleanup', glow:'#7ea7ff'},
   {id:'ff-proc3', vendor:'fabfilter', name:'Pro-C 3', roleEn:'compressor', roleFr:'compresseur', mode:'mix', tags:['dynamics','mix'], useEn:'tight buses, add punch, level control', useFr:'resserrer les bus, ajouter du punch, contrôler le niveau', touchEn:'style, attack, release, lookahead', touchFr:'style, attaque, release, lookahead', avoidEn:'you only want louder, not tighter', avoidFr:'tu veux juste plus fort, pas plus tight', recipe:'Drum Weight Bus', glow:'#7ea7ff'},
@@ -298,8 +312,32 @@ const plugins = [
   {id:'ba-transit2', vendor:'baby-audio', name:'Transit 2', roleEn:'transition designer', roleFr:'designer de transition', mode:'sound', tags:['motion','sound'], useEn:'macro transitions without ten separate automations', useFr:'transitions macro sans dix automations séparées', touchEn:'multi-effect chain, macro curve', touchFr:'chaîne multi-effets, courbe macro', avoidEn:'the section already has enough movement', avoidFr:'la section a déjà assez de mouvement', recipe:'Break Builder Fast', glow:'#ff7fb7'},
   {id:'ba-grainferno', vendor:'baby-audio', name:'Grainferno', roleEn:'granular instrument', roleFr:'instrument granulaire', mode:'sound', tags:['instrument','sound'], useEn:'textures, risers, tuned grains, evolving beds', useFr:'textures, risers, grains accordés, beds évolutifs', touchEn:'grain rate, pitch mode, density', touchFr:'rate des grains, mode de pitch, densité', avoidEn:'you need immediate clean mono leads', avoidFr:'tu veux des leads mono propres immédiats', recipe:'Granular Bed Maker', glow:'#ff7fb7'},
   {id:'ba-tekno', vendor:'baby-audio', name:'Tekno', roleEn:'drum synth', roleFr:'drum synth', mode:'sound', tags:['instrument','sound'], useEn:'synthetic drums without samples', useFr:'drums synthétiques sans samples', touchEn:'engine choice, transient, sequencer', touchFr:'choix d’engine, transient, séquenceur', avoidEn:'you already have a strong sample-based kit', avoidFr:'tu as déjà un kit sample fort', recipe:'Synth Drum Sketch', glow:'#ff7fb7'}
+  // ─── u-he ───
+  ,{id:'uh-diva', vendor:'uhe', name:'Diva', roleEn:'analog polysynth', roleFr:'polysynth analogique', mode:'sound', tags:['instrument','sound'], useEn:'basses, leads, pads — five oscillator models, five ZDF filters (Ladder, Cascade, Multimode, Bite, Uhbie)', useFr:'basses, leads, pads — cinq oscillateurs, cinq filtres ZDF', touchEn:'oscillator model, filter model, cutoff, env2 amount, voice drift, accuracy', touchFr:'modèle osc, filtre, cutoff, env2, drift, accuracy', avoidEn:'you need a wavetable engine or FM', avoidFr:'tu as besoin de wavetable ou FM', recipe:'Dark Sub Architect', glow:'#b695e6'}
+  ,{id:'ar-cs80', vendor:'arturia', name:'CS-80 V4', roleEn:'expressive polysynth', roleFr:'polysynth expressif', mode:'sound', tags:['instrument','sound'], useEn:'dramatic pads, expressive leads with aftertouch', useFr:'pads dramatiques, leads expressifs avec aftertouch', touchEn:'brilliance, ring mod off, aftertouch to cutoff, dual layers', touchFr:'brilliance, ring mod off, aftertouch vers cutoff', avoidEn:'you need a simple mono bass', avoidFr:'tu veux une basse mono simple', recipe:'Blade Runner Wash', glow:'#5cc5e6'}
+  ,{id:'ar-jup8', vendor:'arturia', name:'Jup-8 V4', roleEn:'lush polysynth', roleFr:'polysynth lush', mode:'sound', tags:['instrument','sound'], useEn:'warm pads, sync leads, bright arps — built-in chorus signature', useFr:'pads chauds, leads sync, arps — chorus signature', touchEn:'oscillator sync, pulse width, chorus mode, HPF', touchFr:'sync osc, pulse width, chorus mode, HPF', avoidEn:'you want a dark aggressive timbre', avoidFr:'tu veux un timbre dark agressif', recipe:'Silk Pad', glow:'#5cc5e6'}
+  ,{id:'ar-miniv3', vendor:'arturia', name:'Mini V3', roleEn:'mono bass king', roleFr:'roi de la basse mono', mode:'sound', tags:['instrument','sound'], useEn:'fat mono basses, 3 oscillators, built-in overdrive', useFr:'basses mono grasses, 3 oscillateurs, overdrive', touchEn:'osc mix, filter cutoff, emphasis, contour, glide', touchFr:'mix osc, cutoff, emphasis, contour, glide', avoidEn:'you need polyphony', avoidFr:'tu as besoin de polyphonie', recipe:'Mono Beast Bass', glow:'#5cc5e6'}
+  ,{id:'ar-pigments', vendor:'arturia', name:'Pigments', roleEn:'hybrid synth', roleFr:'synth hybride', mode:'sound', tags:['instrument','sound'], useEn:'granular textures, wavetable + VA, deep mod matrix', useFr:'textures granulaires, wavetable + VA, matrice de mod', touchEn:'engine per osc, granular position, mod matrix', touchFr:'engine par osc, position granulaire, matrice de mod', avoidEn:'you need instant vintage analog color', avoidFr:'tu veux du vintage analog immédiat', recipe:'Granular Texture Bed', glow:'#5cc5e6'}
+  ,{id:'ar-minifreak', vendor:'arturia', name:'MiniFreak V', roleEn:'hybrid lead', roleFr:'lead hybride', mode:'sound', tags:['instrument','sound'], useEn:'textured leads with digital osc and analog filter', useFr:'leads texturés: osc digital + filtre analog', touchEn:'osc engine, filter, FX section, mod matrix', touchFr:'engine osc, filtre, FX, matrice de mod', avoidEn:'you want clean classic analog only', avoidFr:'tu veux uniquement de l analog classique', recipe:'Freak Texture Lead', glow:'#5cc5e6'}
+  ,{id:'ar-dx7', vendor:'arturia', name:'DX7 V', roleEn:'FM synth', roleFr:'synth FM', mode:'sound', tags:['instrument','sound'], useEn:'electric basses, bells, metallic textures via FM synthesis', useFr:'basses electriques, cloches, textures metalliques en FM', touchEn:'algorithm, operator ratios, mod index, velocity', touchFr:'algorithme, ratios, index de mod, velocity', avoidEn:'you need warm subtractive analog', avoidFr:'tu veux du soustractif analog chaud', recipe:'FM Electric Bass', glow:'#5cc5e6'}
+  ,{id:'ar-prophet5', vendor:'arturia', name:'Prophet-5 V', roleEn:'classic polysynth', roleFr:'polysynth classique', mode:'sound', tags:['instrument','sound'], useEn:'thick pads, 80s textures, poly-mod animation', useFr:'pads epais, textures 80s, animation poly-mod', touchEn:'poly-mod, filter env, pulse width', touchFr:'poly-mod, filter env, pulse width', avoidEn:'you need more than 5 voices', avoidFr:'tu as besoin de plus de 5 voix', recipe:'Prophet Atmosphere', glow:'#5cc5e6'}
+  ,{id:'ar-sem', vendor:'arturia', name:'SEM V2', roleEn:'multimode filter bass', roleFr:'basse filtre multimode', mode:'sound', tags:['instrument','sound'], useEn:'growling basses with Oberheim multimode LP to Notch blend', useFr:'basses grognantes avec multimode Oberheim LP vers Notch', touchEn:'filter mode blend, cutoff, resonance, env', touchFr:'blend mode filtre, cutoff, resonance, env', avoidEn:'you need bright crystal leads', avoidFr:'tu veux des leads cristallins', recipe:'SEM Growl Bass', glow:'#5cc5e6'}
+  ,{id:'ar-fet76', vendor:'arturia', name:'Comp FET-76', roleEn:'FET compressor', roleFr:'compresseur FET', mode:'mix', tags:['dynamics','mix'], useEn:'fast peak catching, punchy character compression', useFr:'attrape les pics, compression punchy', touchEn:'input for GR, attack 3, release 7, ratio 4:1', touchFr:'input pour le GR, attack 3, release 7, ratio 4:1', avoidEn:'you need transparent leveling', avoidFr:'tu veux du leveling transparent', recipe:'Vocal Sample Chain', glow:'#5cc5e6'}
+  ,{id:'ar-mellofi', vendor:'arturia', name:'Tape MELLO-FI', roleEn:'tape color', roleFr:'couleur tape', mode:'sound', tags:['tone','sound'], useEn:'subtle tape wow, flutter and saturation at micro-dose', useFr:'wow, flutter et saturation tape en micro-dose', touchEn:'wow 8%, flutter 6%, saturation 12%, noise OFF', touchFr:'wow 8%, flutter 6%, saturation 12%, bruit OFF', avoidEn:'the source is already warm enough', avoidFr:'la source est assez chaude', recipe:'Tape Warmth Layer', glow:'#5cc5e6'}
+  ,{id:'ar-dimensiond', vendor:'arturia', name:'Chorus DIMENSION-D', roleEn:'vintage chorus', roleFr:'chorus vintage', mode:'sound', tags:['motion','sound'], useEn:'instant Juno-style width and warmth in 4 modes', useFr:'largeur et chaleur Juno instantanee en 4 modes', touchEn:'mode I to IV, mix', touchFr:'mode I a IV, mix', avoidEn:'mono compatibility is critical', avoidFr:'la compatibilite mono est critique', recipe:'Silk Pad', glow:'#5cc5e6'}
+  ,{id:'ar-refract', vendor:'arturia', name:'Efx REFRACT', roleEn:'granular FX', roleFr:'FX granulaire', mode:'sound', tags:['motion','sound'], useEn:'real-time granular for transitions and textures', useFr:'granulaire temps reel pour transitions et textures', touchEn:'grain size 50-100ms, density, pitch, spray, mix', touchFr:'taille grain, densite, pitch, spray, mix', avoidEn:'you need a clean utility effect', avoidFr:'tu veux un effet utilitaire propre', recipe:'Granular Transition', glow:'#5cc5e6'}
+  ,{id:'vl-vintageverb', vendor:'valhalla', name:'VintageVerb', roleEn:'vintage algorithmic reverb', roleFr:'reverb algorithmique vintage', mode:'sound', tags:['space','sound'], useEn:'22 algorithms, 3 color eras (70s/80s/Now) — Concert Hall, Smooth Plate, Dirty Hall, Cathedral, Palace', useFr:'22 algorithmes, 3 eres (70s/80s/Now)', touchEn:'mode, color, decay, size, mod depth, diffusion', touchFr:'mode, color, decay, size, mod depth, diffusion', avoidEn:'you need surgical room emulation', avoidFr:'tu veux une emulation de room chirurgicale', recipe:'Long Verb Return', glow:'#6dd69e'}
+  ,{id:'vl-room', vendor:'valhalla', name:'ValhallaRoom', roleEn:'natural room reverb', roleFr:'reverb room naturelle', mode:'sound', tags:['space','sound'], useEn:'always-on room ambience with early/late blend', useFr:'ambiance room permanente, blend early/late', touchEn:'decay 0.4s, depth, early size, late size, high cut', touchFr:'decay 0.4s, depth, tailles early/late, high cut', avoidEn:'you want a huge tail or shimmer', avoidFr:'tu veux une grande queue ou du shimmer', recipe:'Room Return Standard', glow:'#6dd69e'}
+  ,{id:'vl-plate', vendor:'valhalla', name:'ValhallaPlate', roleEn:'plate reverb', roleFr:'reverb plate', mode:'sound', tags:['space','sound'], useEn:'dense plate for snare moments, wide and lush', useFr:'plate dense pour moments snare, large et lush', touchEn:'decay 3s, width, damping, mod depth', touchFr:'decay 3s, width, damping, mod depth', avoidEn:'you need a tight controlled room', avoidFr:'tu veux une room serree et controlee', recipe:'Snare Plate Moment', glow:'#6dd69e'}
+  ,{id:'vl-delay', vendor:'valhalla', name:'ValhallaDelay', roleEn:'tape delay', roleFr:'delay tape', mode:'sound', tags:['space','motion','sound'], useEn:'throw delays, tape degradation, sync rhythmic echoes', useFr:'throw delays, degradation tape, echos rythmiques', touchEn:'mode Tape, sync 1/4 dot, feedback 35%, age, HP/LP', touchFr:'mode Tape, sync 1/4 dot, feedback 35%, age, HP/LP', avoidEn:'you want a clean digital echo', avoidFr:'tu veux un echo digital propre', recipe:'Throw Delay Moment', glow:'#6dd69e'}
+  ,{id:'vl-supermassive', vendor:'valhalla', name:'Supermassive', roleEn:'massive space FX', roleFr:'FX espace massif', mode:'sound', tags:['space','sound'], useEn:'huge washes, drones, texture beds', useFr:'nappes immenses, drones, lits de texture', touchEn:'mode (Gemini, Hydra, Warp), warp, feedback, mix', touchFr:'mode, warp, feedback, mix', avoidEn:'you need a clean short room', avoidFr:'tu veux une room courte et propre', recipe:'Void Texture Bed', glow:'#6dd69e'}
+  ,{id:'vl-shimmer', vendor:'valhalla', name:'ValhallaShimmer', roleEn:'shimmer reverb', roleFr:'reverb shimmer', mode:'sound', tags:['space','sound'], useEn:'pitched reverb tails for breakdowns and transitions', useFr:'queues pitchees pour breakdowns et transitions', touchEn:'pitch shift, decay, diffusion, color', touchFr:'pitch shift, decay, diffusion, color', avoidEn:'you are in the main groove section', avoidFr:'tu es dans le groove principal', recipe:'Shimmer Breakdown', glow:'#6dd69e'}
+  ,{id:'iz-ozone', vendor:'izotope', name:'Ozone 12', roleEn:'mastering suite', roleFr:'suite mastering', mode:'mix', tags:['dynamics','mix'], useEn:'Maximizer, Imager, EQ, Vintage Tape for master chain', useFr:'Maximizer, Imager, EQ, Vintage Tape pour master', touchEn:'Maximizer IRC IV -1dBTP, Imager mono below 120Hz', touchFr:'Maximizer IRC IV -1dBTP, Imager mono sous 120Hz', avoidEn:'the mix still has problems to fix', avoidFr:'le mix a encore des problemes', recipe:'Master Bus Chain', glow:'#5ce6a5'}
+  ,{id:'iz-neutron', vendor:'izotope', name:'Neutron 5', roleEn:'channel strip', roleFr:'channel strip', mode:'mix', tags:['dynamics','tone','mix'], useEn:'Transient Shaper, Compressor, EQ, Clipper modules', useFr:'Transient Shaper, Compresseur, EQ, Clipper', touchEn:'TS attack +15% sustain -5%, Clipper soft -1 to -3dB', touchFr:'TS attack +15% sustain -5%, Clipper soft -1 a -3dB', avoidEn:'you have not gain-staged yet', avoidFr:'pas encore de gain staging', recipe:'Drum Bus Punch', glow:'#5ce6a5'}
+  ,{id:'cg-shaperbox', vendor:'cableguys', name:'ShaperBox 3', roleEn:'volume/filter shaper', roleFr:'shaper volume/filtre', mode:'sound', tags:['motion','dynamics','sound'], useEn:'precise sidechain, gate patterns, filter curves synced to BPM', useFr:'sidechain precis, patterns gate, courbes filtre synced BPM', touchEn:'Volume module, draw curve, trigger Audio/MIDI, smooth', touchFr:'module Volume, courbe, trigger Audio/MIDI, smooth', avoidEn:'a simple compressor sidechain is enough', avoidFr:'un sidechain compresseur suffit', recipe:'Precision Sidechain', glow:'#5c9ee6'}
+  ,{id:'dm-infiltrator', vendor:'devious', name:'Infiltrator', roleEn:'creative multi-FX', roleFr:'multi-FX creatif', mode:'sound', tags:['motion','sound'], useEn:'sound design transitions with XY pad, modular FX chain', useFr:'transitions sound design, XY pad, chaine FX modulaire', touchEn:'browse presets, automate Mix macro 0 to 100%', touchFr:'browse presets, automate Mix macro 0 a 100%', avoidEn:'you need a clean utility effect', avoidFr:'tu veux un effet utilitaire propre', recipe:'Wild Transition FX', glow:'#e65c5c'}
+  ,{id:'kg-polysix', vendor:'korg', name:'Polysix', roleEn:'warm polysynth', roleFr:'polysynth chaud', mode:'sound', tags:['instrument','sound'], useEn:'simple warm pads and arps with signature built-in chorus', useFr:'pads et arps chauds avec chorus integre signature', touchEn:'VCO wave, VCF cutoff/reso/EG, chorus mode, arpeggiator', touchFr:'VCO wave, VCF cutoff/reso/EG, chorus mode, arpeggiateur', avoidEn:'you need complex modulation or FM', avoidFr:'tu as besoin de mod complexe ou FM', recipe:'Poly Warm Pad', glow:'#ccc65c'}
 ];
-
 const routes = [
   { titleEn:'Dark bass with movement', titleFr:'Basse dark avec mouvement', bodyEn:'Start from Serum or Twin. Add Saturn 2 or TAIP. Control low mids with Pro-Q / Pro-MB.', bodyFr:'Pars de Serum ou Twin. Ajoute Saturn 2 ou TAIP. Contrôle les bas médiums avec Pro-Q / Pro-MB.', tags:['bass','movement','sound'] },
   { titleEn:'Minimal groove without deadness', titleFr:'Groove minimal sans mollesse', bodyEn:'Keep fewer drum layers. Use Drumazon / Nithonat. Add one moving hat lane, not five.', bodyFr:'Garde moins de couches de drums. Utilise Drumazon / Nithonat. Ajoute une lane de hats vivante, pas cinq.', tags:['drums','minimal','sound'] },
@@ -307,6 +345,12 @@ const routes = [
   { titleEn:'Break tension builder', titleFr:'Construction de tension en break', bodyEn:'Transit 2, Timeless 3, Crystals or UltraTap. One macro, one destination, one clear stop point.', bodyFr:'Transit 2, Timeless 3, Crystals ou UltraTap. Un macro, une destination, un stop point clair.', tags:['break','fx','sound'] },
   { titleEn:'Muddy mix rescue', titleFr:'Sauvetage mix boueux', bodyEn:'Find the overlap first. Then try Pro-Q, Pro-MB, SplitEQ and simplify the arrangement.', bodyFr:'Trouve d’abord le chevauchement. Ensuite essaye Pro-Q, Pro-MB, SplitEQ et simplifie l’arrangement.', tags:['mix','cleanup','tone'] },
   { titleEn:'Huge space without washing the groove', titleFr:'Grand espace sans laver le groove', bodyEn:'Use ducked reverb and keep low-end mono. Pro-R 2 / Crystalline for control, Blackhole for only one spotlight moment.', bodyFr:'Utilise une reverb duckée et garde le bas en mono. Pro-R 2 / Crystalline pour le contrôle, Blackhole pour un seul vrai moment spotlight.', tags:['space','mix','sound'] }
+  ,{ titleEn:'Diva sub bass foundation', titleFr:'Fondation sub bass Diva', bodyEn:'Triple VCO sine sub, Ladder 24dB LP, cutoff 32%. Saturn 2 Subtle Tube on 50-150Hz, Pro-Q mono bass below 120Hz.', bodyFr:'Triple VCO sine sub, Ladder 24dB LP, cutoff 32%. Saturn 2 Subtle Tube 50-150Hz, Pro-Q mono bass sous 120Hz.', tags:['bass','sound'] }
+  ,{ titleEn:'Pad from scratch with Jup-8', titleFr:'Pad from scratch avec Jup-8', bodyEn:'Two detuned saws, LPF 48%, built-in chorus Mode I. DIMENSION-D for width. ValhallaPlate 2.5s, mix 18%.', bodyFr:'Deux saws detunees, LPF 48%, chorus Mode I. DIMENSION-D pour largeur. ValhallaPlate 2.5s, mix 18%.', tags:['pad','sound'] }
+  ,{ titleEn:'Throw delay for transitions', titleFr:'Throw delay pour transitions', bodyEn:'ValhallaDelay Tape mode, 1/4 dot, feedback 35%, LP 4kHz. Send = 0 by default, automate only at the exact moment.', bodyFr:'ValhallaDelay mode Tape, 1/4 dot, feedback 35%, LP 4kHz. Send = 0, automate uniquement au moment exact.', tags:['fx','transition','sound'] }
+  ,{ titleEn:'Analog warmth on anything', titleFr:'Chaleur analogique sur tout', bodyEn:'Decimort 2 at 24bit/33kHz, then Tape MELLO-FI wow 8%, flutter 6%, sat 12%. Never on kick or sub.', bodyFr:'Decimort 2 24bit/33kHz, puis Tape MELLO-FI wow 8%, flutter 6%, sat 12%. Jamais sur kick/sub.', tags:['tone','sound'] }
+  ,{ titleEn:'Master bus chain', titleFr:'Chaine master', bodyEn:'Pro-Q 4 HP 22Hz → Pro-C 2 Bus 1.5:1 mix 70% → Ozone Imager mono<120Hz → Ozone Maximizer -14 LUFS.', bodyFr:'Pro-Q 4 HP 22Hz → Pro-C 2 Bus 1.5:1 mix 70% → Ozone Imager mono<120Hz → Ozone Maximizer -14 LUFS.', tags:['mix','dynamics'] }
+  ,{ titleEn:'Shimmer for breakdowns only', titleFr:'Shimmer breakdowns uniquement', bodyEn:'ValhallaShimmer +12st at 15%. Send=0 default. Automate UP during breakdown only. Cut before drop.', bodyFr:'ValhallaShimmer +12st 15%. Send=0. Automate UP pendant breakdown uniquement. Coupe avant le drop.', tags:['space','transition','sound'] }
 ];
 
 const recipes = [
@@ -316,6 +360,17 @@ const recipes = [
   { titleEn:'Drum Weight Bus', titleFr:'Bus de poids drums', bodyEn:'Drumazon / Nepheton core drums → Redoptor 2 or Invigorate for edge → Pro-C 3 for shape.', bodyFr:'Core drums Drumazon / Nepheton → Redoptor 2 ou Invigorate pour l’edge → Pro-C 3 pour la forme.', stopEn:'Stop when the drums feel denser, not just louder.', stopFr:'Stop quand les drums paraissent plus denses, pas juste plus fortes.', uses:['Drumazon 2','Nepheton 2','Redoptor 2','Pro-C 3'] },
   { titleEn:'Granular Bed Maker', titleFr:'Fabrique de lit granulaire', bodyEn:'Grainferno texture → Crystalline long space → Volcano or Godfazer for slow movement.', bodyFr:'Texture Grainferno → grand espace Crystalline → Volcano ou Godfazer pour un mouvement lent.', stopEn:'Stop when one bed adds emotion without masking the hook.', stopFr:'Stop quand un seul bed ajoute de l’émotion sans masquer le hook.', uses:['Grainferno','Crystalline','Volcano 3','Godfazer'] },
   { titleEn:'Break Builder Fast', titleFr:'Constructeur de break rapide', bodyEn:'Transit 2 macro → Timeless 3 throw → Crystals rise → limiter safety on FX bus.', bodyFr:'Macro Transit 2 → throw Timeless 3 → montée Crystals → limiteur de sécurité sur le bus FX.', stopEn:'Stop at one hero transition, not a chain of fireworks.', stopFr:'Stop à une transition héroïque, pas une chaîne de feux d’artifice.', uses:['Transit 2','Timeless 3','Crystals','Pro-L 2'] }
+  ,{ titleEn:'Dark Sub Architect', titleFr:'Architecte de sub dark', bodyEn:'Diva Triple VCO sine → Saturn 2 Subtle Tube 50-150Hz drive 12% → Pro-C 2 Opto 3:1 → Pro-Q 4 mono bass M/S below 120Hz.', bodyFr:'Diva Triple VCO sine → Saturn 2 Subtle Tube 50-150Hz drive 12% → Pro-C 2 Opto 3:1 → Pro-Q 4 mono bass M/S sous 120Hz.', stopEn:'Stop when the sub is felt, not heard above 150Hz.', stopFr:'Stop quand le sub se ressent, pas au-dessus de 150Hz.', uses:['Diva','Saturn 2','Pro-C 2','Pro-Q 4'] }
+  ,{ titleEn:'Mono Beast Bass', titleFr:'Basse mono beast', bodyEn:'Mini V3 3-osc saw+square+saw32, overdrive ON → Devastor 2 pre-filter preamp +12dB → Pro-Q 4 HP 30Hz, cut 300Hz → Pro-C 2 Punch 4:1.', bodyFr:'Mini V3 3 osc, overdrive ON → Devastor 2 pre-filter preamp +12dB → Pro-Q 4 HP 30Hz, cut 300Hz → Pro-C 2 Punch 4:1.', stopEn:'Stop when it grooves with the kick at low volume.', stopFr:'Stop quand ca groove avec le kick a bas volume.', uses:['Mini V3','Devastor 2','Pro-Q 4','Pro-C 2'] }
+  ,{ titleEn:'Blade Runner Wash', titleFr:'Nappe Blade Runner', bodyEn:'CS-80 V4 dual layer saws, slow attack 1s, release 4s → ShimmerVerb +12st@8% → Pro-Q 4 HP 150Hz, shelf -2dB@6kHz.', bodyFr:'CS-80 V4 dual layer saws, attack lent 1s, release 4s → ShimmerVerb +12st@8% → Pro-Q 4 HP 150Hz, shelf -2dB@6kHz.', stopEn:'Stop when the pad sits behind everything without grabbing attention.', stopFr:'Stop quand le pad reste derriere tout sans attirer l attention.', uses:['CS-80 V4','ShimmerVerb','Pro-Q 4'] }
+  ,{ titleEn:'Silk Pad', titleFr:'Pad soyeux', bodyEn:'Jup-8 V4 dual saw ±6ct, LPF 48%, chorus Mode I → DIMENSION-D Mode II → ValhallaPlate 2.5s mix 18% → Pro-Q 4 HP 100Hz.', bodyFr:'Jup-8 V4 dual saw ±6ct, LPF 48%, chorus Mode I → DIMENSION-D Mode II → ValhallaPlate 2.5s mix 18% → Pro-Q 4 HP 100Hz.', stopEn:'Stop when it feels warm without dominating the mix.', stopFr:'Stop quand c est chaud sans dominer le mix.', uses:['Jup-8 V4','Chorus DIMENSION-D','ValhallaPlate','Pro-Q 4'] }
+  ,{ titleEn:'Drum Bus Punch', titleFr:'Bus drums punch', bodyEn:'Pro-Q 4 HP 30Hz → Pro-C 2 Bus 2:1 attack 10ms mix 80% → Saturn 2 Warm Tube 10% → Neutron 5 TS attack +15% sustain -5%.', bodyFr:'Pro-Q 4 HP 30Hz → Pro-C 2 Bus 2:1 attack 10ms mix 80% → Saturn 2 Warm Tube 10% → Neutron 5 TS attack +15% sustain -5%.', stopEn:'Stop at -4dB gain reduction maximum.', stopFr:'Stop a -4dB de reduction de gain max.', uses:['Pro-Q 4','Pro-C 2','Saturn 2','Neutron 5'] }
+  ,{ titleEn:'Snare Plate Moment', titleFr:'Moment plate snare', bodyEn:'ValhallaPlate 3s → Pro-Q 4 HP 300Hz LP 6kHz → sidechain from snare (Pro-C 2 4:1, fast). Automate send: full at drop, off elsewhere.', bodyFr:'ValhallaPlate 3s → Pro-Q 4 HP 300Hz LP 6kHz → sidechain snare (Pro-C 2 4:1, fast). Automate send: full au drop, off ailleurs.', stopEn:'Stop when the plate swells after the hit without muddying the groove.', stopFr:'Stop quand la plate swell apres le hit sans salir le groove.', uses:['ValhallaPlate','Pro-Q 4','Pro-C 2'] }
+  ,{ titleEn:'Tape Warmth Layer', titleFr:'Couche warmth tape', bodyEn:'Decimort 2 24bit/33kHz → Tape MELLO-FI wow 8%, flutter 6%, sat 12%, noise OFF. On pads and leads only, never kick/sub.', bodyFr:'Decimort 2 24bit/33kHz → Tape MELLO-FI wow 8%, flutter 6%, sat 12%, bruit OFF. Sur pads et leads, jamais kick/sub.', stopEn:'Stop if you hear any noise or pitch wobble consciously.', stopFr:'Stop si tu entends du bruit ou du wobble de pitch consciemment.', uses:['Decimort 2','Tape MELLO-FI'] }
+  ,{ titleEn:'Master Bus Chain', titleFr:'Chaine master bus', bodyEn:'Pro-Q 4 HP 22Hz safety → Pro-C 2 Bus 1.5:1 mix 70% -2dB GR → Ozone Imager mono<120Hz → Ozone Maximizer IRC IV -1dBTP -14LUFS.', bodyFr:'Pro-Q 4 HP 22Hz → Pro-C 2 Bus 1.5:1 mix 70% -2dB GR → Ozone Imager mono<120Hz → Ozone Maximizer IRC IV -1dBTP -14LUFS.', stopEn:'Stop when GR never exceeds -2dB. If it does, fix the mix.', stopFr:'Stop quand le GR ne depasse jamais -2dB. Sinon, corrige le mix.', uses:['Pro-Q 4','Pro-C 2','Ozone 12'] }
+  ,{ titleEn:'Long Verb Return', titleFr:'Return verb longue', bodyEn:'VintageVerb Concert Hall, Color 80s, decay 2.5s, pre-delay 30ms, size 65%. HP return at 250Hz. Sidechain to kick.', bodyFr:'VintageVerb Concert Hall, Color 80s, decay 2.5s, pre-delay 30ms, size 65%. HP return 250Hz. Sidechain au kick.', stopEn:'Stop when the verb adds depth without smearing the groove.', stopFr:'Stop quand la verb ajoute de la profondeur sans salir le groove.', uses:['VintageVerb'] }
+  ,{ titleEn:'Precision Sidechain', titleFr:'Sidechain precis', bodyEn:'ShaperBox 3 Volume module, audio trigger from kick. Draw fast duck 5ms, smooth return 50ms. More precise than compressor SC.', bodyFr:'ShaperBox 3 module Volume, trigger audio du kick. Duck rapide 5ms, return smooth 50ms. Plus precis qu un compresseur SC.', stopEn:'Stop when the duck is invisible but the bass breathes with the kick.', stopFr:'Stop quand le duck est invisible mais la basse respire avec le kick.', uses:['ShaperBox 3'] }
+  ,{ titleEn:'SEM Growl Bass', titleFr:'Basse growl SEM', bodyEn:'SEM V2 saw+pulse, multimode filter blend LP→Notch → Saturn 2 Warm Tube 100-500Hz drive 18% → Pro-C 2 Punch 4:1.', bodyFr:'SEM V2 saw+pulse, multimode blend LP→Notch → Saturn 2 Warm Tube 100-500Hz drive 18% → Pro-C 2 Punch 4:1.', stopEn:'Stop when the growl adds character without masking the kick.', stopFr:'Stop quand le growl ajoute du caractere sans masquer le kick.', uses:['SEM V2','Saturn 2','Pro-C 2'] }
 ];
 
 let state = {
@@ -332,6 +387,25 @@ let state = {
 const $ = (s, ctx=document) => ctx.querySelector(s);
 const $$ = (s, ctx=document) => Array.from(ctx.querySelectorAll(s));
 
+
+const fixIt = [
+  {sEn:'Kick and bass fight',sFr:'Kick et basse se battent',fEn:'Sidechain bass to kick (ShaperBox 3 or Ableton Compressor). Check phase with Pro-Q 4 analyzer.',fFr:'Sidechain bass au kick (ShaperBox 3 ou Ableton Compressor). Check phase avec Pro-Q 4 analyzer.'},
+  {sEn:'Muddy mix',sFr:'Mix boueux',fEn:'Pro-Q 4 on every track: cut 200-400Hz boxiness. HP everything except kick/bass at 100Hz+.',fFr:'Pro-Q 4 sur chaque piste: coupe 200-400Hz. HP tout sauf kick/bass a 100Hz+.'},
+  {sEn:'Flat drums',sFr:'Drums plats',fEn:'Drums bus glue (Pro-C 2 Bus 2:1 mix 80%) + Saturn 2 Warm Tube 10% + Neutron TS attack +15%.',fFr:'Bus drums (Pro-C 2 Bus 2:1 mix 80%) + Saturn 2 Warm Tube 10% + Neutron TS attack +15%.'},
+  {sEn:'Mix too narrow',sFr:'Mix trop etroit',fEn:'MicroPitch on mids/highs (±8ct, 10-12ms). Check Pro-Q 4 M/S: side HP 150Hz. Verify mono.',fFr:'MicroPitch sur mids/highs (±8ct, 10-12ms). Pro-Q 4 M/S: side HP 150Hz. Verifier mono.'},
+  {sEn:'Reverb muddies low-end',sFr:'Reverb salit le low-end',fEn:'HP ALL returns at 200Hz minimum. Sidechain returns to kick. Reduce sends.',fFr:'HP TOUS les returns a 200Hz minimum. Sidechain returns au kick. Reduis les sends.'},
+  {sEn:'Snare disappears',sFr:'Snare disparait',fEn:'Neutron TS attack +18% on snare. Add snare plate return (ValhallaPlate 3s, HP 300Hz, SC from snare).',fFr:'Neutron TS attack +18% sur snare. Ajoute return plate snare (ValhallaPlate 3s, HP 300Hz, SC snare).'},
+  {sEn:'Master too loud / distorts',sFr:'Master trop fort / distortion',fEn:'Lower ALL faders by -3dB. Gain stage to -12dBFS peaks. Pro-L 2 max -2dB GR.',fFr:'Baisse TOUT de -3dB. Gain staging -12dBFS peaks. Pro-L 2 max -2dB GR.'},
+  {sEn:'Sound too digital / cold',sFr:'Son trop digital / froid',fEn:'Decimort 2 (24bit/33kHz) + Tape MELLO-FI (wow 8%, flutter 6%, sat 12%). Saturn 2 Subtle Tube micro-dose.',fFr:'Decimort 2 (24bit/33kHz) + Tape MELLO-FI (wow 8%, flutter 6%, sat 12%). Saturn 2 Subtle Tube micro-dose.'},
+  {sEn:'Bass too boomy',sFr:'Basse trop boomy',fEn:'Pro-MB band 60-120Hz 3:1 slow attack. Check room acoustics. Mono below 120Hz.',fFr:'Pro-MB bande 60-120Hz 3:1 attack lent. Check acoustique. Mono sous 120Hz.'},
+  {sEn:'Boring transitions',sFr:'Transitions ennuyeuses',fEn:'Throw delay automation (ValhallaDelay). Snare plate moment. Serum noise risers. ShaperBox filter sweep.',fFr:'Throw delay automation (ValhallaDelay). Moment plate snare. Risers Serum. Sweep filtre ShaperBox.'},
+  {sEn:'Thin amateur mix',sFr:'Mix amateur / thin',fEn:'Gain staging -12dBFS per track. Drums bus chain. Master bus chain. Level-match everything.',fFr:'Gain staging -12dBFS par piste. Bus drums. Bus master. Level-match tout.'},
+  {sEn:'Too many elements clash',sFr:'Trop d elements qui clash',fEn:'MUTE all. Rebuild: Kick, Bass, Drums, Hook, Pads. One by one.',fFr:'MUTE tout. Rebuild: Kick, Bass, Drums, Hook, Pads. Un par un.'},
+  {sEn:'Hi-hats too harsh',sFr:'Hi-hats trop harsh',fEn:'HP strict at 4kHz+. Decimort 2 subtle (24bit/30kHz). Pro-C 2 Opto for peaks.',fFr:'HP strict a 4kHz+. Decimort 2 subtil (24bit/30kHz). Pro-C 2 Opto pour les pics.'},
+  {sEn:'Not enough punch',sFr:'Pas assez de punch',fEn:'Neutron TS attack +15-25%. Neutron Clipper soft -1 to -3dB. Parallel crush on return.',fFr:'Neutron TS attack +15-25%. Neutron Clipper soft -1 a -3dB. Parallel crush en return.'},
+  {sEn:'Stereo image broken',sFr:'Image stereo bancale',fEn:'Ozone Imager check. Mono below 120Hz. Pro-Q 4 M/S Polish. Utility mono check.',fFr:'Ozone Imager check. Mono sous 120Hz. Pro-Q 4 M/S. Utility mono check.'},
+  {sEn:'CPU overload',sFr:'CPU overload',fEn:'Freeze finalized tracks. Bounce heavy instruments. Reduce Diva accuracy to FAST.',fFr:'Freeze les pistes finalisees. Bounce les instruments lourds. Diva accuracy en FAST.'}
+];
 function setTheme(theme){
   state.theme = theme;
   document.body.dataset.theme = theme;
@@ -370,6 +444,7 @@ function setLang(lang){
   renderRoutes();
   renderRecipes();
   renderChecklists();
+  renderFixIt();
   updatePageTitle();
   if (state.selectedId) openInspector(state.selectedId);
   if (!$('#audioFile').files?.length) showMixPlaceholder();
@@ -381,7 +456,8 @@ function updatePageTitle(){
     library: i18n[state.lang].pageLibrary,
     sound: i18n[state.lang].pageSound,
     mix: i18n[state.lang].pageMix,
-    finish: i18n[state.lang].pageFinish
+    finish: i18n[state.lang].pageFinish,
+    fixit: i18n[state.lang].pageFixit
   };
   $('#pageTitle').textContent = map[state.page];
 }
@@ -792,6 +868,16 @@ function initUi(){
   window.addEventListener('resize', drawPlaceholderWave);
 }
 
+function renderFixIt(){
+  const el = $('#fixitGrid');
+  if(!el) return;
+  el.innerHTML = fixIt.map(f => {
+    const s = state.lang==='fr' ? f.sFr : f.sEn;
+    const fix = state.lang==='fr' ? f.fFr : f.fEn;
+    return `<article class="fixit-card glass-panel"><div class="fixit-symptom"><span class="fixit-dot"></span>${s}</div><p class="fixit-fix">${fix}</p></article>`;
+  }).join('');
+}
+
 function boot(){
   initUi();
   setTheme(state.theme);
@@ -803,6 +889,7 @@ function boot(){
   renderRoutes();
   renderRecipes();
   renderChecklists();
+  renderFixIt();
   showMixPlaceholder();
   initAudio();
   initGate();
