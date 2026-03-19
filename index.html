@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kapman Studio</title>
   <meta name="description" content="Kapman Studio — production, sound design, mix decisions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -122,30 +125,30 @@
             </div>
 
             <div class="hero-visual">
-              <div class="orb orb-a"></div>
-              <div class="orb orb-b"></div>
-              <div class="hero-panel glass-panel">
-                <div class="hero-stat-row">
-                  <div>
-                    <span data-i18n="heroStat1">Selected stack</span>
-                    <strong>Serum → Saturn 2 → Pro-Q 4</strong>
-                  </div>
-                  <button class="mini-chip quick-nav" data-target="sound" data-i18n="heroJump">Jump in</button>
+              <div class="session-brief glass-panel">
+                <div class="brief-header">
+                  <span class="brief-badge">SESSION BRIEF</span>
+                  <span class="brief-live">● LIVE</span>
                 </div>
-                <div class="hero-line"></div>
-                <div class="hero-grid">
-                  <article class="micro-card">
-                    <p data-i18n="microCard1Title">Fast lane</p>
-                    <strong data-i18n="microCard1Value">Dark bass stack</strong>
-                  </article>
-                  <article class="micro-card">
-                    <p data-i18n="microCard2Title">Check now</p>
-                    <strong data-i18n="microCard2Value">Low-end mono</strong>
-                  </article>
-                  <article class="micro-card">
-                    <p data-i18n="microCard3Title">Sound focus</p>
-                    <strong data-i18n="microCard3Value">Movement + tension</strong>
-                  </article>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-key" data-i18n="heroStat1">Selected stack</span>
+                    <strong class="brief-val">Serum → Saturn 2 → Pro-Q 4</strong>
+                    <button class="mini-chip quick-nav" data-target="sound" data-i18n="heroJump">Jump in</button>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-key" data-i18n="microCard2Title">Check now</span>
+                    <strong class="brief-val" data-i18n="microCard2Value">Low-end mono</strong>
+                    <button class="mini-chip quick-nav" data-target="mix">→</button>
+                  </div>
+                  <div class="brief-row brief-row--full">
+                    <span class="brief-key" data-i18n="microCard3Title">Sound focus</span>
+                    <strong class="brief-val" data-i18n="microCard3Value">Movement + tension</strong>
+                  </div>
+                </div>
+                <div class="brief-foot">
+                  <span data-i18n="microCard1Value">Dark bass stack</span>
+                  <span class="brief-tag" data-i18n="microCard1Title">Fast lane</span>
                 </div>
               </div>
             </div>

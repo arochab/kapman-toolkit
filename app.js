@@ -1,4 +1,4 @@
-const PASSWORD = "kapman";
+const PASSWORD = "EscapeMusic2026!";
 
 const i18n = {
   en: {
@@ -824,8 +824,8 @@ function drawPlaceholderWave(){
   resizeCanvas(canvas);
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const grad = ctx.createLinearGradient(0,0,canvas.width,0);
-  grad.addColorStop(0, 'rgba(126,167,255,.7)');
-  grad.addColorStop(1, 'rgba(118,242,198,.7)');
+  grad.addColorStop(0, 'rgba(0,232,162,.55)');
+  grad.addColorStop(1, 'rgba(0,200,130,.40)');
   ctx.strokeStyle = grad;
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -923,9 +923,9 @@ function drawWaveform(samples){
   const h = canvas.clientHeight || 280;
   ctx.clearRect(0,0,w,h);
   const grad = ctx.createLinearGradient(0,0,w,0);
-  grad.addColorStop(0,'rgba(126,167,255,.95)');
-  grad.addColorStop(.5,'rgba(118,242,198,.95)');
-  grad.addColorStop(1,'rgba(255,127,183,.95)');
+  grad.addColorStop(0,'rgba(0,232,162,.95)');
+  grad.addColorStop(.5,'rgba(0,210,140,.85)');
+  grad.addColorStop(1,'rgba(0,190,120,.90)');
   ctx.strokeStyle = grad;
   ctx.lineWidth = 2;
   ctx.beginPath();
