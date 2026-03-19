@@ -1,885 +1,1534 @@
-const PASSWORD = "EscapeMusic2026!";
+/* ============================================================
+   KAPMAN STUDIO — app.js
+   Complete application logic, data, rendering
+   ============================================================ */
+const GATE_PASS = 'EscapeMusic2026!';
 
-/* ─── i18n ─── */
-const i18n = {
+/* ============================================================
+   i18n
+   ============================================================ */
+const I18N = {
   en: {
-    gateBadge:"Private preview",gateTitle:"Kapman Studio",gateBody:"Enter password to open the toolkit.",
-    gatePlaceholder:"Password",gateEnter:"Enter",
-    topEyebrow:"Production decision system",
-    navHome:"Home",navLibrary:"Library",navSound:"Sound Design",navMix:"Mix Check",navFinish:"Finish",navFixit:"Fix-It",
-    kpiPlugins:"plugins",kpiRecipes:"recipes",
-    searchPlaceholder:"Search plug-ins, recipes, roles…",
-    themeToggle:"Light",
-    heroEyebrow:"Private workflow cockpit",
-    heroTitle:"Choose faster. Design deeper. Release sharper.",
-    heroSub:"A lean production app for plug-in choice, sound design moves and pre-master checks.",
-    heroBtnLibrary:"Open Library",heroBtnSound:"Sound Design",heroBtnMix:"Mix Check",
-    heroStat1:"Selected stack",heroJump:"Jump in",
-    microCard1Title:"Fast lane",microCard1Value:"Dark bass stack",
-    microCard2Title:"Check now",microCard2Value:"Low-end mono",
-    microCard3Title:"Sound focus",microCard3Value:"Movement + tension",
-    vendorsTitle:"Vendor rail",vendorsSub:"Fast entry points",
-    homeCard1Label:"Library",homeCard1Title:"Browse by role, not by brand noise",homeCard1Body:"Open one grid. Pick a role. Use the inspector.",
-    homeCard2Label:"Sound design",homeCard2Title:"Get stacks for bass, leads, motion and texture",homeCard2Body:"Recipes stay short. Details stay contextual.",
-    homeCard3Label:"Mix check",homeCard3Title:"See measured signals, not fake guru talk",homeCard3Body:"Waveform, balance, stereo and triggered actions.",
-    libraryEyebrow:"Expanded plug-in coverage",libraryTitle:"Library",
-    libraryQuickTitle:"Find by role first",libraryQuickSub:"Use one cut before scanning cards",
-    libraryFeaturedTitle:"Fast track",
-    libraryFeaturedA:"Start with bass tools",libraryFeaturedABody:"Sub, mono safety and low-mid control.",
-    libraryFeaturedB:"Shape width intentionally",libraryFeaturedBBody:"Pitch width, chorus, then mono-check.",
-    libraryFeaturedC:"Choose one transition family",libraryFeaturedCBody:"Delay throw, space tail, or filter sweep.",
-    inspectorEyebrow:"Inspector",inspectorTitle:"Pick one item",inspectorBody:"Details appear here so the grid stays clean.",
-    inspectorHintTitle:"Use the grid like a picker, not a catalog",
-    inspectorHintBody:"Filter once, select one tool, then decide whether it solves the job faster than your default.",
-    inspectorHintA:"Bass and mono-safe choices",inspectorHintABody:"Start with bass or mix tags if low end is the blocker.",
-    inspectorHintB:"Width and movement choices",inspectorHintBBody:"Use space or motion when the track feels static.",
-    inspectorUse:"Best for",inspectorTouch:"Touch first",inspectorAvoid:"Avoid when",
-    inspectorRole:"Role",inspectorMode:"Mode",inspectorRecipe:"Related recipe",
-    soundEyebrow:"Creative moves",soundTitle:"Sound Design",
-    soundBuilderEyebrow:"Decision engine",soundBuilderTitle:"Build a direction before you tweak",
-    soundBuilderBody:"Pick a goal and a constraint. The app suggests one route, one recipe, and one next experiment.",
-    soundGoalLabel:"Goal",soundConstraintLabel:"Constraint",
-    sbEmpty:"Pick one goal to get a route, a recipe, and a next experiment.",
-    sbRoute:"Recommended route",sbRecipe:"Recommended recipe",sbNext:"Next experiment",
-    firstMoveLabel:"First move",whyWorksLabel:"Why it works",commonMistakeLabel:"Common mistake",
-    routeBandTitle:"Quick routes",routeBandSub:"One problem, one direction",
-    recipesTitle:"Recipes",recipesSub:"Short stacks with a stop rule",
-    stopRuleLabel:"Stop rule",routeUse:"Use when",recipeUses:"Uses",
-    vendorJump:"Open",
-    mixEyebrow:"Measured only",mixTitle:"Mix Check",
-    uploadEyebrow:"Drop audio",uploadTitle:"WAV / AIFF / MP3",
-    uploadBody:"Client-side analysis only. Nothing leaves your browser.",uploadBtn:"Choose file",
-    metricPeak:"Peak",metricRms:"RMS",metricCrest:"Crest",metricStereo:"Stereo",
-    bandsLow:"Low",bandsLowMid:"Low mids",bandsHighMid:"High mids",bandsHigh:"High",
-    mixActionTitle:"Try",issueNone:"No triggered issues.",issueNeedFile:"Load a file to get results.",
-    uploadDone:"Audio loaded",wrongPassword:"Wrong password",
-    finishEyebrow:"End game",finishTitle:"Finish",
-    finishIntroEyebrow:"Final pass",
-    finishIntroTitle:"Bounce only when the track survives small speakers, mono, and low volume.",
-    finishIntroBody:"Use these five blocks as a final filter. If two blocks fail, stop exporting and fix the real issue first.",
-    finishCard1:"Before export",finishCard2:"Reference pass",finishCard3:"Sound design sanity",
-    finishCard4:"Playback translation",finishCard5:"Arrangement sanity",
-    finishA1:"Peak margin still below about -1 dBFS before mastering.",
-    finishA2:"Kick and bass still read clearly at low volume.",
-    finishA3:"No single FX throw steals the whole section.",
-    finishA4:"Transitions still feel intentional with drums muted.",
-    finishB1:"Compare against one reference, not five random tracks.",
-    finishB2:"Check laptop speakers and mono after studio speakers.",
-    finishB3:"Only correct what repeats as a problem twice.",
-    finishB4:"If the top end feels impressive only when loud, re-check it.",
-    finishC1:"Mute decorative layers one by one. Keep only what moves the track.",
-    finishC2:"If one patch needs too much fixing, swap the source sooner.",
-    finishC3:"Automate one macro hard, not six tiny moves everywhere.",
-    finishC4:"Leave one signature texture per section, not three competing ones.",
-    finishD1:"Check the drop on laptop speakers and at phone volume.",
-    finishD2:"Mono-check the low end below 120 Hz one last time.",
-    finishD3:"Make sure the hook still reads when the level is low.",
-    finishD4:"If the hats dominate small speakers, pull them back now.",
-    finishE1:"Mute one non-essential layer in each section and see if the track improves.",
-    finishE2:"Every transition should have one clear gesture, not five weak ones.",
-    finishE3:"The second drop should add density, width, or contrast — not just more level.",
-    finishE4:"If the break loses all momentum, leave one moving element alive.",
-    fixitEyebrow:"Symptom to solution",fixitTitle:"Fix-It",
-    filterAll:"All",filterMix:"Mix",filterSound:"Sound",filterDynamics:"Dynamics",
-    filterSpace:"Space",filterTone:"Tone",filterMotion:"Motion",filterInstrument:"Instrument",
-    goalBass:"Bass",goalLead:"Lead",goalPad:"Pad",goalDrums:"Drums",goalTexture:"Texture",goalTransition:"Transition",
-    conClean:"Clean",conGrit:"Grit",conMono:"Mono-safe",conWide:"Wide",conMoving:"Moving",conMinimal:"Minimal",
-    pageHome:"Home",pageLibrary:"Library",pageSound:"Sound Design",pageMix:"Mix Check",pageFinish:"Finish",pageFixit:"Fix-It",
-    themeLightLabel:"Light",themeDarkLabel:"Dark",
+    'gate-sub': 'studio',
+    'gate-placeholder': 'password',
+    'gate-error': 'wrong password',
+    'mode-design': 'DESIGN',
+    'mode-mix': 'MIX',
+    'mode-tools': 'TOOLS',
+    'design-synths': 'Synths',
+    'design-routes': 'Routes',
+    'design-recipes': 'Recipes',
+    'design-fx': 'FX Palette',
+    'synths-title': 'Sound Sources',
+    'synths-desc': 'Your synthesis engines — pick a starting point',
+    'tier-primary': 'PRIMARY',
+    'tier-classic': 'CLASSIC ANALOG',
+    'tier-digital': 'DIGITAL / FM / WAVETABLE',
+    'tier-experimental': 'EXPERIMENTAL / MODULAR',
+    'tier-drums': 'DRUM MACHINES',
+    'routes-title': 'Sound Design Routes',
+    'routes-desc': 'Signal paths for specific sonic goals',
+    'recipes-title': 'Recipes',
+    'recipes-desc': 'Step-by-step sound design procedures',
+    'fx-title': 'FX Palette',
+    'fx-desc': 'Creative effects — texture, movement, space, destruction',
+    'mix-check': 'Mix Check',
+    'mix-chains': 'Chains',
+    'mix-finish': 'Finish',
+    'mix-fixit': 'Fix-It',
+    'mixcheck-title': 'Mix Check',
+    'mixcheck-desc': 'Systematic listening pass — diagnose before you touch anything',
+    'chains-title': 'Mix Chains',
+    'chains-desc': 'Channel strip templates — EQ, compression, dynamics, stereo',
+    'finish-title': 'Finish Checklist',
+    'finish-desc': 'Pre-master verification — nothing left unchecked',
+    'fixit-title': 'Fix-It Playbook',
+    'fixit-desc': 'Problem → diagnosis → solution with your plugins',
+    'tools-inventory': 'Inventory',
+    'tools-refs': 'References',
+    'inventory-title': 'Plugin Inventory',
+    'inventory-desc': 'Everything you own — searchable',
+    'inventory-search-placeholder': 'search plugins...',
+    'inventory-plugins': 'plugins',
+    'refs-title': 'Quick References',
+    'refs-desc': 'Frequency ranges, gain staging, sidechain settings',
   },
   fr: {
-    gateBadge:"Aperçu privé",gateTitle:"Kapman Studio",gateBody:"Entre le mot de passe pour ouvrir le toolkit.",
-    gatePlaceholder:"Mot de passe",gateEnter:"Entrer",
-    topEyebrow:"Système de décision production",
-    navHome:"Accueil",navLibrary:"Bibliothèque",navSound:"Sound design",navMix:"Mix Check",navFinish:"Finalisation",navFixit:"Fix-It",
-    kpiPlugins:"plugins",kpiRecipes:"recettes",
-    searchPlaceholder:"Chercher plugins, recettes, rôles…",
-    themeToggle:"Clair",
-    heroEyebrow:"Cockpit de workflow privé",
-    heroTitle:"Choisir plus vite. Designer plus profond. Finir plus propre.",
-    heroSub:"Une app de prod légère pour choisir tes plugins, tes moves de sound design et checker le pré-master.",
-    heroBtnLibrary:"Ouvrir la bibliothèque",heroBtnSound:"Sound design",heroBtnMix:"Mix Check",
-    heroStat1:"Stack sélectionné",heroJump:"Ouvrir",
-    microCard1Title:"Fast lane",microCard1Value:"Stack bass dark",
-    microCard2Title:"À checker",microCard2Value:"Mono du low-end",
-    microCard3Title:"Focus son",microCard3Value:"Mouvement + tension",
-    vendorsTitle:"Rail vendors",vendorsSub:"Entrées rapides",
-    homeCard1Label:"Bibliothèque",homeCard1Title:"Navigue par rôle, pas par bruit de marque",homeCard1Body:"Une grille. Un rôle. L'inspector pour les détails.",
-    homeCard2Label:"Sound design",homeCard2Title:"Des stacks pour basses, leads, mouvement et texture",homeCard2Body:"Les recettes restent courtes. Les détails restent contextuels.",
-    homeCard3Label:"Mix check",homeCard3Title:"Des mesures visibles, pas du pseudo guru talk",homeCard3Body:"Waveform, balance, stéréo et actions déclenchées.",
-    libraryEyebrow:"Couverture plugin élargie",libraryTitle:"Bibliothèque",
-    libraryQuickTitle:"Commence par le rôle",libraryQuickSub:"Fais une première coupe avant de scanner les cartes",
-    libraryFeaturedTitle:"Voie rapide",
-    libraryFeaturedA:"Commencer par la basse",libraryFeaturedABody:"Sub, mono-safe et contrôle des low-mids.",
-    libraryFeaturedB:"Construire la largeur",libraryFeaturedBBody:"Pitch width, chorus, puis check mono.",
-    libraryFeaturedC:"Choisir une famille de transitions",libraryFeaturedCBody:"Delay throw, tail d'espace, ou filter sweep.",
-    inspectorEyebrow:"Inspector",inspectorTitle:"Choisis un item",inspectorBody:"Les détails arrivent ici pour garder la grille propre.",
-    inspectorHintTitle:"Utilise la grille comme un picker, pas comme un catalogue",
-    inspectorHintBody:"Filtre une fois, sélectionne un outil, puis décide s'il résout le job plus vite que ton défaut.",
-    inspectorHintA:"Choix basse et mono-safe",inspectorHintABody:"Commence par les tags bass ou mix si le low-end bloque.",
-    inspectorHintB:"Choix largeur et mouvement",inspectorHintBBody:"Va vers les tags space ou motion si le morceau est statique.",
-    inspectorUse:"Idéal pour",inspectorTouch:"À toucher d'abord",inspectorAvoid:"À éviter quand",
-    inspectorRole:"Rôle",inspectorMode:"Mode",inspectorRecipe:"Recette liée",
-    soundEyebrow:"Moves créatifs",soundTitle:"Sound Design",
-    soundBuilderEyebrow:"Moteur de décision",soundBuilderTitle:"Construis une direction avant de tweaker",
-    soundBuilderBody:"Choisis un objectif et une contrainte. L'app propose une route, une recette et une prochaine expérience.",
-    soundGoalLabel:"Objectif",soundConstraintLabel:"Contrainte",
-    sbEmpty:"Choisis un objectif pour obtenir une route, une recette et une prochaine expérience.",
-    sbRoute:"Route recommandée",sbRecipe:"Recette recommandée",sbNext:"Prochaine expérience",
-    firstMoveLabel:"Premier move",whyWorksLabel:"Pourquoi ça marche",commonMistakeLabel:"Erreur fréquente",
-    routeBandTitle:"Routes rapides",routeBandSub:"Un problème, une direction",
-    recipesTitle:"Recettes",recipesSub:"Stacks courts avec règle d'arrêt",
-    stopRuleLabel:"Règle d'arrêt",routeUse:"À utiliser quand",recipeUses:"Utilise",
-    vendorJump:"Ouvrir",
-    mixEyebrow:"Mesures seulement",mixTitle:"Mix Check",
-    uploadEyebrow:"Glisse ton audio",uploadTitle:"WAV / AIFF / MP3",
-    uploadBody:"Analyse côté navigateur uniquement. Rien n'est envoyé.",uploadBtn:"Choisir un fichier",
-    metricPeak:"Peak",metricRms:"RMS",metricCrest:"Crest",metricStereo:"Stéréo",
-    bandsLow:"Grave",bandsLowMid:"Bas médiums",bandsHighMid:"Hauts médiums",bandsHigh:"Aigu",
-    mixActionTitle:"Tester",issueNone:"Aucune alerte déclenchée.",issueNeedFile:"Charge un fichier pour obtenir des résultats.",
-    uploadDone:"Audio chargé",wrongPassword:"Mauvais mot de passe",
-    finishEyebrow:"Dernière ligne droite",finishTitle:"Finalisation",
-    finishIntroEyebrow:"Passe finale",
-    finishIntroTitle:"N'exporte que quand le morceau tient sur petites enceintes, en mono et à bas volume.",
-    finishIntroBody:"Utilise ces cinq blocs comme filtre final. Si deux blocs échouent, stoppe l'export et corrige la vraie cause.",
-    finishCard1:"Avant export",finishCard2:"Passage référence",finishCard3:"Sanity check sound design",
-    finishCard4:"Traduction playback",finishCard5:"Sanity arrangement",
-    finishA1:"La marge peak reste environ sous -1 dBFS avant le master.",
-    finishA2:"Kick et basse restent lisibles à bas volume.",
-    finishA3:"Aucun FX throw ne vole toute la section.",
-    finishA4:"Les transitions restent intentionnelles même sans les drums.",
-    finishB1:"Compare à une seule référence, pas cinq morceaux au hasard.",
-    finishB2:"Check laptop et mono après les enceintes studio.",
-    finishB3:"Ne corrige que ce qui revient deux fois comme problème.",
-    finishB4:"Si l'aigu impressionne seulement fort, recheck-le.",
-    finishC1:"Mute les couches décoratives une par une. Garde seulement ce qui pousse le morceau.",
-    finishC2:"Si un patch demande trop de chirurgie, change de source plus tôt.",
-    finishC3:"Automatise un macro fort, pas six micro moves partout.",
-    finishC4:"Garde une texture signature par section, pas trois qui se battent.",
-    finishD1:"Vérifie le drop sur enceintes laptop et à volume téléphone.",
-    finishD2:"Refais un check mono sous 120 Hz une dernière fois.",
-    finishD3:"Assure-toi que le hook reste lisible à bas volume.",
-    finishD4:"Si les hats dominent sur petites enceintes, baisse-les maintenant.",
-    finishE1:"Mute une couche non essentielle dans chaque section et vois si ça améliore.",
-    finishE2:"Chaque transition doit avoir un geste clair, pas cinq gestes faibles.",
-    finishE3:"Le deuxième drop doit apporter densité, largeur ou contraste — pas juste plus de niveau.",
-    finishE4:"Si le break perd tout son élan, laisse au moins un élément mouvant vivant.",
-    fixitEyebrow:"Symptome vers solution",fixitTitle:"Fix-It",
-    filterAll:"Tout",filterMix:"Mix",filterSound:"Sound",filterDynamics:"Dynamique",
-    filterSpace:"Espace",filterTone:"Tonalité",filterMotion:"Mouvement",filterInstrument:"Instrument",
-    goalBass:"Basse",goalLead:"Lead",goalPad:"Pad",goalDrums:"Drums",goalTexture:"Texture",goalTransition:"Transition",
-    conClean:"Clean",conGrit:"Grit",conMono:"Mono-safe",conWide:"Large",conMoving:"Mouvant",conMinimal:"Minimal",
-    pageHome:"Accueil",pageLibrary:"Bibliothèque",pageSound:"Sound Design",pageMix:"Mix Check",pageFinish:"Finalisation",pageFixit:"Fix-It",
-    themeLightLabel:"Clair",themeDarkLabel:"Sombre",
+    'gate-sub': 'studio',
+    'gate-placeholder': 'mot de passe',
+    'gate-error': 'mauvais mot de passe',
+    'mode-design': 'DESIGN',
+    'mode-mix': 'MIX',
+    'mode-tools': 'OUTILS',
+    'design-synths': 'Synthés',
+    'design-routes': 'Routes',
+    'design-recipes': 'Recettes',
+    'design-fx': 'Palette FX',
+    'synths-title': 'Sources sonores',
+    'synths-desc': 'Tes moteurs de synthèse — choisis un point de départ',
+    'tier-primary': 'PRIORITAIRES',
+    'tier-classic': 'ANALOGIQUE CLASSIQUE',
+    'tier-digital': 'DIGITAL / FM / WAVETABLE',
+    'tier-experimental': 'EXPÉRIMENTAL / MODULAIRE',
+    'tier-drums': 'BOÎTES À RYTHMES',
+    'routes-title': 'Routes de sound design',
+    'routes-desc': 'Chemins de signal pour des objectifs sonores précis',
+    'recipes-title': 'Recettes',
+    'recipes-desc': 'Procédures de sound design étape par étape',
+    'fx-title': 'Palette FX',
+    'fx-desc': 'Effets créatifs — texture, mouvement, espace, destruction',
+    'mix-check': 'Mix Check',
+    'mix-chains': 'Chaînes',
+    'mix-finish': 'Finition',
+    'mix-fixit': 'Fix-It',
+    'mixcheck-title': 'Mix Check',
+    'mixcheck-desc': 'Écoute systématique — diagnostique avant de toucher quoi que ce soit',
+    'chains-title': 'Chaînes de mix',
+    'chains-desc': 'Templates de channel strip — EQ, compression, dynamique, stéréo',
+    'finish-title': 'Checklist de finition',
+    'finish-desc': 'Vérification pré-master — rien ne passe entre les mailles',
+    'fixit-title': 'Playbook Fix-It',
+    'fixit-desc': 'Problème → diagnostic → solution avec tes plugins',
+    'tools-inventory': 'Inventaire',
+    'tools-refs': 'Références',
+    'inventory-title': 'Inventaire plugins',
+    'inventory-desc': 'Tout ce que tu possèdes — recherche rapide',
+    'inventory-search-placeholder': 'chercher un plugin...',
+    'inventory-plugins': 'plugins',
+    'refs-title': 'Références rapides',
+    'refs-desc': 'Plages de fréquences, gain staging, réglages sidechain',
   }
 };
 
-/* ─── Data ─── */
-const vendors = [
-  {id:'fabfilter',mark:'FF',name:'FabFilter',pitchEn:'Precision and visual workflow',pitchFr:'Précision et workflow visuel',glow:'#7ea7ff'},
-  {id:'d16',mark:'D16',name:'D16',pitchEn:'Machine energy and edge',pitchFr:'Énergie machine et mordant',glow:'#ff8b6e'},
-  {id:'eventide',mark:'EV',name:'Eventide',pitchEn:'Space, pitch and weirdness',pitchFr:'Espace, pitch et étrangeté',glow:'#8d83ff'},
-  {id:'xfer',mark:'XF',name:'Xfer',pitchEn:'Modern synth control',pitchFr:'Contrôle synth moderne',glow:'#76f2c6'},
-  {id:'baby-audio',mark:'BA',name:'Baby Audio',pitchEn:'Creative polish fast',pitchFr:'Polish créatif rapide',glow:'#ff7fb7'},
-  {id:'uhe',mark:'UH',name:'u-he',pitchEn:'Analog soul in code',pitchFr:'Âme analogique en code',glow:'#b695e6'},
-  {id:'arturia',mark:'AR',name:'Arturia',pitchEn:'Classic synths reborn',pitchFr:'Classiques ressuscités',glow:'#5cc5e6'},
-  {id:'valhalla',mark:'VL',name:'Valhalla',pitchEn:'Reverb and space mastery',pitchFr:'Maîtrise reverb et espace',glow:'#6dd69e'},
-  {id:'izotope',mark:'IZ',name:'iZotope',pitchEn:'Intelligent mixing and mastering',pitchFr:'Mix et master intelligent',glow:'#5ce6a5'},
-  {id:'cableguys',mark:'CG',name:'Cableguys',pitchEn:'Modulation and volume shaping',pitchFr:'Modulation et shaping de volume',glow:'#5c9ee6'},
-  {id:'devious',mark:'DM',name:'Devious Machines',pitchEn:'Creative multi-FX chaos',pitchFr:'Chaos multi-FX créatif',glow:'#e65c5c'},
-  {id:'korg',mark:'KG',name:'KORG',pitchEn:'Iconic polysynth character',pitchFr:'Caractère polysynth iconique',glow:'#ccc65c'}
-];
-
-const plugins = [
-  {id:'ff-proq4',vendor:'fabfilter',name:'Pro-Q 4',roleEn:'surgical EQ',roleFr:'EQ chirurgical',mode:'mix',tags:['tone','mix'],useEn:'cut mud, shape harshness, dynamic control',useFr:'couper la boue, calmer la dureté, contrôle dynamique',touchEn:'250–400 Hz, 2–5 kHz, dynamic bands',touchFr:'250–400 Hz, 2–5 kHz, bandes dynamiques',avoidEn:'you still do not know what the source should be',avoidFr:'tu ne sais pas encore ce que la source doit être',recipe:'Dark Bass Cleanup',glow:'#7ea7ff'},
-  {id:'ff-proc3',vendor:'fabfilter',name:'Pro-C 3',roleEn:'compressor',roleFr:'compresseur',mode:'mix',tags:['dynamics','mix'],useEn:'tight buses, add punch, level control',useFr:'resserrer les bus, ajouter du punch, contrôler le niveau',touchEn:'style, attack, release, lookahead',touchFr:'style, attaque, release, lookahead',avoidEn:'you only want louder, not tighter',avoidFr:'tu veux juste plus fort, pas plus tight',recipe:'Drum Weight Bus',glow:'#7ea7ff'},
-  {id:'ff-prol2',vendor:'fabfilter',name:'Pro-L 2',roleEn:'limiter',roleFr:'limiteur',mode:'mix',tags:['dynamics','mix'],useEn:'preview loudness before mastering, catch peaks',useFr:'prévisualiser le niveau avant mastering, attraper les pics',touchEn:'style, attack, lookahead, true peak',touchFr:'style, attaque, lookahead, true peak',avoidEn:'you are still changing the arrangement',avoidFr:'tu changes encore l\'arrangement',recipe:'Pre-master Sanity',glow:'#7ea7ff'},
-  {id:'ff-pror2',vendor:'fabfilter',name:'Pro-R 2',roleEn:'reverb',roleFr:'reverb',mode:'sound',tags:['space','sound'],useEn:'clean modern space, controlled width',useFr:'espace moderne propre, largeur contrôlée',touchEn:'distance, brightness, ducking',touchFr:'distance, brightness, ducking',avoidEn:'you want a very dirty vintage tail',avoidFr:'tu veux une queue très sale et vintage',recipe:'Clean Modern Space',glow:'#7ea7ff'},
-  {id:'ff-saturn2',vendor:'fabfilter',name:'Saturn 2',roleEn:'saturation and movement',roleFr:'saturation et mouvement',mode:'sound',tags:['tone','motion','sound'],useEn:'growl, grit, harmonic lift, macro movement',useFr:'growl, grit, lift harmonique, mouvement macro',touchEn:'band split, drive tone, dynamics, modulation',touchFr:'split bands, tone du drive, dynamique, modulation',avoidEn:'the sound is already too busy in the mids',avoidFr:'le son est déjà trop chargé dans les mids',recipe:'Indie Drive Lead',glow:'#7ea7ff'},
-  {id:'ff-timeless3',vendor:'fabfilter',name:'Timeless 3',roleEn:'modulated delay',roleFr:'delay modulé',mode:'sound',tags:['space','motion','sound'],useEn:'throws, movement, evolving repeats',useFr:'throws, mouvement, répétitions évolutives',touchEn:'filter, feedback, diffusion, modulation sources',touchFr:'filtre, feedback, diffusion, sources de modulation',avoidEn:'the groove is already too smeared',avoidFr:'le groove est déjà trop flou',recipe:'Break Tension Throw',glow:'#7ea7ff'},
-  {id:'ff-volcano3',vendor:'fabfilter',name:'Volcano 3',roleEn:'filter motion',roleFr:'filtre en mouvement',mode:'sound',tags:['motion','sound'],useEn:'animated filter design and sweeps',useFr:'design filtré animé et sweeps',touchEn:'XLFO, envelope, drive, stereo',touchFr:'XLFO, envelope, drive, stéréo',avoidEn:'you just need static cleanup EQ',avoidFr:'tu as juste besoin d\'un EQ fixe',recipe:'Movement Filter Lane',glow:'#7ea7ff'},
-  {id:'ff-prods',vendor:'fabfilter',name:'Pro-DS',roleEn:'de-esser',roleFr:'de-esser',mode:'mix',tags:['tone','mix'],useEn:'calm sharp hats, vocals, bright synth edges',useFr:'calmer hats agressifs, voix, bords de synth brillants',touchEn:'wide band, threshold, range',touchFr:'wide band, threshold, range',avoidEn:'the issue is broad harshness, not sibilance',avoidFr:'le problème est une dureté large, pas de la sibilance',recipe:'Top-End Taming',glow:'#7ea7ff'},
-  {id:'ff-promb',vendor:'fabfilter',name:'Pro-MB',roleEn:'multiband dynamics',roleFr:'dynamique multibande',mode:'mix',tags:['dynamics','mix'],useEn:'contain low mids, tame resonant ranges',useFr:'tenir les bas médiums, calmer les zones résonantes',touchEn:'range, attack, release, knee',touchFr:'range, attaque, release, knee',avoidEn:'you do not know the trouble band yet',avoidFr:'tu n\'as pas encore identifié la bande problème',recipe:'Muddy Mix Rescue',glow:'#7ea7ff'},
-  {id:'ff-twin3',vendor:'fabfilter',name:'Twin 3',roleEn:'modular synth',roleFr:'synth modulable',mode:'sound',tags:['instrument','sound'],useEn:'clean modern synths with deep modulation',useFr:'synths modernes propres avec modulation profonde',touchEn:'filter shape, env amount, XLFO lanes',touchFr:'forme du filtre, amount d\'env, lanes XLFO',avoidEn:'you want instant nostalgic color',avoidFr:'tu veux une couleur nostalgique immédiate',recipe:'Glass Motion Keys',glow:'#7ea7ff'},
-  {id:'d16-drumazon2',vendor:'d16',name:'Drumazon 2',roleEn:'909 drum machine',roleFr:'boîte à rythmes 909',mode:'sound',tags:['instrument','sound'],useEn:'punchy club drums, machine grooves',useFr:'drums club punchy, groove machine',touchEn:'decay, tuning, groove, bus drive',touchFr:'decay, tuning, groove, drive de bus',avoidEn:'you need organic human drums',avoidFr:'tu veux des drums organiques humaines',recipe:'909 Pressure Loop',glow:'#ff8b6e'},
-  {id:'d16-nepheton2',vendor:'d16',name:'Nepheton 2',roleEn:'808 drum machine',roleFr:'boîte à rythmes 808',mode:'sound',tags:['instrument','sound'],useEn:'boomy kicks and classic machine percussion',useFr:'kicks ronds et percussions machine classiques',touchEn:'tone, snappy, sub length',touchFr:'tone, snappy, longueur du sub',avoidEn:'you want modern click-heavy kicks only',avoidFr:'tu veux seulement des kicks modernes très clickés',recipe:'808 Foundation',glow:'#ff8b6e'},
-  {id:'d16-decimort2',vendor:'d16',name:'Decimort 2',roleEn:'bit crusher',roleFr:'bit crusher',mode:'sound',tags:['tone','sound'],useEn:'digital grit and old sampler edge',useFr:'grit digital et edge vieux sampler',touchEn:'jitter, resample, anti-alias',touchFr:'jitter, resample, anti-alias',avoidEn:'the source is already brittle',avoidFr:'la source est déjà cassante',recipe:'Lo-Fi Spark',glow:'#ff8b6e'},
-  {id:'d16-devastor2',vendor:'d16',name:'Devastor 2',roleEn:'multiband distortion',roleFr:'distorsion multibande',mode:'sound',tags:['tone','sound'],useEn:'surgical saturation per band',useFr:'saturation chirurgicale par bande',touchEn:'band drive, character',touchFr:'drive par bande, caractère',avoidEn:'you want transparent bus treatment',avoidFr:'tu veux un traitement de bus transparent',recipe:'Dirty Bass Pressure',glow:'#ff8b6e'},
-  {id:'d16-toraverb2',vendor:'d16',name:'Toraverb 2',roleEn:'algorithmic reverb',roleFr:'reverb algorithmique',mode:'sound',tags:['space','sound'],useEn:'lush synthetic rooms for dark material',useFr:'pièces synthétiques lush pour matière dark',touchEn:'mod depth, diffusion, EQ',touchFr:'profondeur de mod, diffusion, EQ',avoidEn:'you need a super clean modern room',avoidFr:'tu veux une room moderne ultra propre',recipe:'Dark Hall Tail',glow:'#ff8b6e'},
-  {id:'d16-phoscyon2',vendor:'d16',name:'Phoscyon 2',roleEn:'303 acid line',roleFr:'ligne acid 303',mode:'sound',tags:['instrument','sound'],useEn:'acid hooks and squelchy movement',useFr:'hooks acid et mouvement squelchy',touchEn:'accent, slide, distortion, env mod',touchFr:'accent, slide, distortion, env mod',avoidEn:'you need a wide lush lead',avoidFr:'tu veux un lead large et lush',recipe:'Acid Motion Lead',glow:'#ff8b6e'},
-  {id:'d16-punchbox',vendor:'d16',name:'PunchBox',roleEn:'kick designer',roleFr:'designer de kick',mode:'sound',tags:['instrument','sound'],useEn:'layered club kicks fast',useFr:'kicks club layerés rapidement',touchEn:'click, body, sub, limiter',touchFr:'click, body, sub, limiteur',avoidEn:'you already have a perfect kick sample',avoidFr:'tu as déjà un sample de kick parfait',recipe:'Kick Build Fast',glow:'#ff8b6e'},
-  {id:'ev-blackhole',vendor:'eventide',name:'Blackhole',roleEn:'huge reverb',roleFr:'reverb immense',mode:'sound',tags:['space','sound'],useEn:'epic non-natural tails, void atmospheres',useFr:'queues épiques non naturelles, atmosphères abyssales',touchEn:'gravity, size, feedback',touchFr:'gravity, size, feedback',avoidEn:'you need a small realistic room',avoidFr:'tu as besoin d\'une petite room réaliste',recipe:'Void Atmos Tail',glow:'#8d83ff'},
-  {id:'ev-micropitch',vendor:'eventide',name:'MicroPitch',roleEn:'micro shift width',roleFr:'largeur micro shift',mode:'sound',tags:['space','sound'],useEn:'instant wideners, detuned gloss, vocal spread',useFr:'élargir vite, gloss désaccordé, spread vocal',touchEn:'detune, delay, mix',touchFr:'detune, delay, mix',avoidEn:'the part already collapses badly in mono',avoidFr:'la partie s\'écroule déjà mal en mono',recipe:'Wide Lead Edge',glow:'#8d83ff'},
-  {id:'ev-crystals',vendor:'eventide',name:'Crystals',roleEn:'pitch-shift delay',roleFr:'delay pitch-shift',mode:'sound',tags:['space','sound'],useEn:'angelic rises, glassy throws, reverse bloom',useFr:'montées angéliques, throws brillants, bloom',touchEn:'pitch interval, reverse, feedback',touchFr:'intervalle de pitch, reverse, feedback',avoidEn:'the section already has too much top shine',avoidFr:'la section a déjà trop de brillance',recipe:'Dream Throw',glow:'#8d83ff'},
-  {id:'ev-ultratap',vendor:'eventide',name:'UltraTap',roleEn:'multi-tap designer',roleFr:'designer multi-tap',mode:'sound',tags:['space','motion','sound'],useEn:'rhythmic splashes and swelling echoes',useFr:'échos rythmiques et splashes en swell',touchEn:'spread, slurm, taps',touchFr:'spread, slurm, taps',avoidEn:'you just need one clean slap',avoidFr:'tu veux juste un slap clean',recipe:'Swarm Throw',glow:'#8d83ff'},
-  {id:'ev-spliteq',vendor:'eventide',name:'SplitEQ',roleEn:'transient/tonal EQ',roleFr:'EQ transient/tonal',mode:'mix',tags:['tone','mix'],useEn:'separate attack and body for cleaner moves',useFr:'séparer attaque et corps pour des moves plus propres',touchEn:'transient split, dynamic bands',touchFr:'split transient, bandes dynamiques',avoidEn:'you need a fast broad EQ only',avoidFr:'tu as juste besoin d\'un EQ large rapide',recipe:'Attack Body Separation',glow:'#8d83ff'},
-  {id:'ev-sp2016',vendor:'eventide',name:'SP2016 Reverb',roleEn:'classic reverb',roleFr:'reverb classique',mode:'sound',tags:['space','sound'],useEn:'bigger but still familiar classic spaces',useFr:'espaces plus grands mais familiers',touchEn:'room type, decay, pre-delay',touchFr:'type de room, decay, pre-delay',avoidEn:'you want a futuristic synthetic wash',avoidFr:'tu veux un wash synthétique futuriste',recipe:'Classic Hall Weight',glow:'#8d83ff'},
-  {id:'ev-mangledverb',vendor:'eventide',name:'MangledVerb',roleEn:'distorted reverb',roleFr:'reverb distordue',mode:'sound',tags:['space','tone','sound'],useEn:'aggressive textured space for dark breaks',useFr:'espace texturé agressif pour les breaks dark',touchEn:'distortion, size, pre-delay',touchFr:'distortion, size, pre-delay',avoidEn:'you need clean transparent ambience',avoidFr:'tu veux une ambiance propre et transparente',recipe:'Dark Break Texture',glow:'#8d83ff'},
-  {id:'xf-serum',vendor:'xfer',name:'Serum 2',roleEn:'wavetable synth',roleFr:'synth wavetable',mode:'sound',tags:['instrument','sound'],useEn:'modern basses, plucks, precise modulation',useFr:'basses modernes, plucks, modulation précise',touchEn:'wavetable position, filter drive, macros',touchFr:'position de wavetable, drive du filtre, macros',avoidEn:'you need instant analog nostalgia',avoidFr:'tu veux de la nostalgie analogique immédiate',recipe:'Modern Bass Engine',glow:'#76f2c6'},
-  {id:'xf-serumfx',vendor:'xfer',name:'Serum 2 FX',roleEn:'multi-FX rack',roleFr:'rack multi-FX',mode:'sound',tags:['motion','sound'],useEn:'post-synth movement, OTT-style FX chains',useFr:'mouvement post-synth, chaînes FX façon OTT',touchEn:'hyper, dimension, filter, compressor',touchFr:'hyper, dimension, filtre, compresseur',avoidEn:'the source needs cleaner correction first',avoidFr:'la source demande d\'abord une correction plus propre',recipe:'Hyper Width Lane',glow:'#76f2c6'},
-  {id:'ba-crystalline',vendor:'baby-audio',name:'Crystalline',roleEn:'clean algorithmic reverb',roleFr:'reverb algorithmique propre',mode:'sound',tags:['space','sound'],useEn:'shiny modern space with control',useFr:'espace moderne brillant avec contrôle',touchEn:'ducking, sides, smoothing',touchFr:'ducking, sides, smoothing',avoidEn:'you want grime and vintage blur',avoidFr:'tu veux de la crasse et du flou vintage',recipe:'Modern Air Space',glow:'#ff7fb7'},
-  {id:'ba-ba1',vendor:'baby-audio',name:'BA-1',roleEn:'vintage analog synth',roleFr:'synth analogique vintage',mode:'sound',tags:['instrument','sound'],useEn:'warm vintage leads and pads with instant tone',useFr:'leads et pads vintage chauds avec ton instantané',touchEn:'cutoff, resonance, drive, chorus',touchFr:'cutoff, resonance, drive, chorus',avoidEn:'you need complex modulation routing',avoidFr:'tu as besoin d\'un routage de modulation complexe',recipe:'Warm Vintage Hook',glow:'#ff7fb7'},
-  {id:'ba-supervhs',vendor:'baby-audio',name:'Super VHS',roleEn:'lo-fi tape color',roleFr:'couleur tape lo-fi',mode:'sound',tags:['tone','sound'],useEn:'instant nostalgic degradation and warmth',useFr:'dégradation nostalgique et chaleur instantanée',touchEn:'wobble, blur, level',touchFr:'wobble, blur, level',avoidEn:'the source needs modern clarity',avoidFr:'la source a besoin de clarté moderne',recipe:'Lo-Fi Texture Layer',glow:'#ff7fb7'},
-  {id:'uh-diva',vendor:'uhe',name:'Diva',roleEn:'analog polysynth',roleFr:'polysynth analogique',mode:'sound',tags:['instrument','sound'],useEn:'basses, leads, pads — five oscillator models, five ZDF filters',useFr:'basses, leads, pads — cinq oscillateurs, cinq filtres ZDF',touchEn:'oscillator model, filter model, cutoff, env2 amount, voice drift',touchFr:'modèle osc, filtre, cutoff, env2, drift',avoidEn:'you need a wavetable engine or FM',avoidFr:'tu as besoin de wavetable ou FM',recipe:'Dark Sub Architect',glow:'#b695e6'},
-  {id:'ar-cs80',vendor:'arturia',name:'CS-80 V4',roleEn:'expressive polysynth',roleFr:'polysynth expressif',mode:'sound',tags:['instrument','sound'],useEn:'dramatic pads, expressive leads with aftertouch',useFr:'pads dramatiques, leads expressifs avec aftertouch',touchEn:'brilliance, ring mod off, aftertouch to cutoff, dual layers',touchFr:'brilliance, ring mod off, aftertouch vers cutoff',avoidEn:'you need a simple mono bass',avoidFr:'tu veux une basse mono simple',recipe:'Blade Runner Wash',glow:'#5cc5e6'},
-  {id:'ar-jup8',vendor:'arturia',name:'Jup-8 V4',roleEn:'lush polysynth',roleFr:'polysynth lush',mode:'sound',tags:['instrument','sound'],useEn:'warm pads, sync leads, bright arps',useFr:'pads chauds, leads sync, arps',touchEn:'oscillator sync, pulse width, chorus mode, HPF',touchFr:'sync osc, pulse width, chorus mode, HPF',avoidEn:'you want a dark aggressive timbre',avoidFr:'tu veux un timbre dark agressif',recipe:'Silk Pad',glow:'#5cc5e6'},
-  {id:'ar-miniv3',vendor:'arturia',name:'Mini V3',roleEn:'mono bass king',roleFr:'roi de la basse mono',mode:'sound',tags:['instrument','sound'],useEn:'fat mono basses, 3 oscillators, built-in overdrive',useFr:'basses mono grasses, 3 oscillateurs, overdrive',touchEn:'osc mix, filter cutoff, emphasis, contour, glide',touchFr:'mix osc, cutoff, emphasis, contour, glide',avoidEn:'you need polyphony',avoidFr:'tu as besoin de polyphonie',recipe:'Mono Beast Bass',glow:'#5cc5e6'},
-  {id:'ar-pigments',vendor:'arturia',name:'Pigments',roleEn:'hybrid synth',roleFr:'synth hybride',mode:'sound',tags:['instrument','sound'],useEn:'granular textures, wavetable + VA, deep mod matrix',useFr:'textures granulaires, wavetable + VA, matrice de mod',touchEn:'engine per osc, granular position, mod matrix',touchFr:'engine par osc, position granulaire, matrice de mod',avoidEn:'you need instant vintage analog color',avoidFr:'tu veux du vintage analog immédiat',recipe:'Granular Texture Bed',glow:'#5cc5e6'},
-  {id:'ar-minifreak',vendor:'arturia',name:'MiniFreak V',roleEn:'hybrid lead',roleFr:'lead hybride',mode:'sound',tags:['instrument','sound'],useEn:'textured leads with digital osc and analog filter',useFr:'leads texturés: osc digital + filtre analog',touchEn:'osc engine, filter, FX section, mod matrix',touchFr:'engine osc, filtre, FX, matrice de mod',avoidEn:'you want clean classic analog only',avoidFr:'tu veux uniquement de l\'analog classique',recipe:'Freak Texture Lead',glow:'#5cc5e6'},
-  {id:'ar-sem',vendor:'arturia',name:'SEM V2',roleEn:'multimode filter bass',roleFr:'basse filtre multimode',mode:'sound',tags:['instrument','sound'],useEn:'growling basses with Oberheim multimode LP to Notch blend',useFr:'basses grognantes avec multimode Oberheim LP vers Notch',touchEn:'filter mode blend, cutoff, resonance, env',touchFr:'blend mode filtre, cutoff, resonance, env',avoidEn:'you need bright crystal leads',avoidFr:'tu veux des leads cristallins',recipe:'SEM Growl Bass',glow:'#5cc5e6'},
-  {id:'ar-mellofi',vendor:'arturia',name:'Tape MELLO-FI',roleEn:'tape color',roleFr:'couleur tape',mode:'sound',tags:['tone','sound'],useEn:'subtle tape wow, flutter and saturation at micro-dose',useFr:'wow, flutter et saturation tape en micro-dose',touchEn:'wow 8%, flutter 6%, saturation 12%, noise OFF',touchFr:'wow 8%, flutter 6%, saturation 12%, bruit OFF',avoidEn:'the source is already warm enough',avoidFr:'la source est assez chaude',recipe:'Tape Warmth Layer',glow:'#5cc5e6'},
-  {id:'ar-dimensiond',vendor:'arturia',name:'Chorus DIMENSION-D',roleEn:'vintage chorus',roleFr:'chorus vintage',mode:'sound',tags:['motion','sound'],useEn:'instant Juno-style width and warmth in 4 modes',useFr:'largeur et chaleur Juno instantanee en 4 modes',touchEn:'mode I to IV, mix',touchFr:'mode I a IV, mix',avoidEn:'mono compatibility is critical',avoidFr:'la compatibilite mono est critique',recipe:'Silk Pad',glow:'#5cc5e6'},
-  {id:'ar-refract',vendor:'arturia',name:'Efx REFRACT',roleEn:'granular FX',roleFr:'FX granulaire',mode:'sound',tags:['motion','sound'],useEn:'real-time granular for transitions and textures',useFr:'granulaire temps reel pour transitions et textures',touchEn:'grain size 50-100ms, density, pitch, spray, mix',touchFr:'taille grain, densite, pitch, spray, mix',avoidEn:'you need a clean utility effect',avoidFr:'tu veux un effet utilitaire propre',recipe:'Granular Transition',glow:'#5cc5e6'},
-  {id:'ar-fet76',vendor:'arturia',name:'Comp FET-76',roleEn:'FET compressor',roleFr:'compresseur FET',mode:'mix',tags:['dynamics','mix'],useEn:'fast peak catching, punchy character compression',useFr:'attrape les pics, compression punchy',touchEn:'input for GR, attack 3, release 7, ratio 4:1',touchFr:'input pour le GR, attack 3, release 7, ratio 4:1',avoidEn:'you need transparent leveling',avoidFr:'tu veux du leveling transparent',recipe:'Drum Bus Punch',glow:'#5cc5e6'},
-  {id:'vl-vintageverb',vendor:'valhalla',name:'VintageVerb',roleEn:'vintage algorithmic reverb',roleFr:'reverb algorithmique vintage',mode:'sound',tags:['space','sound'],useEn:'22 algorithms, 3 color eras — Concert Hall, Smooth Plate, Dirty Hall',useFr:'22 algorithmes, 3 eres (70s/80s/Now)',touchEn:'mode, color, decay, size, mod depth, diffusion',touchFr:'mode, color, decay, size, mod depth, diffusion',avoidEn:'you need surgical room emulation',avoidFr:'tu veux une emulation de room chirurgicale',recipe:'Long Verb Return',glow:'#6dd69e'},
-  {id:'vl-room',vendor:'valhalla',name:'ValhallaRoom',roleEn:'natural room reverb',roleFr:'reverb room naturelle',mode:'sound',tags:['space','sound'],useEn:'always-on room ambience with early/late blend',useFr:'ambiance room permanente, blend early/late',touchEn:'decay 0.4s, depth, early size, late size, high cut',touchFr:'decay 0.4s, depth, tailles early/late, high cut',avoidEn:'you want a huge tail or shimmer',avoidFr:'tu veux une grande queue ou du shimmer',recipe:'Room Return Standard',glow:'#6dd69e'},
-  {id:'vl-plate',vendor:'valhalla',name:'ValhallaPlate',roleEn:'plate reverb',roleFr:'reverb plate',mode:'sound',tags:['space','sound'],useEn:'dense plate for snare moments, wide and lush',useFr:'plate dense pour moments snare, large et lush',touchEn:'decay 3s, width, damping, mod depth',touchFr:'decay 3s, width, damping, mod depth',avoidEn:'you need a tight controlled room',avoidFr:'tu veux une room serree et controlee',recipe:'Snare Plate Moment',glow:'#6dd69e'},
-  {id:'vl-delay',vendor:'valhalla',name:'ValhallaDelay',roleEn:'tape delay',roleFr:'delay tape',mode:'sound',tags:['space','motion','sound'],useEn:'throw delays, tape degradation, sync rhythmic echoes',useFr:'throw delays, degradation tape, echos rythmiques',touchEn:'mode Tape, sync 1/4 dot, feedback 35%, age, HP/LP',touchFr:'mode Tape, sync 1/4 dot, feedback 35%, age, HP/LP',avoidEn:'you want a clean digital echo',avoidFr:'tu veux un echo digital propre',recipe:'Throw Delay Moment',glow:'#6dd69e'},
-  {id:'vl-supermassive',vendor:'valhalla',name:'Supermassive',roleEn:'massive space FX',roleFr:'FX espace massif',mode:'sound',tags:['space','sound'],useEn:'huge washes, drones, texture beds',useFr:'nappes immenses, drones, lits de texture',touchEn:'mode (Gemini, Hydra, Warp), warp, feedback, mix',touchFr:'mode, warp, feedback, mix',avoidEn:'you need a clean short room',avoidFr:'tu veux une room courte et propre',recipe:'Void Texture Bed',glow:'#6dd69e'},
-  {id:'vl-shimmer',vendor:'valhalla',name:'ValhallaShimmer',roleEn:'shimmer reverb',roleFr:'reverb shimmer',mode:'sound',tags:['space','sound'],useEn:'pitched reverb tails for breakdowns and transitions',useFr:'queues pitchees pour breakdowns et transitions',touchEn:'pitch shift, decay, diffusion, color',touchFr:'pitch shift, decay, diffusion, color',avoidEn:'you are in the main groove section',avoidFr:'tu es dans le groove principal',recipe:'Shimmer Breakdown',glow:'#6dd69e'},
-  {id:'iz-ozone',vendor:'izotope',name:'Ozone 12',roleEn:'mastering suite',roleFr:'suite mastering',mode:'mix',tags:['dynamics','mix'],useEn:'Maximizer, Imager, EQ, Vintage Tape for master chain',useFr:'Maximizer, Imager, EQ, Vintage Tape pour master',touchEn:'Maximizer IRC IV -1dBTP, Imager mono below 120Hz',touchFr:'Maximizer IRC IV -1dBTP, Imager mono sous 120Hz',avoidEn:'the mix still has problems to fix',avoidFr:'le mix a encore des problemes',recipe:'Master Bus Chain',glow:'#5ce6a5'},
-  {id:'iz-neutron',vendor:'izotope',name:'Neutron 5',roleEn:'channel strip',roleFr:'channel strip',mode:'mix',tags:['dynamics','tone','mix'],useEn:'Transient Shaper, Compressor, EQ, Clipper modules',useFr:'Transient Shaper, Compresseur, EQ, Clipper',touchEn:'TS attack +15% sustain -5%, Clipper soft -1 to -3dB',touchFr:'TS attack +15% sustain -5%, Clipper soft -1 a -3dB',avoidEn:'you have not gain-staged yet',avoidFr:'pas encore de gain staging',recipe:'Drum Bus Punch',glow:'#5ce6a5'},
-  {id:'cg-shaperbox',vendor:'cableguys',name:'ShaperBox 3',roleEn:'volume/filter shaper',roleFr:'shaper volume/filtre',mode:'sound',tags:['motion','dynamics','sound'],useEn:'precise sidechain, gate patterns, filter curves synced to BPM',useFr:'sidechain precis, patterns gate, courbes filtre synced BPM',touchEn:'Volume module, draw curve, trigger Audio/MIDI, smooth',touchFr:'module Volume, courbe, trigger Audio/MIDI, smooth',avoidEn:'a simple compressor sidechain is enough',avoidFr:'un sidechain compresseur suffit',recipe:'Precision Sidechain',glow:'#5c9ee6'},
-  {id:'dm-infiltrator',vendor:'devious',name:'Infiltrator',roleEn:'creative multi-FX',roleFr:'multi-FX creatif',mode:'sound',tags:['motion','sound'],useEn:'sound design transitions with XY pad, modular FX chain',useFr:'transitions sound design, XY pad, chaine FX modulaire',touchEn:'browse presets, automate Mix macro 0 to 100%',touchFr:'browse presets, automate Mix macro 0 a 100%',avoidEn:'you need a clean utility effect',avoidFr:'tu veux un effet utilitaire propre',recipe:'Wild Transition FX',glow:'#e65c5c'},
-  {id:'kg-polysix',vendor:'korg',name:'Polysix',roleEn:'warm polysynth',roleFr:'polysynth chaud',mode:'sound',tags:['instrument','sound'],useEn:'simple warm pads and arps with signature built-in chorus',useFr:'pads et arps chauds avec chorus integre signature',touchEn:'VCO wave, VCF cutoff/reso/EG, chorus mode, arpeggiator',touchFr:'VCO wave, VCF cutoff/reso/EG, chorus mode, arpeggiateur',avoidEn:'you need complex modulation or FM',avoidFr:'tu as besoin de mod complexe ou FM',recipe:'Poly Warm Pad',glow:'#ccc65c'}
-];
-
-const roleDefs = [
-  {id:'all',en:'All',fr:'Tous',hintEn:'Full library',hintFr:'Toute la library'},
-  {id:'bass',en:'Bass',fr:'Basse',hintEn:'Low-end tools',hintFr:'Outils low-end'},
-  {id:'lead',en:'Lead',fr:'Lead',hintEn:'Hooks and top lines',hintFr:'Hooks et toplines'},
-  {id:'pad',en:'Pad',fr:'Pad',hintEn:'Beds and harmony',hintFr:'Beds et harmonie'},
-  {id:'drums',en:'Drums',fr:'Drums',hintEn:'Punch and groove',hintFr:'Punch et groove'},
-  {id:'space',en:'Space',fr:'Espace',hintEn:'Width and depth',hintFr:'Largeur et profondeur'},
-  {id:'motion',en:'Motion',fr:'Mouvement',hintEn:'Animation and transitions',hintFr:'Animation et transitions'},
-  {id:'mix',en:'Mix',fr:'Mix',hintEn:'Control and finishing',hintFr:'Contrôle et finition'}
-];
-
-const sbGoalDefs = ['bass','lead','pad','drums','texture','transition'];
-const sbConstraintDefs = ['clean','grit','mono','wide','moving','minimal'];
-const goalTagMap = {bass:['bass','low','mix'],lead:['lead','hook','sound'],pad:['pad','space','sound'],drums:['drums','minimal','sound'],texture:['texture','tone','motion','space'],transition:['transition','break','fx','motion']};
-const constraintTagMap = {clean:['mix','tone'],grit:['tone','sound'],mono:['bass','mix'],wide:['space'],moving:['movement','motion','transition'],minimal:['minimal','drums']};
-
-const routes = [
-  {titleEn:'Dark bass with movement',titleFr:'Basse dark avec mouvement',bodyEn:'Start from Serum or Twin. Add Saturn 2 or TAIP. Control low mids with Pro-Q / Pro-MB.',bodyFr:'Pars de Serum ou Twin. Ajoute Saturn 2 ou TAIP. Contrôle les bas médiums avec Pro-Q / Pro-MB.',tags:['bass','movement','sound']},
-  {titleEn:'Minimal groove without deadness',titleFr:'Groove minimal sans mollesse',bodyEn:'Keep fewer drum layers. Use Drumazon / Nithonat. Add one moving hat lane, not five.',bodyFr:'Garde moins de couches de drums. Utilise Drumazon / Nithonat. Ajoute une lane de hats vivante, pas cinq.',tags:['drums','minimal','sound']},
-  {titleEn:'Lead that cuts without pain',titleFr:'Lead qui perce sans douleur',bodyEn:'Use MicroPitch or Crystalline for width, then calm the 3–5 kHz band with Pro-Q.',bodyFr:'Utilise MicroPitch ou Crystalline pour la largeur, puis calme la zone 3–5 kHz avec Pro-Q.',tags:['lead','tone','mix']},
-  {titleEn:'Break tension builder',titleFr:'Construction de tension en break',bodyEn:'Transit 2, Timeless 3, Crystals or UltraTap. One macro, one destination, one clear stop point.',bodyFr:'Transit 2, Timeless 3, Crystals ou UltraTap. Un macro, une destination, un stop point clair.',tags:['break','fx','sound']},
-  {titleEn:'Muddy mix rescue',titleFr:'Sauvetage mix boueux',bodyEn:'Find the overlap first. Then try Pro-Q, Pro-MB, SplitEQ and simplify the arrangement.',bodyFr:'Trouve d\'abord le chevauchement. Ensuite essaye Pro-Q, Pro-MB, SplitEQ et simplifie l\'arrangement.',tags:['mix','cleanup','tone']},
-  {titleEn:'Huge space without washing the groove',titleFr:'Grand espace sans laver le groove',bodyEn:'Use ducked reverb and keep low-end mono. Pro-R 2 / Crystalline for control, Blackhole for only one spotlight moment.',bodyFr:'Utilise une reverb duckée et garde le bas en mono. Pro-R 2 / Crystalline pour le contrôle, Blackhole pour un seul vrai moment spotlight.',tags:['space','mix','sound']},
-  {titleEn:'Diva sub bass foundation',titleFr:'Fondation sub bass Diva',bodyEn:'Triple VCO sine sub, Ladder 24dB LP, cutoff 32%. Saturn 2 Subtle Tube on 50-150Hz, Pro-Q mono bass below 120Hz.',bodyFr:'Triple VCO sine sub, Ladder 24dB LP, cutoff 32%. Saturn 2 Subtle Tube 50-150Hz, Pro-Q mono bass sous 120Hz.',tags:['bass','sound']},
-  {titleEn:'Pad from scratch with Jup-8',titleFr:'Pad from scratch avec Jup-8',bodyEn:'Two detuned saws, LPF 48%, built-in chorus Mode I. DIMENSION-D for width. ValhallaPlate 2.5s, mix 18%.',bodyFr:'Deux saws detunees, LPF 48%, chorus Mode I. DIMENSION-D pour largeur. ValhallaPlate 2.5s, mix 18%.',tags:['pad','sound']},
-  {titleEn:'Throw delay for transitions',titleFr:'Throw delay pour transitions',bodyEn:'ValhallaDelay Tape mode, 1/4 dot, feedback 35%, LP 4kHz. Send = 0 by default, automate only at the exact moment.',bodyFr:'ValhallaDelay mode Tape, 1/4 dot, feedback 35%, LP 4kHz. Send = 0, automate uniquement au moment exact.',tags:['fx','transition','sound']},
-  {titleEn:'Analog warmth on anything',titleFr:'Chaleur analogique sur tout',bodyEn:'Decimort 2 at 24bit/33kHz, then Tape MELLO-FI wow 8%, flutter 6%, sat 12%. Never on kick or sub.',bodyFr:'Decimort 2 24bit/33kHz, puis Tape MELLO-FI wow 8%, flutter 6%, sat 12%. Jamais sur kick/sub.',tags:['tone','sound']},
-  {titleEn:'Master bus chain',titleFr:'Chaine master',bodyEn:'Pro-Q 4 HP 22Hz → Pro-C 2 Bus 1.5:1 mix 70% → Ozone Imager mono<120Hz → Ozone Maximizer -14 LUFS.',bodyFr:'Pro-Q 4 HP 22Hz → Pro-C 2 Bus 1.5:1 mix 70% → Ozone Imager mono<120Hz → Ozone Maximizer -14 LUFS.',tags:['mix','dynamics']},
-  {titleEn:'Shimmer for breakdowns only',titleFr:'Shimmer breakdowns uniquement',bodyEn:'ValhallaShimmer +12st at 15%. Send=0 default. Automate UP during breakdown only. Cut before drop.',bodyFr:'ValhallaShimmer +12st 15%. Send=0. Automate UP pendant breakdown uniquement. Coupe avant le drop.',tags:['space','transition','sound']}
-];
-
-const recipes = [
-  {titleEn:'Dark Bass Cleanup',titleFr:'Nettoyage basse dark',bodyEn:'Serum bass → Saturn 2 multiband → Pro-Q 4 dynamic dip at 280 Hz → Pro-C 3 bus glue.',bodyFr:'Basse Serum → Saturn 2 multibande → Pro-Q 4 avec dip dynamique à 280 Hz → glue bus Pro-C 3.',stopEn:'Stop when the bass still feels big at low volume.',stopFr:'Stop quand la basse reste grande à bas volume.',uses:['Serum 2','Saturn 2','Pro-Q 4','Pro-C 3']},
-  {titleEn:'Indie Drive Lead',titleFr:'Lead drive indie',bodyEn:'Twin 3 or Serum lead → MicroPitch for width → Saturn 2 for color → Pro-DS if top edge bites.',bodyFr:'Lead Twin 3 ou Serum → MicroPitch pour la largeur → Saturn 2 pour la couleur → Pro-DS si l\'aigu mord.',stopEn:'Stop when the hook reads in mono and stereo.',stopFr:'Stop quand le hook se lit en mono et en stéréo.',uses:['Twin 3','Serum 2','MicroPitch','Saturn 2','Pro-DS']},
-  {titleEn:'Void Atmos Tail',titleFr:'Queue d\'atmosphère abyssale',bodyEn:'Eventide Blackhole on a send, then Pro-Q on the return to cut low mud and tame 2.5 kHz glare.',bodyFr:'Eventide Blackhole sur un send, puis Pro-Q sur le retour pour couper la boue du bas et calmer 2,5 kHz.',stopEn:'Stop when the tail feels cinematic without blurring the kick.',stopFr:'Stop quand la queue paraît cinématographique sans flouter le kick.',uses:['Blackhole','Pro-Q 4']},
-  {titleEn:'Drum Weight Bus',titleFr:'Bus de poids drums',bodyEn:'Drumazon / Nepheton core drums → Redoptor 2 or Devastor 2 for edge → Pro-C 3 for shape.',bodyFr:'Core drums Drumazon / Nepheton → Redoptor 2 ou Devastor 2 pour l\'edge → Pro-C 3 pour la forme.',stopEn:'Stop when the drums feel denser, not just louder.',stopFr:'Stop quand les drums paraissent plus denses, pas juste plus fortes.',uses:['Drumazon 2','Nepheton 2','Devastor 2','Pro-C 3']},
-  {titleEn:'Break Builder Fast',titleFr:'Constructeur de break rapide',bodyEn:'Timeless 3 throw → Crystals rise → UltraTap splash → limiter safety on FX bus.',bodyFr:'Throw Timeless 3 → montée Crystals → splash UltraTap → limiteur de sécurité sur le bus FX.',stopEn:'Stop at one hero transition, not a chain of fireworks.',stopFr:'Stop à une transition héroïque, pas une chaîne de feux d\'artifice.',uses:['Timeless 3','Crystals','UltraTap','Pro-L 2']},
-  {titleEn:'Dark Sub Architect',titleFr:'Architecte de sub dark',bodyEn:'Diva Triple VCO sine → Saturn 2 Subtle Tube 50-150Hz drive 12% → Pro-C 2 Opto 3:1 → Pro-Q 4 mono bass M/S below 120Hz.',bodyFr:'Diva Triple VCO sine → Saturn 2 Subtle Tube 50-150Hz drive 12% → Pro-C 2 Opto 3:1 → Pro-Q 4 mono bass M/S sous 120Hz.',stopEn:'Stop when the sub is felt, not heard above 150Hz.',stopFr:'Stop quand le sub se ressent, pas au-dessus de 150Hz.',uses:['Diva','Saturn 2','Pro-C 2','Pro-Q 4']},
-  {titleEn:'Mono Beast Bass',titleFr:'Basse mono beast',bodyEn:'Mini V3 3-osc saw+square+saw32, overdrive ON → Devastor 2 pre-filter preamp +12dB → Pro-Q 4 HP 30Hz, cut 300Hz → Pro-C 2 Punch 4:1.',bodyFr:'Mini V3 3 osc, overdrive ON → Devastor 2 pre-filter preamp +12dB → Pro-Q 4 HP 30Hz, cut 300Hz → Pro-C 2 Punch 4:1.',stopEn:'Stop when it grooves with the kick at low volume.',stopFr:'Stop quand ca groove avec le kick a bas volume.',uses:['Mini V3','Devastor 2','Pro-Q 4','Pro-C 2']},
-  {titleEn:'Blade Runner Wash',titleFr:'Nappe Blade Runner',bodyEn:'CS-80 V4 dual layer saws, slow attack 1s, release 4s → ShimmerVerb +12st@8% → Pro-Q 4 HP 150Hz, shelf -2dB@6kHz.',bodyFr:'CS-80 V4 dual layer saws, attack lent 1s, release 4s → ShimmerVerb +12st@8% → Pro-Q 4 HP 150Hz, shelf -2dB@6kHz.',stopEn:'Stop when the pad sits behind everything without grabbing attention.',stopFr:'Stop quand le pad reste derriere tout sans attirer l\'attention.',uses:['CS-80 V4','ShimmerVerb','Pro-Q 4']},
-  {titleEn:'Silk Pad',titleFr:'Pad soyeux',bodyEn:'Jup-8 V4 dual saw ±6ct, LPF 48%, chorus Mode I → DIMENSION-D Mode II → ValhallaPlate 2.5s mix 18% → Pro-Q 4 HP 100Hz.',bodyFr:'Jup-8 V4 dual saw ±6ct, LPF 48%, chorus Mode I → DIMENSION-D Mode II → ValhallaPlate 2.5s mix 18% → Pro-Q 4 HP 100Hz.',stopEn:'Stop when it feels warm without dominating the mix.',stopFr:'Stop quand c\'est chaud sans dominer le mix.',uses:['Jup-8 V4','Chorus DIMENSION-D','ValhallaPlate','Pro-Q 4']},
-  {titleEn:'Drum Bus Punch',titleFr:'Bus drums punch',bodyEn:'Pro-Q 4 HP 30Hz → Pro-C 2 Bus 2:1 attack 10ms mix 80% → Saturn 2 Warm Tube 10% → Neutron 5 TS attack +15% sustain -5%.',bodyFr:'Pro-Q 4 HP 30Hz → Pro-C 2 Bus 2:1 attack 10ms mix 80% → Saturn 2 Warm Tube 10% → Neutron 5 TS attack +15% sustain -5%.',stopEn:'Stop at -4dB gain reduction maximum.',stopFr:'Stop a -4dB de reduction de gain max.',uses:['Pro-Q 4','Pro-C 2','Saturn 2','Neutron 5']},
-  {titleEn:'Snare Plate Moment',titleFr:'Moment plate snare',bodyEn:'ValhallaPlate 3s → Pro-Q 4 HP 300Hz LP 6kHz → sidechain from snare (Pro-C 2 4:1, fast). Automate send: full at drop, off elsewhere.',bodyFr:'ValhallaPlate 3s → Pro-Q 4 HP 300Hz LP 6kHz → sidechain snare (Pro-C 2 4:1, fast). Automate send: full au drop, off ailleurs.',stopEn:'Stop when the plate swells after the hit without muddying the groove.',stopFr:'Stop quand la plate swell apres le hit sans salir le groove.',uses:['ValhallaPlate','Pro-Q 4','Pro-C 2']},
-  {titleEn:'Tape Warmth Layer',titleFr:'Couche warmth tape',bodyEn:'Decimort 2 24bit/33kHz → Tape MELLO-FI wow 8%, flutter 6%, sat 12%, noise OFF. On pads and leads only, never kick/sub.',bodyFr:'Decimort 2 24bit/33kHz → Tape MELLO-FI wow 8%, flutter 6%, sat 12%, bruit OFF. Sur pads et leads, jamais kick/sub.',stopEn:'Stop if you hear any noise or pitch wobble consciously.',stopFr:'Stop si tu entends du bruit ou du wobble de pitch consciemment.',uses:['Decimort 2','Tape MELLO-FI']},
-  {titleEn:'Master Bus Chain',titleFr:'Chaine master bus',bodyEn:'Pro-Q 4 HP 22Hz safety → Pro-C 2 Bus 1.5:1 mix 70% -2dB GR → Ozone Imager mono<120Hz → Ozone Maximizer IRC IV -1dBTP -14LUFS.',bodyFr:'Pro-Q 4 HP 22Hz → Pro-C 2 Bus 1.5:1 mix 70% -2dB GR → Ozone Imager mono<120Hz → Ozone Maximizer IRC IV -1dBTP -14LUFS.',stopEn:'Stop when GR never exceeds -2dB. If it does, fix the mix.',stopFr:'Stop quand le GR ne depasse jamais -2dB. Sinon, corrige le mix.',uses:['Pro-Q 4','Pro-C 2','Ozone 12']},
-  {titleEn:'Precision Sidechain',titleFr:'Sidechain precis',bodyEn:'ShaperBox 3 Volume module, audio trigger from kick. Draw fast duck 5ms, smooth return 50ms. More precise than compressor SC.',bodyFr:'ShaperBox 3 module Volume, trigger audio du kick. Duck rapide 5ms, return smooth 50ms. Plus precis qu\'un compresseur SC.',stopEn:'Stop when the duck is invisible but the bass breathes with the kick.',stopFr:'Stop quand le duck est invisible mais la basse respire avec le kick.',uses:['ShaperBox 3']},
-  {titleEn:'SEM Growl Bass',titleFr:'Basse growl SEM',bodyEn:'SEM V2 saw+pulse, multimode filter blend LP→Notch → Saturn 2 Warm Tube 100-500Hz drive 18% → Pro-C 2 Punch 4:1.',bodyFr:'SEM V2 saw+pulse, multimode blend LP→Notch → Saturn 2 Warm Tube 100-500Hz drive 18% → Pro-C 2 Punch 4:1.',stopEn:'Stop when the growl adds character without masking the kick.',stopFr:'Stop quand le growl ajoute du caractere sans masquer le kick.',uses:['SEM V2','Saturn 2','Pro-C 2']}
-];
-
-const fixIt = [
-  {sEn:'Kick and bass fight',sFr:'Kick et basse se battent',fEn:'Sidechain bass to kick (ShaperBox 3 or Ableton Compressor). Check phase with Pro-Q 4 analyzer.',fFr:'Sidechain bass au kick (ShaperBox 3 ou Ableton Compressor). Check phase avec Pro-Q 4 analyzer.'},
-  {sEn:'Muddy mix',sFr:'Mix boueux',fEn:'Pro-Q 4 on every track: cut 200-400Hz boxiness. HP everything except kick/bass at 100Hz+.',fFr:'Pro-Q 4 sur chaque piste: coupe 200-400Hz. HP tout sauf kick/bass a 100Hz+.'},
-  {sEn:'Flat drums',sFr:'Drums plats',fEn:'Drums bus glue (Pro-C 2 Bus 2:1 mix 80%) + Saturn 2 Warm Tube 10% + Neutron TS attack +15%.',fFr:'Bus drums (Pro-C 2 Bus 2:1 mix 80%) + Saturn 2 Warm Tube 10% + Neutron TS attack +15%.'},
-  {sEn:'Mix too narrow',sFr:'Mix trop etroit',fEn:'MicroPitch on mids/highs (±8ct, 10-12ms). Check Pro-Q 4 M/S: side HP 150Hz. Verify mono.',fFr:'MicroPitch sur mids/highs (±8ct, 10-12ms). Pro-Q 4 M/S: side HP 150Hz. Verifier mono.'},
-  {sEn:'Reverb muddies low-end',sFr:'Reverb salit le low-end',fEn:'HP ALL returns at 200Hz minimum. Sidechain returns to kick. Reduce sends.',fFr:'HP TOUS les returns a 200Hz minimum. Sidechain returns au kick. Reduis les sends.'},
-  {sEn:'Snare disappears',sFr:'Snare disparait',fEn:'Neutron TS attack +18% on snare. Add snare plate return (ValhallaPlate 3s, HP 300Hz, SC from snare).',fFr:'Neutron TS attack +18% sur snare. Ajoute return plate snare (ValhallaPlate 3s, HP 300Hz, SC snare).'},
-  {sEn:'Master too loud / distorts',sFr:'Master trop fort / distortion',fEn:'Lower ALL faders by -3dB. Gain stage to -12dBFS peaks. Pro-L 2 max -2dB GR.',fFr:'Baisse TOUT de -3dB. Gain staging -12dBFS peaks. Pro-L 2 max -2dB GR.'},
-  {sEn:'Sound too digital / cold',sFr:'Son trop digital / froid',fEn:'Decimort 2 (24bit/33kHz) + Tape MELLO-FI (wow 8%, flutter 6%, sat 12%). Saturn 2 Subtle Tube micro-dose.',fFr:'Decimort 2 (24bit/33kHz) + Tape MELLO-FI (wow 8%, flutter 6%, sat 12%). Saturn 2 Subtle Tube micro-dose.'},
-  {sEn:'Bass too boomy',sFr:'Basse trop boomy',fEn:'Pro-MB band 60-120Hz 3:1 slow attack. Check room acoustics. Mono below 120Hz.',fFr:'Pro-MB bande 60-120Hz 3:1 attack lent. Check acoustique. Mono sous 120Hz.'},
-  {sEn:'Boring transitions',sFr:'Transitions ennuyeuses',fEn:'Throw delay automation (ValhallaDelay). Snare plate moment. Serum noise risers. ShaperBox filter sweep.',fFr:'Throw delay automation (ValhallaDelay). Moment plate snare. Risers Serum. Sweep filtre ShaperBox.'},
-  {sEn:'Thin amateur mix',sFr:'Mix amateur / thin',fEn:'Gain staging -12dBFS per track. Drums bus chain. Master bus chain. Level-match everything.',fFr:'Gain staging -12dBFS par piste. Bus drums. Bus master. Level-match tout.'},
-  {sEn:'Too many elements clash',sFr:'Trop d\'elements qui clash',fEn:'MUTE all. Rebuild: Kick, Bass, Drums, Hook, Pads. One by one.',fFr:'MUTE tout. Rebuild: Kick, Bass, Drums, Hook, Pads. Un par un.'},
-  {sEn:'Hi-hats too harsh',sFr:'Hi-hats trop harsh',fEn:'HP strict at 4kHz+. Decimort 2 subtle (24bit/30kHz). Pro-C 2 Opto for peaks.',fFr:'HP strict a 4kHz+. Decimort 2 subtil (24bit/30kHz). Pro-C 2 Opto pour les pics.'},
-  {sEn:'Not enough punch',sFr:'Pas assez de punch',fEn:'Neutron TS attack +15-25%. Neutron Clipper soft -1 to -3dB. Parallel crush on return.',fFr:'Neutron TS attack +15-25%. Neutron Clipper soft -1 a -3dB. Parallel crush en return.'},
-  {sEn:'Stereo image broken',sFr:'Image stereo bancale',fEn:'Ozone Imager check. Mono below 120Hz. Pro-Q 4 M/S Polish. Utility mono check.',fFr:'Ozone Imager check. Mono sous 120Hz. Pro-Q 4 M/S. Utility mono check.'},
-  {sEn:'CPU overload',sFr:'CPU overload',fEn:'Freeze finalized tracks. Bounce heavy instruments. Reduce Diva accuracy to FAST.',fFr:'Freeze les pistes finalisees. Bounce les instruments lourds. Diva accuracy en FAST.'}
-];
-
-/* ─── State ─── */
-let state = {
-  lang: localStorage.getItem('kapman-lang') || 'en',
-  theme: localStorage.getItem('kapman-theme') || 'dark',
-  page: 'home',
-  modeFilter: 'all',
-  vendorFilter: 'all',
-  search: '',
-  selectedId: null,
-  roleFilter: 'all',
-  sbGoal: null,
-  sbConstraint: null
+/* ============================================================
+   DATA — SYNTHS (categorized)
+   ============================================================ */
+const SYNTHS = {
+  primary: [
+    { name: 'Diva', vendor: 'u-he', priority: true },
+    { name: 'Serum 2', vendor: 'Xfer', priority: true },
+    { name: 'Pigments', vendor: 'Arturia', priority: true },
+    { name: 'Mini V3', vendor: 'Arturia', priority: true },
+    { name: 'BA-1', vendor: 'Baby Audio', priority: true },
+    { name: 'MiniFreak V', vendor: 'Arturia', priority: true },
+    { name: 'Trilian', vendor: 'Spectrasonics', priority: true },
+  ],
+  classic: [
+    { name: 'CS-80 V4', vendor: 'Arturia' },
+    { name: 'Jup-8 V4', vendor: 'Arturia' },
+    { name: 'Prophet-5 V', vendor: 'Arturia' },
+    { name: 'SEM V2', vendor: 'Arturia' },
+    { name: 'Jun-6 V', vendor: 'Arturia' },
+    { name: 'OP-Xa V', vendor: 'Arturia' },
+    { name: 'Matrix-12 V2', vendor: 'Arturia' },
+    { name: 'ARP 2600 V3', vendor: 'Arturia' },
+    { name: 'Polysix', vendor: 'KORG' },
+    { name: 'KORG MS-20 V', vendor: 'Arturia' },
+  ],
+  digital: [
+    { name: 'DX7 V', vendor: 'Arturia' },
+    { name: 'CZ V', vendor: 'Arturia' },
+    { name: 'SQ80 V', vendor: 'Arturia' },
+    { name: 'Prophet-VS V', vendor: 'Arturia' },
+    { name: 'Synclavier V', vendor: 'Arturia' },
+    { name: 'CMI V', vendor: 'Arturia' },
+    { name: 'Emulator II V', vendor: 'Arturia' },
+  ],
+  experimental: [
+    { name: 'Buchla Easel V', vendor: 'Arturia' },
+    { name: 'Synthi V', vendor: 'Arturia' },
+    { name: 'Modular V3', vendor: 'Arturia' },
+    { name: 'Vocoder V', vendor: 'Arturia' },
+  ],
+  drums: [
+    { name: 'Drumazon 2', vendor: 'D16' },
+    { name: 'Nepheton 2', vendor: 'D16' },
+    { name: 'Nithonat 2', vendor: 'D16' },
+    { name: 'PunchBox', vendor: 'D16' },
+    { name: 'Phoscyon 2', vendor: 'D16' },
+  ]
 };
 
-const $ = (s, ctx=document) => ctx.querySelector(s);
-const $$ = (s, ctx=document) => Array.from(ctx.querySelectorAll(s));
-const ui = k => (i18n[state.lang][k] || k);
-const pickLang = (en, fr) => state.lang === 'fr' ? fr : en;
-const titleCaseWord = s => s.charAt(0).toUpperCase() + s.slice(1);
+/* ============================================================
+   DATA — ROUTES
+   ============================================================ */
+const ROUTES = [
+  {
+    name: { en: 'Deep Sub Bass', fr: 'Sub bass profonde' },
+    role: { en: 'Foundation — below 80 Hz', fr: 'Fondation — sous 80 Hz' },
+    chain: ['Diva / Serum 2', 'Saturn 2', 'Pro-Q 3', 'Pro-C 2', 'Pro-L 2'],
+    notes: {
+      en: '<strong>Diva</strong> or <strong>Serum 2</strong> — single saw/sine oscillator, no unison. <strong>Saturn 2</strong> on Warm Tube, Drive 10–15%, Mix 40%. <strong>Pro-Q 3</strong> high-pass at 25 Hz 24 dB/oct, low-pass at 120 Hz gentle. <strong>Pro-C 2</strong> in Clean mode, Ratio 3:1, Attack 10 ms, Release 80 ms. <strong>Pro-L 2</strong> as safety limiter at −1 dB.',
+      fr: '<strong>Diva</strong> ou <strong>Serum 2</strong> — oscillateur simple saw/sine, pas d\'unisson. <strong>Saturn 2</strong> sur Warm Tube, Drive 10–15%, Mix 40%. <strong>Pro-Q 3</strong> passe-haut à 25 Hz 24 dB/oct, passe-bas à 120 Hz doux. <strong>Pro-C 2</strong> en mode Clean, Ratio 3:1, Attack 10 ms, Release 80 ms. <strong>Pro-L 2</strong> en limiteur de sécurité à −1 dB.'
+    }
+  },
+  {
+    name: { en: 'Acid Line', fr: 'Ligne acid' },
+    role: { en: 'Squelchy mono lead / bass', fr: 'Lead / basse mono squelchy' },
+    chain: ['Phoscyon 2 / Diva', 'Devastor 2', 'Decimort 2', 'Pro-Q 3', 'ValhallaDelay'],
+    notes: {
+      en: '<strong>Phoscyon 2</strong> for authentic 303. Or <strong>Diva</strong> single osc + ladder filter, Reso 60–80%. <strong>Devastor 2</strong> light asymmetric saturation. <strong>Decimort 2</strong> at 22 kHz, subtle bit reduction for grit. <strong>Pro-Q 3</strong> notch at 300 Hz if muddy. <strong>ValhallaDelay</strong> dotted 1/8, Mix 15%, feedback 30%.',
+      fr: '<strong>Phoscyon 2</strong> pour un 303 authentique. Ou <strong>Diva</strong> osc simple + filtre ladder, Reso 60–80%. <strong>Devastor 2</strong> saturation asymétrique légère. <strong>Decimort 2</strong> à 22 kHz, réduction de bit subtile pour le grain. <strong>Pro-Q 3</strong> notch à 300 Hz si boueux. <strong>ValhallaDelay</strong> pointé 1/8, Mix 15%, feedback 30%.'
+    }
+  },
+  {
+    name: { en: 'Lo-fi Pad', fr: 'Nappe lo-fi' },
+    role: { en: 'Textured atmosphere', fr: 'Atmosphère texturée' },
+    chain: ['CS-80 V4 / Jup-8 V4', 'Tape MELLO-FI', 'Super VHS', 'Chorus DIMENSION-D', 'ValhallaVintageVerb'],
+    notes: {
+      en: '<strong>CS-80 V4</strong> or <strong>Jup-8 V4</strong> — warm detuned pad preset. <strong>Tape MELLO-FI</strong> for tape wobble and hiss. <strong>Super VHS</strong> with Age at 50–60%. <strong>Chorus DIMENSION-D</strong> mode II or III. <strong>ValhallaVintageVerb</strong> 1980s mode, Decay 3–5 s, Mix 35%.',
+      fr: '<strong>CS-80 V4</strong> ou <strong>Jup-8 V4</strong> — preset nappe chaude désaccordée. <strong>Tape MELLO-FI</strong> pour le wobble et le souffle de bande. <strong>Super VHS</strong> avec Age à 50–60%. <strong>Chorus DIMENSION-D</strong> mode II ou III. <strong>ValhallaVintageVerb</strong> mode 1980s, Decay 3–5 s, Mix 35%.'
+    }
+  },
+  {
+    name: { en: 'Metallic Stab', fr: 'Stab métallique' },
+    role: { en: 'Short, bright percussive hit', fr: 'Hit percussif court et brillant' },
+    chain: ['DX7 V / Serum 2', 'Dist COLDFIRE', 'ShaperBox 3', 'Crystalline', 'Pro-Q 3'],
+    notes: {
+      en: '<strong>DX7 V</strong> metallic bell preset or <strong>Serum 2</strong> FM mode. <strong>Dist COLDFIRE</strong> for harmonic density, Drive 20%. <strong>ShaperBox 3</strong> VolumeShaper for tight amplitude envelope. <strong>Crystalline</strong> short plate, 0.5 s, Mix 20%. <strong>Pro-Q 3</strong> cut below 200 Hz, gentle 8 kHz shelf boost.',
+      fr: '<strong>DX7 V</strong> preset cloche métallique ou <strong>Serum 2</strong> en mode FM. <strong>Dist COLDFIRE</strong> pour la densité harmonique, Drive 20%. <strong>ShaperBox 3</strong> VolumeShaper pour une enveloppe d\'amplitude serrée. <strong>Crystalline</strong> plate courte, 0.5 s, Mix 20%. <strong>Pro-Q 3</strong> coupe sous 200 Hz, shelf doux à 8 kHz.'
+    }
+  },
+  {
+    name: { en: 'Ghostly Vocal Texture', fr: 'Texture vocale fantôme' },
+    role: { en: 'Ethereal processed vocal layer', fr: 'Couche vocale traitée éthérée' },
+    chain: ['Vocoder V / Sample', 'Efx REFRACT', 'Phaser BI-TRON', 'ValhallaShimmer', 'Pro-Q 3'],
+    notes: {
+      en: 'Start with <strong>Vocoder V</strong> or a vocal sample via Moises AI. <strong>Efx REFRACT</strong> for granular scatter. <strong>Phaser BI-TRON</strong> slow rate, moderate depth. <strong>ValhallaShimmer</strong> pitch +12, Decay 4 s, Mix 40%. <strong>Pro-Q 3</strong> high-pass at 300 Hz to keep it floating above the mix.',
+      fr: 'Commence avec <strong>Vocoder V</strong> ou un sample vocal via Moises AI. <strong>Efx REFRACT</strong> pour un scatter granulaire. <strong>Phaser BI-TRON</strong> rate lent, profondeur modérée. <strong>ValhallaShimmer</strong> pitch +12, Decay 4 s, Mix 40%. <strong>Pro-Q 3</strong> passe-haut à 300 Hz pour que ça flotte au-dessus du mix.'
+    }
+  },
+  {
+    name: { en: 'Distorted Drum Bus', fr: 'Bus drums distordu' },
+    role: { en: 'Parallel crush for drum group', fr: 'Crush parallèle pour groupe drums' },
+    chain: ['Devastor 2', 'Decimort 2', 'Pro-C 2', 'Pro-Q 3'],
+    notes: {
+      en: 'On a parallel send from your drum bus. <strong>Devastor 2</strong> asymmetric, Drive 40–60%. <strong>Decimort 2</strong> bit depth 10–12, sample rate 18 kHz. <strong>Pro-C 2</strong> Opto mode, heavy compression 8:1, slow attack. <strong>Pro-Q 3</strong> high-pass at 100 Hz, tame any harsh peaks around 3 kHz. Blend to taste (−10 to −6 dB below dry bus).',
+      fr: 'Sur un envoi parallèle de ton bus drums. <strong>Devastor 2</strong> asymétrique, Drive 40–60%. <strong>Decimort 2</strong> profondeur 10–12 bits, sample rate 18 kHz. <strong>Pro-C 2</strong> mode Opto, compression lourde 8:1, attaque lente. <strong>Pro-Q 3</strong> passe-haut à 100 Hz, dompte les pics durs vers 3 kHz. Blend au goût (−10 à −6 dB sous le bus sec).'
+    }
+  },
+  {
+    name: { en: 'Lush Stereo Lead', fr: 'Lead stéréo lush' },
+    role: { en: 'Wide melodic element', fr: 'Élément mélodique large' },
+    chain: ['Pigments / MiniFreak V', 'Chorus JUN-6', 'Delay ETERNITY', 'ValhallaRoom', 'Pro-Q 3'],
+    notes: {
+      en: '<strong>Pigments</strong> or <strong>MiniFreak V</strong> — 2 osc with slight detune. <strong>Chorus JUN-6</strong> for classic Juno width. <strong>Delay ETERNITY</strong> ping-pong, 1/8, Mix 20%. <strong>ValhallaRoom</strong> medium room, Decay 1.5 s, Mix 20%. <strong>Pro-Q 3</strong> mid-side mode — cut low end in sides below 200 Hz.',
+      fr: '<strong>Pigments</strong> ou <strong>MiniFreak V</strong> — 2 osc avec léger désaccord. <strong>Chorus JUN-6</strong> pour la largeur Juno classique. <strong>Delay ETERNITY</strong> ping-pong, 1/8, Mix 20%. <strong>ValhallaRoom</strong> room moyenne, Decay 1.5 s, Mix 20%. <strong>Pro-Q 3</strong> mode mid-side — coupe le bas dans les sides sous 200 Hz.'
+    }
+  },
+  {
+    name: { en: 'Broken Beat Perc', fr: 'Perc beat cassé' },
+    role: { en: 'Textured rhythmic layer', fr: 'Couche rythmique texturée' },
+    chain: ['Sample / PunchBox', 'Infiltrator', 'ShaperBox 3', 'Toraverb 2'],
+    notes: {
+      en: 'Start with a percussion sample or <strong>PunchBox</strong> layer. <strong>Infiltrator</strong> — pick a multi-fx preset, reduce Mix to 30–50%. <strong>ShaperBox 3</strong> TimeShaper for rhythmic glitch. <strong>Toraverb 2</strong> short diffuse verb, Decay 0.8 s, Mix 15%.',
+      fr: 'Commence avec un sample percussion ou un layer <strong>PunchBox</strong>. <strong>Infiltrator</strong> — choisis un preset multi-fx, réduis Mix à 30–50%. <strong>ShaperBox 3</strong> TimeShaper pour du glitch rythmique. <strong>Toraverb 2</strong> reverb diffuse courte, Decay 0.8 s, Mix 15%.'
+    }
+  },
+  {
+    name: { en: 'Dark Ambient Drone', fr: 'Drone ambiant dark' },
+    role: { en: 'Background tension layer', fr: 'Couche de tension en arrière-plan' },
+    chain: ['Synthi V / Buchla Easel V', 'Efx FRAGMENTS', 'ValhallaSupermassive', 'Tape MELLO-FI'],
+    notes: {
+      en: '<strong>Synthi V</strong> or <strong>Buchla Easel V</strong> — generative patch, slow LFOs on filter and pitch. <strong>Efx FRAGMENTS</strong> for granular processing. <strong>ValhallaSupermassive</strong> Gemini mode, long feedback. <strong>Tape MELLO-FI</strong> for warmth and drift.',
+      fr: '<strong>Synthi V</strong> ou <strong>Buchla Easel V</strong> — patch génératif, LFOs lents sur filtre et pitch. <strong>Efx FRAGMENTS</strong> pour traitement granulaire. <strong>ValhallaSupermassive</strong> mode Gemini, feedback long. <strong>Tape MELLO-FI</strong> pour chaleur et dérive.'
+    }
+  },
+  {
+    name: { en: 'EBM Bass Sequence', fr: 'Séquence basse EBM' },
+    role: { en: 'Aggressive pulsing bassline', fr: 'Ligne de basse agressive et pulsée' },
+    chain: ['Mini V3 / Diva', 'Comp FET-76', 'Devastor 2', 'Pro-Q 3', 'Delay TAPE-201'],
+    notes: {
+      en: '<strong>Mini V3</strong> or <strong>Diva</strong> — mono, single saw, filter mod from envelope. Fast staccato sequence. <strong>Comp FET-76</strong> all-buttons mode for aggressive limiting. <strong>Devastor 2</strong> symmetric, Drive 25%. <strong>Pro-Q 3</strong> boost 80 Hz +2 dB, cut 250 Hz −3 dB. <strong>Delay TAPE-201</strong> very short slapback, Mix 10%.',
+      fr: '<strong>Mini V3</strong> ou <strong>Diva</strong> — mono, saw simple, modulation filtre par enveloppe. Séquence staccato rapide. <strong>Comp FET-76</strong> mode all-buttons pour une limitation agressive. <strong>Devastor 2</strong> symétrique, Drive 25%. <strong>Pro-Q 3</strong> boost 80 Hz +2 dB, cut 250 Hz −3 dB. <strong>Delay TAPE-201</strong> slapback très court, Mix 10%.'
+    }
+  },
+  {
+    name: { en: 'Pitched Noise Riser', fr: 'Riser noise pitched' },
+    role: { en: 'Transition / build element', fr: 'Élément de transition / montée' },
+    chain: ['Serum 2', 'Filter SEM', 'Efx MOTIONS', 'ValhallaDelay'],
+    notes: {
+      en: '<strong>Serum 2</strong> noise oscillator + slow pitch bend automation. <strong>Filter SEM</strong> band-pass sweep up over 4–8 bars. <strong>Efx MOTIONS</strong> for rhythmic modulation. <strong>ValhallaDelay</strong> feedback rising to 60–80% at the peak.',
+      fr: '<strong>Serum 2</strong> oscillateur noise + automation de pitch bend lente. <strong>Filter SEM</strong> sweep band-pass montant sur 4–8 mesures. <strong>Efx MOTIONS</strong> pour modulation rythmique. <strong>ValhallaDelay</strong> feedback montant à 60–80% au pic.'
+    }
+  },
+  {
+    name: { en: 'Mangled Reverb Pad', fr: 'Nappe reverb mangled' },
+    role: { en: 'Abstract spatial texture', fr: 'Texture spatiale abstraite' },
+    chain: ['Any synth source', 'MangledVerb', 'Blackhole', 'Pro-Q 3', 'Pro-L 2'],
+    notes: {
+      en: 'Feed any short synth sound into <strong>MangledVerb</strong> — Overdrive 40%, Mix 80%. Layer <strong>Blackhole</strong> in parallel, Gravity inverted, Size max. <strong>Pro-Q 3</strong> aggressive high-pass at 200 Hz to prevent mud. <strong>Pro-L 2</strong> safety limiter.',
+      fr: 'Envoie n\'importe quel son synthé court dans <strong>MangledVerb</strong> — Overdrive 40%, Mix 80%. Layer <strong>Blackhole</strong> en parallèle, Gravity inversé, Size max. <strong>Pro-Q 3</strong> passe-haut agressif à 200 Hz pour éviter la boue. <strong>Pro-L 2</strong> limiteur de sécurité.'
+    }
+  },
+  {
+    name: { en: 'Harmonic Shimmer Key', fr: 'Clavier shimmer harmonique' },
+    role: { en: 'Sparkling melodic texture', fr: 'Texture mélodique scintillante' },
+    chain: ['DX7 V / Pigments', 'Crystals', 'Crystalline', 'Chorus DIMENSION-D'],
+    notes: {
+      en: '<strong>DX7 V</strong> electric piano or <strong>Pigments</strong> wavetable bell. <strong>Crystals</strong> pitch +12, Feedback 30%, Mix 25%. <strong>Crystalline</strong> plate, Sparkle high, Decay 2 s, Mix 25%. <strong>Chorus DIMENSION-D</strong> mode I for subtle width.',
+      fr: '<strong>DX7 V</strong> piano électrique ou <strong>Pigments</strong> cloche wavetable. <strong>Crystals</strong> pitch +12, Feedback 30%, Mix 25%. <strong>Crystalline</strong> plate, Sparkle élevé, Decay 2 s, Mix 25%. <strong>Chorus DIMENSION-D</strong> mode I pour une largeur subtile.'
+    }
+  },
+  {
+    name: { en: 'Industrial Perc Hit', fr: 'Perc industrielle' },
+    role: { en: 'Hard metallic one-shot', fr: 'One-shot métallique dur' },
+    chain: ['PunchBox / Sample', 'Redoptor 2', 'Decimort 2', 'SP2016 Reverb'],
+    notes: {
+      en: '<strong>PunchBox</strong> or a metallic sample. <strong>Redoptor 2</strong> for harsh tube saturation. <strong>Decimort 2</strong> aggressive — bit depth 8, sample rate 12 kHz. <strong>SP2016 Reverb</strong> Room preset, Decay 0.5 s, Mix 20%. Keep it mono, short, impactful.',
+      fr: '<strong>PunchBox</strong> ou un sample métallique. <strong>Redoptor 2</strong> pour saturation tube dure. <strong>Decimort 2</strong> agressif — profondeur 8 bits, sample rate 12 kHz. <strong>SP2016 Reverb</strong> preset Room, Decay 0.5 s, Mix 20%. Garde-le mono, court, impactant.'
+    }
+  }
+];
 
-/* ─── Theme / Lang ─── */
-function setTheme(theme) {
-  state.theme = theme;
-  document.body.dataset.theme = theme;
-  localStorage.setItem('kapman-theme', theme);
-  const btn = $('#themeBtn');
-  if (btn) btn.textContent = state.lang === 'fr'
-    ? (theme === 'dark' ? i18n.fr.themeLightLabel : i18n.fr.themeDarkLabel)
-    : (theme === 'dark' ? i18n.en.themeLightLabel : i18n.en.themeDarkLabel);
+/* ============================================================
+   DATA — RECIPES
+   ============================================================ */
+const RECIPES = [
+  {
+    name: { en: 'Kapman Signature Kick', fr: 'Kick signature Kapman' },
+    tags: ['kick', 'low-end'],
+    steps: {
+      en: [
+        '<strong>PunchBox</strong> — Start with a sine sub layer tuned to your track key. Body from Noise layer, Attack from Click layer.',
+        '<strong>Pro-Q 3</strong> — High-pass at 28 Hz (24 dB/oct). Surgical cut at 300 Hz (−3 dB, narrow Q) to clear mud.',
+        '<strong>Saturn 2</strong> — Warm Tape band on 60–200 Hz, Drive 15%. Adds controlled harmonic weight.',
+        '<strong>Pro-C 2</strong> — Punch mode. Ratio 4:1, Attack 5 ms, Release 50 ms. Gain reduction 3–4 dB.',
+        '<strong>Pro-L 2</strong> — Modern style, ceiling −0.3 dB. Just catching peaks.',
+        'Level-match and A/B against reference kick at every step.'
+      ],
+      fr: [
+        '<strong>PunchBox</strong> — Commence avec un layer sub sinus accordé sur la tonalité du morceau. Body depuis le layer Noise, Attack depuis le layer Click.',
+        '<strong>Pro-Q 3</strong> — Passe-haut à 28 Hz (24 dB/oct). Coupe chirurgicale à 300 Hz (−3 dB, Q étroit) pour clarifier.',
+        '<strong>Saturn 2</strong> — Warm Tape sur la bande 60–200 Hz, Drive 15%. Ajoute du poids harmonique contrôlé.',
+        '<strong>Pro-C 2</strong> — Mode Punch. Ratio 4:1, Attack 5 ms, Release 50 ms. Réduction de gain 3–4 dB.',
+        '<strong>Pro-L 2</strong> — Style Modern, ceiling −0.3 dB. Juste attraper les crêtes.',
+        'Level-match et A/B contre un kick de référence à chaque étape.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Vintage Analog Pad', fr: 'Nappe analogique vintage' },
+    tags: ['pad', 'texture'],
+    steps: {
+      en: [
+        '<strong>Jup-8 V4</strong> — Two oscillators, slight detune (5–8 cents). Low-pass filter at 2 kHz, Resonance 20%.',
+        '<strong>Tape MELLO-FI</strong> — Tape Speed slow, Wow & Flutter 30%, Noise 15%.',
+        '<strong>Super VHS</strong> — Age 50%, Boost off. Lo-fi character without losing definition.',
+        '<strong>Chorus DIMENSION-D</strong> — Mode III for maximum width.',
+        '<strong>ValhallaVintageVerb</strong> — 1980s algorithm, Decay 4 s, ModDepth 30%, Mix 30%.',
+        '<strong>Pro-Q 3</strong> — High-pass at 150 Hz. Gentle 10 kHz shelf −2 dB to keep it smooth.'
+      ],
+      fr: [
+        '<strong>Jup-8 V4</strong> — Deux oscillateurs, léger désaccord (5–8 cents). Filtre passe-bas à 2 kHz, Résonance 20%.',
+        '<strong>Tape MELLO-FI</strong> — Vitesse bande lente, Wow & Flutter 30%, Noise 15%.',
+        '<strong>Super VHS</strong> — Age 50%, Boost off. Caractère lo-fi sans perdre la définition.',
+        '<strong>Chorus DIMENSION-D</strong> — Mode III pour largeur maximale.',
+        '<strong>ValhallaVintageVerb</strong> — Algo 1980s, Decay 4 s, ModDepth 30%, Mix 30%.',
+        '<strong>Pro-Q 3</strong> — Passe-haut à 150 Hz. Shelf doux 10 kHz −2 dB pour garder la douceur.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Tight Electro Clap', fr: 'Clap électro serré' },
+    tags: ['drums', 'clap'],
+    steps: {
+      en: [
+        'Start with a layered clap sample — short, punchy, minimal room.',
+        '<strong>Devastor 2</strong> — Symmetric mode, Drive 20%. Adds edge without harshness.',
+        '<strong>Pro-Q 3</strong> — Cut below 200 Hz. Boost 1.5 kHz (+2 dB, wide Q) for presence. Notch any ringy frequency.',
+        '<strong>Pro-C 2</strong> — Classic mode. Ratio 3:1, Attack 1 ms, Release 40 ms. Fast and controlled.',
+        '<strong>ValhallaPlate</strong> — Decay 0.8 s, Damping high, Mix 15%. Just enough space, not washy.',
+        'Keep it centered, mono-compatible.'
+      ],
+      fr: [
+        'Commence avec un sample clap layeré — court, punchy, minimal room.',
+        '<strong>Devastor 2</strong> — Mode symétrique, Drive 20%. Ajoute du tranchant sans agressivité.',
+        '<strong>Pro-Q 3</strong> — Coupe sous 200 Hz. Boost 1.5 kHz (+2 dB, Q large) pour la présence. Notch sur toute fréquence qui sonne.',
+        '<strong>Pro-C 2</strong> — Mode Classic. Ratio 3:1, Attack 1 ms, Release 40 ms. Rapide et contrôlé.',
+        '<strong>ValhallaPlate</strong> — Decay 0.8 s, Damping élevé, Mix 15%. Juste assez d\'espace, pas délavé.',
+        'Garde-le centré, compatible mono.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Rhythmic Sidechain Pump', fr: 'Pump sidechain rythmique' },
+    tags: ['dynamics', 'groove'],
+    steps: {
+      en: [
+        '<strong>ShaperBox 3</strong> — VolumeShaper. Draw a pump curve synced to 1/4.',
+        'Attack shape: fast drop (5–10 ms). Release shape: medium recovery (80–120 ms). Adjust to track groove.',
+        'Apply to pads, basses, and mid-range synths — NOT to drums or leads.',
+        'Alternative: Ableton\'s native Compressor with sidechain from kick, Ratio 4:1, Attack 0.1 ms, Release 100 ms.',
+        'Level-match before/after. The pump should feel rhythmic, not like a broken compressor.'
+      ],
+      fr: [
+        '<strong>ShaperBox 3</strong> — VolumeShaper. Dessine une courbe de pump sync en 1/4.',
+        'Forme d\'attaque : chute rapide (5–10 ms). Forme de release : récupération moyenne (80–120 ms). Ajuste au groove du morceau.',
+        'Applique sur les nappes, basses et synthés mid-range — PAS sur les drums ni les leads.',
+        'Alternative : Compressor natif d\'Ableton avec sidechain du kick, Ratio 4:1, Attack 0.1 ms, Release 100 ms.',
+        'Level-match avant/après. Le pump doit sembler rythmique, pas comme un compresseur cassé.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Gritty Hi-Hat Processing', fr: 'Traitement hi-hat gritty' },
+    tags: ['drums', 'hi-hat'],
+    steps: {
+      en: [
+        'Choose a crisp closed hi-hat sample. Layer an open hat on offbeats if needed.',
+        '<strong>Pro-Q 3</strong> — High-pass at 400 Hz aggressively. Boost 8–10 kHz (+2 dB shelf) for sizzle.',
+        '<strong>Decimort 2</strong> — Subtle: sample rate 28 kHz, bit depth 14. Adds analog texture to digital hats.',
+        '<strong>Comp FET-76</strong> — Fast attack, fast release, light ratio (2:1). Tames peaks, adds consistent level.',
+        'Pan 5–15% off-center for width. Keep velocity variations for groove.'
+      ],
+      fr: [
+        'Choisis un sample de hi-hat fermé net. Layer un open hat sur les contretemps si besoin.',
+        '<strong>Pro-Q 3</strong> — Passe-haut à 400 Hz agressif. Boost 8–10 kHz (+2 dB shelf) pour le sizzle.',
+        '<strong>Decimort 2</strong> — Subtil : sample rate 28 kHz, profondeur 14 bits. Ajoute une texture analogique aux hats numériques.',
+        '<strong>Comp FET-76</strong> — Attack rapide, release rapide, ratio léger (2:1). Dompte les crêtes, niveau constant.',
+        'Pan 5–15% décentré pour la largeur. Garde les variations de vélocité pour le groove.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Tape-Saturated Bus Glue', fr: 'Glue bus saturé bande' },
+    tags: ['bus', 'mix'],
+    steps: {
+      en: [
+        'On your 2-bus or instrument bus:',
+        '<strong>Comp VCA-65</strong> — Gentle 2:1, Attack 30 ms, Release auto. 1–2 dB gain reduction max.',
+        '<strong>Saturn 2</strong> — Warm Tape, single band full range, Drive 8–12%, Mix 50%. Adds cohesion.',
+        '<strong>Pro-Q 3</strong> — Subtle tilt EQ: +1 dB at 10 kHz shelf, −1 dB at 100 Hz shelf. Brings air.',
+        'Level-match meticulously. This should feel like "better" not "different".'
+      ],
+      fr: [
+        'Sur ton bus 2-bus ou bus d\'instruments :',
+        '<strong>Comp VCA-65</strong> — Doux 2:1, Attack 30 ms, Release auto. 1–2 dB de réduction de gain max.',
+        '<strong>Saturn 2</strong> — Warm Tape, bande unique full range, Drive 8–12%, Mix 50%. Ajoute de la cohésion.',
+        '<strong>Pro-Q 3</strong> — Tilt EQ subtil : +1 dB shelf à 10 kHz, −1 dB shelf à 100 Hz. Apporte de l\'air.',
+        'Level-match méticuleusement. Ça doit paraître "meilleur" pas "différent".'
+      ]
+    }
+  },
+  {
+    name: { en: 'Detuned Supersaw Lead', fr: 'Lead supersaw désaccordé' },
+    tags: ['lead', 'synth'],
+    steps: {
+      en: [
+        '<strong>Serum 2</strong> — Init patch. Osc A: Saw, 7 voices unison, Detune 20%. Osc B: Saw, 3 voices, Detune 10%, −7 semitones.',
+        '<strong>Filter</strong> in Serum: LP 24 dB, Cutoff 3 kHz, Reso 15%. Env 2 modulating cutoff, Amount 40%.',
+        '<strong>Chorus JUN-6</strong> — Subtle width after Serum.',
+        '<strong>Pro-Q 3</strong> — High-pass at 150 Hz. Tame 2–4 kHz if harsh.',
+        '<strong>ValhallaRoom</strong> — Small room, Decay 1 s, Mix 15%. Keep it focused, not washed out.',
+        'Use mono below 200 Hz (Pro-Q 3 mid-side mode, cut sides below 200 Hz).'
+      ],
+      fr: [
+        '<strong>Serum 2</strong> — Patch Init. Osc A : Saw, 7 voix unison, Detune 20%. Osc B : Saw, 3 voix, Detune 10%, −7 demi-tons.',
+        '<strong>Filtre</strong> dans Serum : LP 24 dB, Cutoff 3 kHz, Reso 15%. Env 2 modulant le cutoff, Amount 40%.',
+        '<strong>Chorus JUN-6</strong> — Largeur subtile après Serum.',
+        '<strong>Pro-Q 3</strong> — Passe-haut à 150 Hz. Dompte 2–4 kHz si agressif.',
+        '<strong>ValhallaRoom</strong> — Petite room, Decay 1 s, Mix 15%. Garde le focus, pas délavé.',
+        'Utilise le mono sous 200 Hz (Pro-Q 3 mode mid-side, coupe les sides sous 200 Hz).'
+      ]
+    }
+  },
+  {
+    name: { en: 'Filtered Noise Sweep', fr: 'Sweep de bruit filtré' },
+    tags: ['fx', 'transition'],
+    steps: {
+      en: [
+        '<strong>Serum 2</strong> — Noise oscillator, white noise. No pitch tracking.',
+        '<strong>Filter SEM</strong> — Band-pass mode. Automate cutoff from 200 Hz to 8 kHz over 4–8 bars.',
+        '<strong>Efx MOTIONS</strong> — Sync to 1/16, subtle rhythmic modulation on filter.',
+        '<strong>ValhallaDelay</strong> — Stereo, 1/16, Mix 20%, Feedback rising from 10% to 50%.',
+        '<strong>Pro-L 2</strong> — Safety limiter. The feedback can get wild.',
+        'Automate volume: fade in from silence to −12 dB. Cut abruptly at the drop.'
+      ],
+      fr: [
+        '<strong>Serum 2</strong> — Oscillateur noise, bruit blanc. Pas de pitch tracking.',
+        '<strong>Filter SEM</strong> — Mode band-pass. Automatise le cutoff de 200 Hz à 8 kHz sur 4–8 mesures.',
+        '<strong>Efx MOTIONS</strong> — Sync en 1/16, modulation rythmique subtile sur le filtre.',
+        '<strong>ValhallaDelay</strong> — Stéréo, 1/16, Mix 20%, Feedback montant de 10% à 50%.',
+        '<strong>Pro-L 2</strong> — Limiteur de sécurité. Le feedback peut devenir sauvage.',
+        'Automatise le volume : fade in depuis le silence jusqu\'à −12 dB. Coupe net au drop.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Electro Perc Loop Treatment', fr: 'Traitement loop perc électro' },
+    tags: ['perc', 'loop'],
+    steps: {
+      en: [
+        'Import percussion loop (e.g. Sample Market Co UK). Warp in Beats mode.',
+        '<strong>Infiltrator</strong> — Choose a rhythmic multi-fx preset. Reduce Mix to 25–40%.',
+        '<strong>Pro-Q 3</strong> — High-pass at 250 Hz. Remove anything competing with kick/bass.',
+        '<strong>Decimort 2</strong> — Light bit-crush: 14 bits, 24 kHz. Adds analog grit.',
+        '<strong>ShaperBox 3</strong> — PanShaper for stereo movement synced to 1/8.',
+        'Level-match. The loop should add texture, not volume.'
+      ],
+      fr: [
+        'Importe un loop de percussion (ex. Sample Market Co UK). Warp en mode Beats.',
+        '<strong>Infiltrator</strong> — Choisis un preset multi-fx rythmique. Réduis Mix à 25–40%.',
+        '<strong>Pro-Q 3</strong> — Passe-haut à 250 Hz. Supprime tout ce qui entre en conflit avec kick/bass.',
+        '<strong>Decimort 2</strong> — Léger bit-crush : 14 bits, 24 kHz. Ajoute du grain analogique.',
+        '<strong>ShaperBox 3</strong> — PanShaper pour du mouvement stéréo sync en 1/8.',
+        'Level-match. Le loop doit ajouter de la texture, pas du volume.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Cinematic Impact Hit', fr: 'Impact cinématique' },
+    tags: ['fx', 'impact'],
+    steps: {
+      en: [
+        'Layer: low boom (sine at 50 Hz, fast decay), metallic crash sample, noise burst.',
+        '<strong>Blackhole</strong> — Size 50%, Gravity normal, Mix 30%. Creates the tail.',
+        '<strong>Dist COLDFIRE</strong> — Parallel: Drive 50%, Mix 20%. Adds aggression to the initial transient.',
+        '<strong>Pro-Q 3</strong> — Low-pass at 12 kHz to remove fizz. Boost 60–80 Hz (+3 dB) for weight.',
+        '<strong>Pro-L 2</strong> — Aggressive limiting to flatten the peak. Ceiling −0.5 dB.',
+        'Render in place. Use as a one-shot in your arrangement at key transition points.'
+      ],
+      fr: [
+        'Layer : boom grave (sinus à 50 Hz, decay rapide), sample crash métallique, burst de bruit.',
+        '<strong>Blackhole</strong> — Size 50%, Gravity normal, Mix 30%. Crée la traîne.',
+        '<strong>Dist COLDFIRE</strong> — Parallèle : Drive 50%, Mix 20%. Ajoute de l\'agressivité au transitoire initial.',
+        '<strong>Pro-Q 3</strong> — Passe-bas à 12 kHz pour enlever le fizz. Boost 60–80 Hz (+3 dB) pour le poids.',
+        '<strong>Pro-L 2</strong> — Limitation agressive pour aplatir le pic. Ceiling −0.5 dB.',
+        'Render in place. Utilise comme one-shot dans ton arrangement aux points de transition clés.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Warm Mono Bass', fr: 'Basse mono chaude' },
+    tags: ['bass', 'low-end'],
+    steps: {
+      en: [
+        '<strong>Diva</strong> — Mono mode. Single saw oscillator. Filter: Ladder, Cutoff 800 Hz, Reso 10%. Env mod 30%.',
+        '<strong>Saturn 2</strong> — Warm Tube on 80–400 Hz band, Drive 20%. Adds harmonic body.',
+        '<strong>Pro-Q 3</strong> — High-pass at 30 Hz. Cut 200–300 Hz (−2 dB) to reduce boxy mud.',
+        '<strong>Pro-C 2</strong> — Clean mode, Ratio 4:1, Attack 8 ms, Release 60 ms. Tighten dynamics.',
+        '<strong>Pro-MB</strong> — Optional: upward compression on 60–100 Hz band, +2 dB. Lifts sub presence.',
+        'A/B against reference. Keep it simple, solid, mono.'
+      ],
+      fr: [
+        '<strong>Diva</strong> — Mode mono. Oscillateur saw unique. Filtre : Ladder, Cutoff 800 Hz, Reso 10%. Env mod 30%.',
+        '<strong>Saturn 2</strong> — Warm Tube sur la bande 80–400 Hz, Drive 20%. Ajoute du corps harmonique.',
+        '<strong>Pro-Q 3</strong> — Passe-haut à 30 Hz. Cut 200–300 Hz (−2 dB) pour réduire la boîte.',
+        '<strong>Pro-C 2</strong> — Mode Clean, Ratio 4:1, Attack 8 ms, Release 60 ms. Resserre la dynamique.',
+        '<strong>Pro-MB</strong> — Optionnel : compression upward sur bande 60–100 Hz, +2 dB. Relève la présence sub.',
+        'A/B contre référence. Garde ça simple, solide, mono.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Granular Texture Layer', fr: 'Couche texture granulaire' },
+    tags: ['texture', 'experimental'],
+    steps: {
+      en: [
+        'Source: any synth one-shot, vocal snippet, or field recording.',
+        '<strong>Efx FRAGMENTS</strong> — Grain size 30–80 ms, Scatter 50%, Pitch random ±5 semitones, Mix 70%.',
+        '<strong>Phaser BI-TRON</strong> — Rate 0.1 Hz, Depth 60%. Slow evolving movement.',
+        '<strong>ValhallaShimmer</strong> — Pitch +12, Size large, Decay 5 s, Mix 35%.',
+        '<strong>Pro-Q 3</strong> — Band-pass: high-pass 300 Hz, low-pass 8 kHz. Keep it in its frequency lane.',
+        'Automate Efx FRAGMENTS parameters for organic evolution. Render 8–16 bars, chop the best parts.'
+      ],
+      fr: [
+        'Source : n\'importe quel one-shot synthé, extrait vocal, ou field recording.',
+        '<strong>Efx FRAGMENTS</strong> — Taille grain 30–80 ms, Scatter 50%, Pitch aléatoire ±5 demi-tons, Mix 70%.',
+        '<strong>Phaser BI-TRON</strong> — Rate 0.1 Hz, Depth 60%. Mouvement évolutif lent.',
+        '<strong>ValhallaShimmer</strong> — Pitch +12, Size large, Decay 5 s, Mix 35%.',
+        '<strong>Pro-Q 3</strong> — Band-pass : passe-haut 300 Hz, passe-bas 8 kHz. Reste dans sa plage de fréquences.',
+        'Automatise les paramètres d\'Efx FRAGMENTS pour une évolution organique. Render 8–16 mesures, découpe les meilleurs passages.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Stereo Widening Stack', fr: 'Stack d\'élargissement stéréo' },
+    tags: ['stereo', 'mix'],
+    steps: {
+      en: [
+        'For midrange elements (synths, pads, FX) — NOT bass or kick:',
+        '<strong>Chorus JUN-6</strong> — Mode I for subtle, Mode II for wider. First in chain.',
+        '<strong>MicroPitch</strong> — Detune ±10 cents, Delay 15–20 ms, Mix 40%. Adds dimension.',
+        '<strong>Pro-Q 3</strong> — Mid-side mode: boost sides at 3–8 kHz (+1.5 dB). Cut sides below 200 Hz.',
+        'Check mono compatibility: collapse to mono in Utility. If it sounds thin or phasey, reduce MicroPitch Mix.',
+        'Reference against your track\'s mono fold. Width should enhance, not destroy.'
+      ],
+      fr: [
+        'Pour les éléments mid-range (synthés, nappes, FX) — PAS basse ou kick :',
+        '<strong>Chorus JUN-6</strong> — Mode I pour subtil, Mode II pour plus large. Premier dans la chaîne.',
+        '<strong>MicroPitch</strong> — Detune ±10 cents, Delay 15–20 ms, Mix 40%. Ajoute de la dimension.',
+        '<strong>Pro-Q 3</strong> — Mode mid-side : boost sides à 3–8 kHz (+1.5 dB). Cut sides sous 200 Hz.',
+        'Vérifie la compatibilité mono : collapse en mono dans Utility. Si ça sonne fin ou phaseux, réduis le Mix MicroPitch.',
+        'Compare avec le fold mono de ton morceau. La largeur doit améliorer, pas détruire.'
+      ]
+    }
+  },
+  {
+    name: { en: 'Master Bus Polish', fr: 'Polish bus master' },
+    tags: ['master', 'finish'],
+    steps: {
+      en: [
+        'Final chain on your master bus (apply LAST, after mix is balanced):',
+        '<strong>Neutron 5 Equalizer</strong> — Gentle surgical cleanup. Fix any mix-wide resonances.',
+        '<strong>Ozone 12 Dynamic EQ</strong> — Tame 200–400 Hz buildup dynamically. Only acts when needed.',
+        '<strong>Ozone 12 Exciter</strong> — Tape mode on lows (Drive 5%), Retro mode on highs (Drive 8%).',
+        '<strong>Ozone 12 Imager</strong> — Narrow below 100 Hz, widen 2–8 kHz slightly.',
+        '<strong>Ozone 12 Maximizer</strong> — IRC IV, Ceiling −1.0 dB (for streaming). Target −14 LUFS integrated.',
+        'A/B with and without the entire chain. Each module should be subtle. If you can obviously hear a single module working, it\'s too much.'
+      ],
+      fr: [
+        'Chaîne finale sur ton bus master (applique EN DERNIER, après que le mix est équilibré) :',
+        '<strong>Neutron 5 Equalizer</strong> — Nettoyage chirurgical doux. Corrige les résonances globales du mix.',
+        '<strong>Ozone 12 Dynamic EQ</strong> — Dompte l\'accumulation 200–400 Hz dynamiquement. N\'agit que quand nécessaire.',
+        '<strong>Ozone 12 Exciter</strong> — Mode Tape sur les graves (Drive 5%), mode Retro sur les aigus (Drive 8%).',
+        '<strong>Ozone 12 Imager</strong> — Rétrécis sous 100 Hz, élargis 2–8 kHz légèrement.',
+        '<strong>Ozone 12 Maximizer</strong> — IRC IV, Ceiling −1.0 dB (pour streaming). Cible −14 LUFS intégré.',
+        'A/B avec et sans toute la chaîne. Chaque module doit être subtil. Si tu entends clairement un module travailler, c\'est trop.'
+      ]
+    }
+  }
+];
+
+/* ============================================================
+   DATA — FX PALETTE
+   ============================================================ */
+const FX_PALETTE = [
+  {
+    category: { en: 'SATURATION / DISTORTION', fr: 'SATURATION / DISTORTION' },
+    items: [
+      { name: 'Saturn 2', vendor: 'FabFilter' },
+      { name: 'Devastor 2', vendor: 'D16' },
+      { name: 'Redoptor 2', vendor: 'D16' },
+      { name: 'Dist COLDFIRE', vendor: 'Arturia' },
+      { name: 'Dist OPAMP-21', vendor: 'Arturia' },
+      { name: 'Dist TUBE-CULTURE', vendor: 'Arturia' },
+      { name: 'CrushStation', vendor: 'Eventide' },
+    ]
+  },
+  {
+    category: { en: 'REVERB', fr: 'RÉVERB' },
+    items: [
+      { name: 'ValhallaVintageVerb', vendor: 'Valhalla' },
+      { name: 'ValhallaRoom', vendor: 'Valhalla' },
+      { name: 'ValhallaPlate', vendor: 'Valhalla' },
+      { name: 'ValhallaShimmer', vendor: 'Valhalla' },
+      { name: 'ValhallaSupermassive', vendor: 'Valhalla' },
+      { name: 'Crystalline', vendor: 'Baby Audio' },
+      { name: 'SP2016 Reverb', vendor: 'Eventide' },
+      { name: 'MangledVerb', vendor: 'Eventide' },
+      { name: 'Blackhole', vendor: 'Eventide' },
+      { name: 'ShimmerVerb', vendor: 'Eventide' },
+      { name: 'Pro-R 2', vendor: 'FabFilter' },
+      { name: 'Toraverb 2', vendor: 'D16' },
+    ]
+  },
+  {
+    category: { en: 'DELAY', fr: 'DELAY' },
+    items: [
+      { name: 'ValhallaDelay', vendor: 'Valhalla' },
+      { name: 'Timeless 3', vendor: 'FabFilter' },
+      { name: 'Delay TAPE-201', vendor: 'Arturia' },
+      { name: 'Delay ETERNITY', vendor: 'Arturia' },
+      { name: 'Delay BRIGADE', vendor: 'Arturia' },
+      { name: 'Tekturon', vendor: 'D16' },
+      { name: 'Repeater', vendor: 'D16' },
+      { name: 'UltraTap', vendor: 'Eventide' },
+      { name: 'H3000 Band Delays Mk II', vendor: 'Eventide' },
+    ]
+  },
+  {
+    category: { en: 'MODULATION', fr: 'MODULATION' },
+    items: [
+      { name: 'Chorus DIMENSION-D', vendor: 'Arturia' },
+      { name: 'Chorus JUN-6', vendor: 'Arturia' },
+      { name: 'Phaser BI-TRON', vendor: 'Arturia' },
+      { name: 'Flanger BL-20', vendor: 'Arturia' },
+      { name: 'TriceraChorus', vendor: 'Eventide' },
+      { name: 'Instant Phaser Mk II', vendor: 'Eventide' },
+      { name: 'Instant Flanger Mk II', vendor: 'Eventide' },
+      { name: 'MicroPitch', vendor: 'Eventide' },
+      { name: 'Lush 2', vendor: 'D16' },
+      { name: 'Syntorus 2', vendor: 'D16' },
+      { name: 'Fazortan 2', vendor: 'D16' },
+    ]
+  },
+  {
+    category: { en: 'DEGRADATION / LOFI', fr: 'DÉGRADATION / LOFI' },
+    items: [
+      { name: 'Decimort 2', vendor: 'D16' },
+      { name: 'Super VHS', vendor: 'Baby Audio' },
+      { name: 'Tape MELLO-FI', vendor: 'Arturia' },
+    ]
+  },
+  {
+    category: { en: 'MULTI-FX / CREATIVE', fr: 'MULTI-FX / CRÉATIF' },
+    items: [
+      { name: 'ShaperBox 3', vendor: 'Cableguys' },
+      { name: 'Infiltrator', vendor: 'Devious Machines' },
+      { name: 'Efx FRAGMENTS', vendor: 'Arturia' },
+      { name: 'Efx MOTIONS', vendor: 'Arturia' },
+      { name: 'Efx REFRACT', vendor: 'Arturia' },
+      { name: 'Crystals', vendor: 'Eventide' },
+      { name: 'Undulator', vendor: 'Eventide' },
+      { name: 'H3000 Factory Mk II', vendor: 'Eventide' },
+    ]
+  },
+  {
+    category: { en: 'FILTER', fr: 'FILTRE' },
+    items: [
+      { name: 'Filter Mini', vendor: 'Arturia' },
+      { name: 'Filter M12', vendor: 'Arturia' },
+      { name: 'Filter MS-20', vendor: 'Arturia' },
+      { name: 'Filter SEM', vendor: 'Arturia' },
+      { name: 'Volcano 3', vendor: 'FabFilter' },
+      { name: 'Simplon', vendor: 'FabFilter' },
+      { name: 'Godfazer', vendor: 'D16' },
+    ]
+  },
+  {
+    category: { en: 'HARMONIZER / PITCH', fr: 'HARMONISEUR / PITCH' },
+    items: [
+      { name: 'Octavox', vendor: 'Eventide' },
+      { name: 'Quadravox', vendor: 'Eventide' },
+      { name: 'H910 Harmonizer', vendor: 'Eventide' },
+      { name: 'H949 Harmonizer', vendor: 'Eventide' },
+      { name: 'Crystals', vendor: 'Eventide' },
+      { name: 'ValhallaFreqEcho', vendor: 'Valhalla' },
+      { name: 'ValhallaUberMod', vendor: 'Valhalla' },
+    ]
+  }
+];
+
+/* ============================================================
+   DATA — MIX CHECK
+   ============================================================ */
+const MIXCHECK_ZONES = [
+  {
+    freq: '20–60 Hz',
+    name: { en: 'Sub', fr: 'Sub' },
+    listen: {
+      en: '<strong>Listen for:</strong> Is the sub present and controlled? Any unwanted rumble? Does it translate on small speakers (it shouldn\'t — but check with a reference)? Is kick/bass phase aligned?',
+      fr: '<strong>Écoute :</strong> Le sub est-il présent et contrôlé ? Du rumble indésirable ? Est-ce que ça traduit sur petites enceintes (ça ne devrait pas — mais vérifie avec une référence) ? Kick/basse en phase ?'
+    },
+    tools: ['Pro-Q 3 (analyzer)', 'Ozone 12 Low End Focus', 'Neutron 5 Phase']
+  },
+  {
+    freq: '60–200 Hz',
+    name: { en: 'Bass Body', fr: 'Corps de basse' },
+    listen: {
+      en: '<strong>Listen for:</strong> Kick and bass working together or fighting? Boominess or mud around 100–200 Hz? Is the low end tight and punchy or flabby?',
+      fr: '<strong>Écoute :</strong> Kick et basse travaillent ensemble ou se battent ? Du boomy ou de la boue vers 100–200 Hz ? Le bas est serré et punchy ou mou ?'
+    },
+    tools: ['Pro-Q 3', 'Pro-C 2 (sidechain)', 'ShaperBox 3']
+  },
+  {
+    freq: '200–500 Hz',
+    name: { en: 'Low Mids', fr: 'Bas médiums' },
+    listen: {
+      en: '<strong>Listen for:</strong> Mud, boxiness, or buildup. Multiple elements stacking in this range. This is the most common problem zone. Cut surgically, don\'t boost.',
+      fr: '<strong>Écoute :</strong> Boue, boxiness, ou accumulation. Plusieurs éléments qui s\'empilent dans cette zone. C\'est la zone à problèmes la plus courante. Coupe chirurgicalement, ne booste pas.'
+    },
+    tools: ['Pro-Q 3', 'Ozone 12 Dynamic EQ', 'Neutron 5 Equalizer']
+  },
+  {
+    freq: '500 Hz–2 kHz',
+    name: { en: 'Midrange', fr: 'Médiums' },
+    listen: {
+      en: '<strong>Listen for:</strong> Honky or nasal quality. Clarity of melodic elements. Are leads cutting through? Is there enough body without masking?',
+      fr: '<strong>Écoute :</strong> Qualité honky ou nasale. Clarté des éléments mélodiques. Les leads percent-ils ? Y a-t-il assez de corps sans masquage ?'
+    },
+    tools: ['Pro-Q 3', 'Neutron 5 Sculptor', 'SplitEQ']
+  },
+  {
+    freq: '2–6 kHz',
+    name: { en: 'Presence', fr: 'Présence' },
+    listen: {
+      en: '<strong>Listen for:</strong> Harshness, sibilance, or ear fatigue. Is the track too aggressive in this range? Presence should feel energetic, not painful. Compare at lower volume.',
+      fr: '<strong>Écoute :</strong> Agressivité, sibilance, ou fatigue d\'oreille. Le morceau est-il trop agressif dans cette zone ? La présence doit être énergique, pas douloureuse. Compare à volume bas.'
+    },
+    tools: ['Pro-Q 3 (dynamic EQ)', 'Pro-DS', 'Ozone 12 Spectral Shaper']
+  },
+  {
+    freq: '6–20 kHz',
+    name: { en: 'Air / Brilliance', fr: 'Air / Brillance' },
+    listen: {
+      en: '<strong>Listen for:</strong> Sizzle on hats and cymbals. Is the top end bright enough or dull? Overly bright = fatiguing. Too dull = lifeless. Check against reference.',
+      fr: '<strong>Écoute :</strong> Sizzle sur les hats et cymbales. Le haut est assez brillant ou terne ? Trop brillant = fatiguant. Trop terne = sans vie. Compare avec la référence.'
+    },
+    tools: ['Pro-Q 3', 'Ozone 12 Exciter', 'Ozone 12 Equalizer']
+  },
+  {
+    freq: 'STEREO',
+    name: { en: 'Stereo Field', fr: 'Champ stéréo' },
+    listen: {
+      en: '<strong>Listen for:</strong> Width balance. Is the center solid (kick, bass, lead)? Are sides interesting without being empty or cluttered? Mono compatibility check: does anything disappear?',
+      fr: '<strong>Écoute :</strong> Équilibre de largeur. Le centre est solide (kick, basse, lead) ? Les côtés sont intéressants sans être vides ou encombrés ? Check compatibilité mono : quelque chose disparaît ?'
+    },
+    tools: ['Ozone 12 Imager', 'Pro-Q 3 (mid-side)', 'Neutron 5 Visual Mixer']
+  },
+  {
+    freq: 'DYNAMICS',
+    name: { en: 'Overall Dynamics', fr: 'Dynamique globale' },
+    listen: {
+      en: '<strong>Listen for:</strong> Does the track breathe? Are transients preserved or squashed? Is there dynamic contrast between sections? Crest factor should be 8–12 dB for club music.',
+      fr: '<strong>Écoute :</strong> Le morceau respire-t-il ? Les transitoires sont préservés ou écrasés ? Y a-t-il du contraste dynamique entre les sections ? Le crest factor devrait être 8–12 dB pour la musique club.'
+    },
+    tools: ['Pro-L 2 (metering)', 'Ozone 12 Maximizer', 'Ozone 12 Dynamics']
+  }
+];
+
+/* ============================================================
+   DATA — MIX CHAINS
+   ============================================================ */
+const MIX_CHAINS = [
+  {
+    name: { en: 'Kick Channel', fr: 'Channel Kick' },
+    purpose: { en: 'Clean, punchy, mono', fr: 'Propre, punchy, mono' },
+    slots: [
+      { plugin: 'Pro-Q 3', setting: { en: 'HP 25 Hz 24dB/oct. Cut 300 Hz −3 dB (Q 2.0). Boost 60 Hz +1.5 dB (wide).', fr: 'HP 25 Hz 24dB/oct. Cut 300 Hz −3 dB (Q 2.0). Boost 60 Hz +1.5 dB (large).' }},
+      { plugin: 'Pro-C 2', setting: { en: 'Punch mode. Ratio 4:1, Attack 5 ms, Release 50 ms. GR: 3–4 dB.', fr: 'Mode Punch. Ratio 4:1, Attack 5 ms, Release 50 ms. GR : 3–4 dB.' }},
+      { plugin: 'Saturn 2', setting: { en: 'Warm Tape on 60–200 Hz. Drive 10%. Mix 40%.', fr: 'Warm Tape sur 60–200 Hz. Drive 10%. Mix 40%.' }},
+      { plugin: 'Pro-L 2', setting: { en: 'Modern. Ceiling −0.3 dB. Safety only.', fr: 'Modern. Ceiling −0.3 dB. Sécurité uniquement.' }},
+    ]
+  },
+  {
+    name: { en: 'Bass Channel', fr: 'Channel Basse' },
+    purpose: { en: 'Tight, warm, controlled', fr: 'Serré, chaud, contrôlé' },
+    slots: [
+      { plugin: 'Pro-Q 3', setting: { en: 'HP 28 Hz. Cut 200–300 Hz −2 dB. Mono below 80 Hz (mid-side).', fr: 'HP 28 Hz. Cut 200–300 Hz −2 dB. Mono sous 80 Hz (mid-side).' }},
+      { plugin: 'Pro-C 2', setting: { en: 'Clean mode. Ratio 4:1, Attack 8 ms, Release 60 ms. GR: 3–5 dB.', fr: 'Mode Clean. Ratio 4:1, Attack 8 ms, Release 60 ms. GR : 3–5 dB.' }},
+      { plugin: 'Saturn 2', setting: { en: 'Warm Tube on 80–400 Hz. Drive 15%. Mix 50%.', fr: 'Warm Tube sur 80–400 Hz. Drive 15%. Mix 50%.' }},
+      { plugin: 'ShaperBox 3', setting: { en: 'VolumeShaper sidechain from kick. 1/4 sync. Depth 40–60%.', fr: 'VolumeShaper sidechain du kick. Sync 1/4. Depth 40–60%.' }},
+    ]
+  },
+  {
+    name: { en: 'Drums Bus', fr: 'Bus Drums' },
+    purpose: { en: 'Glue, punch, cohesion', fr: 'Glue, punch, cohésion' },
+    slots: [
+      { plugin: 'Pro-Q 3', setting: { en: 'Surgical cleanup only. Fix any resonances across the bus.', fr: 'Nettoyage chirurgical uniquement. Corrige les résonances du bus.' }},
+      { plugin: 'Comp VCA-65', setting: { en: 'Ratio 2:1, Attack 15 ms, Release auto. GR: 2–3 dB. Glue.', fr: 'Ratio 2:1, Attack 15 ms, Release auto. GR : 2–3 dB. Glue.' }},
+      { plugin: 'Saturn 2', setting: { en: 'Warm Tape, full range, Drive 8%. Mix 40%. Subtle warmth.', fr: 'Warm Tape, full range, Drive 8%. Mix 40%. Chaleur subtile.' }},
+      { plugin: 'Pro-L 2', setting: { en: 'Safety limiter. Ceiling −0.5 dB.', fr: 'Limiteur de sécurité. Ceiling −0.5 dB.' }},
+    ]
+  },
+  {
+    name: { en: 'Synth / Mid Bus', fr: 'Bus Synthé / Mid' },
+    purpose: { en: 'Clarity, width, separation', fr: 'Clarté, largeur, séparation' },
+    slots: [
+      { plugin: 'Pro-Q 3', setting: { en: 'HP 100–200 Hz (varies by source). Dynamic EQ at 2–4 kHz (−2 dB) to tame harshness.', fr: 'HP 100–200 Hz (varie selon la source). EQ dynamique à 2–4 kHz (−2 dB) pour dompter l\'agressivité.' }},
+      { plugin: 'Pro-C 2', setting: { en: 'Vocal mode. Ratio 3:1, Attack 10 ms, Release 100 ms. Gentle.', fr: 'Mode Vocal. Ratio 3:1, Attack 10 ms, Release 100 ms. Doux.' }},
+      { plugin: 'MicroPitch', setting: { en: 'Detune ±8 cents. Delay 12 ms. Mix 30%. Stereo width.', fr: 'Detune ±8 cents. Delay 12 ms. Mix 30%. Largeur stéréo.' }},
+      { plugin: 'Pro-R 2', setting: { en: 'Small room, Decay 0.8 s, Brightness 60%. Mix 10–15%.', fr: 'Petite room, Decay 0.8 s, Brightness 60%. Mix 10–15%.' }},
+    ]
+  },
+  {
+    name: { en: 'FX Return', fr: 'Retour FX' },
+    purpose: { en: 'Space without mud', fr: 'Espace sans boue' },
+    slots: [
+      { plugin: 'Pro-Q 3', setting: { en: 'HP 200–400 Hz (pre-verb). Cuts mud from reverb/delay tails.', fr: 'HP 200–400 Hz (pré-verb). Coupe la boue des queues de reverb/delay.' }},
+      { plugin: 'ValhallaVintageVerb', setting: { en: '1980s algo. Decay 2–4 s. ModDepth 20%. 100% wet on return.', fr: 'Algo 1980s. Decay 2–4 s. ModDepth 20%. 100% wet sur le retour.' }},
+      { plugin: 'Pro-C 2', setting: { en: 'Sidechain from drums bus. Ducks verb during hits. Ratio 3:1.', fr: 'Sidechain du bus drums. Duck la verb pendant les hits. Ratio 3:1.' }},
+    ]
+  },
+  {
+    name: { en: 'Master Bus', fr: 'Bus Master' },
+    purpose: { en: 'Final polish — subtle', fr: 'Polish final — subtil' },
+    slots: [
+      { plugin: 'Neutron 5 Equalizer', setting: { en: 'Surgical fixes only. No creative EQ here.', fr: 'Corrections chirurgicales uniquement. Pas d\'EQ créatif ici.' }},
+      { plugin: 'Ozone 12 Dynamic EQ', setting: { en: 'Tame 200–400 Hz buildup. Dynamic, gentle.', fr: 'Dompte l\'accumulation 200–400 Hz. Dynamique, doux.' }},
+      { plugin: 'Ozone 12 Imager', setting: { en: 'Narrow <100 Hz. Widen 2–8 kHz (+10–15%).', fr: 'Rétrécis <100 Hz. Élargis 2–8 kHz (+10–15%).' }},
+      { plugin: 'Ozone 12 Maximizer', setting: { en: 'IRC IV. Ceiling −1.0 dB. Target −14 LUFS.', fr: 'IRC IV. Ceiling −1.0 dB. Cible −14 LUFS.' }},
+    ]
+  }
+];
+
+/* ============================================================
+   DATA — FINISH CHECKLIST
+   ============================================================ */
+const FINISH_GROUPS = [
+  {
+    name: { en: 'LOW END', fr: 'BAS DU SPECTRE' },
+    items: [
+      { en: 'Kick and bass phase-aligned', fr: 'Kick et basse alignés en phase' },
+      { en: 'Sub mono below 80 Hz', fr: 'Sub mono sous 80 Hz' },
+      { en: 'No rumble below 25 Hz', fr: 'Pas de rumble sous 25 Hz' },
+      { en: 'Sidechain pump feels musical', fr: 'Le pump sidechain sonne musical' },
+      { en: 'Low end translates on laptop speakers', fr: 'Le bas traduit sur haut-parleurs laptop' },
+    ]
+  },
+  {
+    name: { en: 'MIDRANGE / BALANCE', fr: 'MÉDIUMS / ÉQUILIBRE' },
+    items: [
+      { en: 'No mud at 200–400 Hz', fr: 'Pas de boue à 200–400 Hz' },
+      { en: 'Lead / main element clearly audible', fr: 'Lead / élément principal clairement audible' },
+      { en: 'No harshness at 2–5 kHz', fr: 'Pas d\'agressivité à 2–5 kHz' },
+      { en: 'Frequency separation between elements', fr: 'Séparation fréquentielle entre les éléments' },
+    ]
+  },
+  {
+    name: { en: 'STEREO / SPACE', fr: 'STÉRÉO / ESPACE' },
+    items: [
+      { en: 'Mono compatibility checked', fr: 'Compatibilité mono vérifiée' },
+      { en: 'Width appropriate for club system', fr: 'Largeur appropriée pour système club' },
+      { en: 'Center image solid (kick, bass, lead)', fr: 'Image centre solide (kick, basse, lead)' },
+      { en: 'Reverb tails not muddy', fr: 'Queues de reverb pas boueuses' },
+      { en: 'No excessive side energy below 200 Hz', fr: 'Pas d\'énergie latérale excessive sous 200 Hz' },
+    ]
+  },
+  {
+    name: { en: 'DYNAMICS / LOUDNESS', fr: 'DYNAMIQUE / LOUDNESS' },
+    items: [
+      { en: 'Target loudness reached (−14 LUFS streaming)', fr: 'Loudness cible atteint (−14 LUFS streaming)' },
+      { en: 'True peak below −1 dBTP', fr: 'True peak sous −1 dBTP' },
+      { en: 'Transients preserved (not over-limited)', fr: 'Transitoires préservés (pas sur-limités)' },
+      { en: 'Dynamic contrast between sections', fr: 'Contraste dynamique entre les sections' },
+      { en: 'Crest factor 8–12 dB', fr: 'Crest factor 8–12 dB' },
+    ]
+  },
+  {
+    name: { en: 'FINAL CHECKS', fr: 'VÉRIFICATIONS FINALES' },
+    items: [
+      { en: 'Listened on headphones', fr: 'Écouté au casque' },
+      { en: 'Listened on phone/laptop speaker', fr: 'Écouté sur haut-parleur téléphone/laptop' },
+      { en: 'Listened at low volume', fr: 'Écouté à volume bas' },
+      { en: 'Compared against 2–3 references', fr: 'Comparé avec 2–3 références' },
+      { en: 'No clicks, pops, or artifacts', fr: 'Pas de clics, pops, ou artefacts' },
+    ]
+  }
+];
+
+/* ============================================================
+   DATA — FIX-IT PLAYBOOK
+   ============================================================ */
+const FIXIT_CARDS = [
+  {
+    problem: { en: 'Mix sounds muddy', fr: 'Le mix sonne boueux' },
+    diagnosis: { en: 'Buildup in 200–400 Hz range. Multiple elements competing.', fr: 'Accumulation dans la zone 200–400 Hz. Plusieurs éléments en conflit.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — Solo each element. Cut 200–400 Hz (−2 to −4 dB, Q 1.0–2.0) on non-essential elements. High-pass pads/FX higher (200+ Hz). <strong class="fixit-plugin-ref">Ozone 12 Dynamic EQ</strong> on master for remaining buildup.',
+      fr: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — Solo chaque élément. Coupe 200–400 Hz (−2 à −4 dB, Q 1.0–2.0) sur les éléments non essentiels. Passe-haut plus élevé sur nappes/FX (200+ Hz). <strong class="fixit-plugin-ref">Ozone 12 Dynamic EQ</strong> sur le master pour le reste.'
+    }
+  },
+  {
+    problem: { en: 'Kick disappears under bass', fr: 'Le kick disparaît sous la basse' },
+    diagnosis: { en: 'Frequency overlap + phase issues in low end.', fr: 'Chevauchement de fréquences + problèmes de phase dans le bas.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Neutron 5 Phase</strong> — Check and fix phase alignment. <strong class="fixit-plugin-ref">Pro-Q 3</strong> — Carve complementary EQ: boost kick at 60 Hz, cut bass at 60 Hz (and vice versa at 100 Hz). <strong class="fixit-plugin-ref">ShaperBox 3</strong> — VolumeShaper on bass sidechained from kick.',
+      fr: '<strong class="fixit-plugin-ref">Neutron 5 Phase</strong> — Vérifie et corrige l\'alignement de phase. <strong class="fixit-plugin-ref">Pro-Q 3</strong> — EQ complémentaire : boost kick à 60 Hz, cut basse à 60 Hz (et inversement à 100 Hz). <strong class="fixit-plugin-ref">ShaperBox 3</strong> — VolumeShaper sur la basse sidechainé du kick.'
+    }
+  },
+  {
+    problem: { en: 'Harsh / fatiguing highs', fr: 'Aigus agressifs / fatigants' },
+    diagnosis: { en: 'Resonant peaks in 2–6 kHz range. Over-saturated or over-excited.', fr: 'Pics résonants dans la zone 2–6 kHz. Sur-saturé ou sur-excité.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — Dynamic EQ band at 3–5 kHz, −3 dB, threshold set to catch only peaks. <strong class="fixit-plugin-ref">Pro-DS</strong> — Broadband mode if the harshness is sibilance-like. <strong class="fixit-plugin-ref">Ozone 12 Spectral Shaper</strong> on master for overall taming.',
+      fr: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — Bande EQ dynamique à 3–5 kHz, −3 dB, seuil réglé pour n\'attraper que les pics. <strong class="fixit-plugin-ref">Pro-DS</strong> — Mode broadband si l\'agressivité ressemble à de la sibilance. <strong class="fixit-plugin-ref">Ozone 12 Spectral Shaper</strong> sur le master pour dompter globalement.'
+    }
+  },
+  {
+    problem: { en: 'Mix lacks width', fr: 'Le mix manque de largeur' },
+    diagnosis: { en: 'Too many mono elements. Lack of stereo processing on mid-range.', fr: 'Trop d\'éléments mono. Manque de traitement stéréo sur le mid-range.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">MicroPitch</strong> — On synth bus: Detune ±8 cents, Delay 12 ms, Mix 30%. <strong class="fixit-plugin-ref">Chorus JUN-6</strong> on pads. <strong class="fixit-plugin-ref">Ozone 12 Imager</strong> — Widen 2–8 kHz. Always check mono compatibility.',
+      fr: '<strong class="fixit-plugin-ref">MicroPitch</strong> — Sur bus synthé : Detune ±8 cents, Delay 12 ms, Mix 30%. <strong class="fixit-plugin-ref">Chorus JUN-6</strong> sur les nappes. <strong class="fixit-plugin-ref">Ozone 12 Imager</strong> — Élargis 2–8 kHz. Toujours vérifier la compatibilité mono.'
+    }
+  },
+  {
+    problem: { en: 'Drums lack punch', fr: 'Les drums manquent de punch' },
+    diagnosis: { en: 'Transients being eaten by compression or saturation.', fr: 'Les transitoires sont mangés par la compression ou la saturation.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Neutron 5 Transient Shaper</strong> — Increase Attack on kick (+20–30%). <strong class="fixit-plugin-ref">Pro-C 2</strong> — Switch to Punch mode, increase attack time to let transients through. <strong class="fixit-plugin-ref">Devastor 2</strong> — Reduce drive if on drum bus. Check parallel crush levels.',
+      fr: '<strong class="fixit-plugin-ref">Neutron 5 Transient Shaper</strong> — Augmente Attack sur kick (+20–30%). <strong class="fixit-plugin-ref">Pro-C 2</strong> — Passe en mode Punch, augmente le temps d\'attaque pour laisser passer les transitoires. <strong class="fixit-plugin-ref">Devastor 2</strong> — Réduis le drive si sur le bus drums. Vérifie les niveaux de crush parallèle.'
+    }
+  },
+  {
+    problem: { en: 'Bass sounds thin', fr: 'La basse sonne fine' },
+    diagnosis: { en: 'Missing harmonics in 80–200 Hz range. Or high-passed too aggressively.', fr: 'Harmoniques manquantes dans la zone 80–200 Hz. Ou passe-haut trop agressif.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Saturn 2</strong> — Warm Tube on 80–400 Hz band, Drive 15–25%. Generates harmonics that add weight. <strong class="fixit-plugin-ref">Pro-MB</strong> — Upward compression on 60–150 Hz, +2–3 dB. Lifts quiet moments. <strong class="fixit-plugin-ref">Pro-Q 3</strong> — Check your HP filter — try lowering to 25 Hz.',
+      fr: '<strong class="fixit-plugin-ref">Saturn 2</strong> — Warm Tube sur bande 80–400 Hz, Drive 15–25%. Génère des harmoniques qui ajoutent du poids. <strong class="fixit-plugin-ref">Pro-MB</strong> — Compression upward sur 60–150 Hz, +2–3 dB. Relève les moments calmes. <strong class="fixit-plugin-ref">Pro-Q 3</strong> — Vérifie ton filtre HP — essaie de baisser à 25 Hz.'
+    }
+  },
+  {
+    problem: { en: 'Mix doesn\'t translate (sounds different everywhere)', fr: 'Le mix ne traduit pas (sonne différent partout)' },
+    diagnosis: { en: 'Over-reliance on one monitoring setup. Resonance issues. Imbalanced frequency spectrum.', fr: 'Trop de dépendance à un seul système d\'écoute. Problèmes de résonance. Spectre fréquentiel déséquilibré.' },
+    solution: {
+      en: 'Test on headphones, laptop speaker, car, phone. <strong class="fixit-plugin-ref">Ozone 12 Match EQ</strong> — Compare your spectrum against a reference track. Fix large deviations. <strong class="fixit-plugin-ref">Pro-Q 3</strong> — Use the spectrum analyzer to find and fix problem frequencies. Trust your references more than your room.',
+      fr: 'Teste au casque, HP laptop, voiture, téléphone. <strong class="fixit-plugin-ref">Ozone 12 Match EQ</strong> — Compare ton spectre avec un morceau de référence. Corrige les gros écarts. <strong class="fixit-plugin-ref">Pro-Q 3</strong> — Utilise l\'analyseur de spectre pour trouver et corriger les fréquences problématiques. Fais confiance à tes références plus qu\'à ta pièce.'
+    }
+  },
+  {
+    problem: { en: 'Too loud but sounds squashed', fr: 'Trop fort mais sonne écrasé' },
+    diagnosis: { en: 'Over-limiting on master. No headroom left.', fr: 'Sur-limitation sur le master. Plus de headroom.' },
+    solution: {
+      en: 'Turn down <strong class="fixit-plugin-ref">Ozone 12 Maximizer</strong> input by 2–3 dB. Check gain staging throughout — aim for peaks at −6 dBFS before the master chain. <strong class="fixit-plugin-ref">Pro-L 2</strong> — Switch to Modern style with less aggressive lookahead. Target −14 LUFS for streaming, not maximum loudness.',
+      fr: 'Baisse l\'input de <strong class="fixit-plugin-ref">Ozone 12 Maximizer</strong> de 2–3 dB. Vérifie le gain staging partout — vise des crêtes à −6 dBFS avant la chaîne master. <strong class="fixit-plugin-ref">Pro-L 2</strong> — Passe en style Modern avec un lookahead moins agressif. Cible −14 LUFS pour le streaming, pas le volume maximum.'
+    }
+  },
+  {
+    problem: { en: 'Reverb tails creating mud', fr: 'Les queues de reverb créent de la boue' },
+    diagnosis: { en: 'Reverb fed with too much low-end. No pre-filtering. Too long decay.', fr: 'Reverb alimentée avec trop de bas. Pas de pré-filtrage. Decay trop long.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — BEFORE the reverb (pre-filter): HP at 200–400 Hz. LP at 8–10 kHz. <strong class="fixit-plugin-ref">Pro-C 2</strong> — AFTER the reverb: sidechain from drums bus, ducks verb during hits. Shorten decay: most club-ready verbs are 0.5–2.5 s.',
+      fr: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — AVANT la reverb (pré-filtre) : HP à 200–400 Hz. LP à 8–10 kHz. <strong class="fixit-plugin-ref">Pro-C 2</strong> — APRÈS la reverb : sidechain du bus drums, duck la verb pendant les hits. Raccourcis le decay : la plupart des verbs club-ready sont 0.5–2.5 s.'
+    }
+  },
+  {
+    problem: { en: 'Snare / clap sounds boxy', fr: 'Le snare / clap sonne boxy' },
+    diagnosis: { en: 'Resonance at 200–500 Hz. Sample choice or room tone issue.', fr: 'Résonance à 200–500 Hz. Problème de choix de sample ou de room tone.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — Sweep 200–500 Hz with a narrow boost to find the boxy frequency. Cut it by 3–5 dB. <strong class="fixit-plugin-ref">Devastor 2</strong> — Light saturation to add upper harmonics that shift perceived tone upward. Consider layering a different sample on top.',
+      fr: '<strong class="fixit-plugin-ref">Pro-Q 3</strong> — Sweep 200–500 Hz avec un boost étroit pour trouver la fréquence boxy. Coupe de 3–5 dB. <strong class="fixit-plugin-ref">Devastor 2</strong> — Saturation légère pour ajouter des harmoniques hautes qui déplacent le ton perçu vers le haut. Envisage de layer un autre sample par-dessus.'
+    }
+  },
+  {
+    problem: { en: 'Track lacks energy / feels flat', fr: 'Le morceau manque d\'énergie / sonne plat' },
+    diagnosis: { en: 'No dynamic movement. Static sounds. Lack of frequency excitement.', fr: 'Pas de mouvement dynamique. Sons statiques. Manque d\'excitation fréquentielle.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">ShaperBox 3</strong> — Add subtle volume/filter automation to pads and synths. <strong class="fixit-plugin-ref">Ozone 12 Exciter</strong> — Tape mode on lows, Retro on mids, Warm on highs. Low drive (5–10%). <strong class="fixit-plugin-ref">Efx MOTIONS</strong> — On a synth layer for rhythmic modulation. Check arrangement: do sections contrast enough?',
+      fr: '<strong class="fixit-plugin-ref">ShaperBox 3</strong> — Ajoute une automation subtile de volume/filtre sur les nappes et synthés. <strong class="fixit-plugin-ref">Ozone 12 Exciter</strong> — Mode Tape sur les graves, Retro sur les médiums, Warm sur les aigus. Drive faible (5–10%). <strong class="fixit-plugin-ref">Efx MOTIONS</strong> — Sur une couche synthé pour modulation rythmique. Vérifie l\'arrangement : les sections contrastent-elles assez ?'
+    }
+  },
+  {
+    problem: { en: 'Vocals / samples phase issues', fr: 'Problèmes de phase vocals / samples' },
+    diagnosis: { en: 'Layered samples with timing or phase misalignment. Comb filtering.', fr: 'Samples layerés avec décalage de timing ou de phase. Filtrage en peigne.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">Neutron 5 Phase</strong> — Auto-align layers. Check correlation meter. <strong class="fixit-plugin-ref">Precision Time Align</strong> — For surgical sample alignment. Zoom in on waveforms in Ableton\'s arrangement view. Nudge samples until transients align. If still phasey, try polarity flip on one layer.',
+      fr: '<strong class="fixit-plugin-ref">Neutron 5 Phase</strong> — Aligne automatiquement les layers. Vérifie le mètre de corrélation. <strong class="fixit-plugin-ref">Precision Time Align</strong> — Pour alignement chirurgical de samples. Zoome sur les waveforms dans la vue arrangement d\'Ableton. Nudge les samples jusqu\'à alignement des transitoires. Si toujours phaseux, essaie une inversion de polarité sur un layer.'
+    }
+  },
+  {
+    problem: { en: 'Sidechain sounds unnatural', fr: 'Le sidechain sonne pas naturel' },
+    diagnosis: { en: 'Release too fast or too slow. Attack too aggressive. Wrong curve shape.', fr: 'Release trop rapide ou trop lent. Attack trop agressif. Mauvaise forme de courbe.' },
+    solution: {
+      en: '<strong class="fixit-plugin-ref">ShaperBox 3</strong> — Switch to VolumeShaper instead of compressor sidechain. Draw custom curve: fast attack (5 ms), smooth recovery matching your groove (80–150 ms). <strong>Key:</strong> the release should end just before the next hit. If you hear pumping, lengthen release. If you hear clicking, soften attack.',
+      fr: '<strong class="fixit-plugin-ref">ShaperBox 3</strong> — Passe au VolumeShaper au lieu du compresseur sidechain. Dessine une courbe custom : attaque rapide (5 ms), récupération douce correspondant à ton groove (80–150 ms). <strong>Clé :</strong> le release doit finir juste avant le prochain hit. Si tu entends du pumping, allonge le release. Si tu entends du clicking, adoucis l\'attack.'
+    }
+  }
+];
+
+/* ============================================================
+   DATA — REFERENCES
+   ============================================================ */
+const REFERENCES = [
+  {
+    title: { en: 'FREQUENCY MAP', fr: 'CARTE DES FRÉQUENCES' },
+    rows: [
+      { key: 'Sub Bass', val: '20–60 Hz' },
+      { key: 'Bass Body', val: '60–200 Hz' },
+      { key: 'Low Mids (mud zone)', val: '200–500 Hz' },
+      { key: 'Midrange', val: '500 Hz–2 kHz' },
+      { key: 'Presence', val: '2–6 kHz' },
+      { key: 'Brilliance / Air', val: '6–20 kHz' },
+    ]
+  },
+  {
+    title: { en: 'GAIN STAGING', fr: 'GAIN STAGING' },
+    rows: [
+      { key: { en: 'Individual tracks peak', fr: 'Crête pistes individuelles' }, val: '−12 to −6 dBFS' },
+      { key: { en: 'Bus/group peak', fr: 'Crête bus/groupes' }, val: '−8 to −4 dBFS' },
+      { key: { en: 'Master pre-limiter', fr: 'Master pré-limiteur' }, val: '−6 to −3 dBFS' },
+      { key: { en: 'Final output ceiling', fr: 'Ceiling sortie finale' }, val: '−1.0 dBTP' },
+      { key: { en: 'Streaming target (LUFS)', fr: 'Cible streaming (LUFS)' }, val: '−14 LUFS integrated' },
+    ]
+  },
+  {
+    title: { en: 'SIDECHAIN BASICS', fr: 'BASES DU SIDECHAIN' },
+    rows: [
+      { key: { en: 'Kick → Bass', fr: 'Kick → Basse' }, val: { en: '4:1, Attack 0.1 ms, Release 80–120 ms', fr: '4:1, Attack 0.1 ms, Release 80–120 ms' }},
+      { key: { en: 'Kick → Pads', fr: 'Kick → Nappes' }, val: { en: '3:1, Attack 0.5 ms, Release 100–150 ms', fr: '3:1, Attack 0.5 ms, Release 100–150 ms' }},
+      { key: { en: 'VolumeShaper depth', fr: 'Profondeur VolumeShaper' }, val: '40–70%' },
+      { key: { en: 'Always sync to tempo', fr: 'Toujours sync au tempo' }, val: '1/4 note' },
+    ]
+  },
+  {
+    title: { en: 'REVERB RULES', fr: 'RÈGLES DE RÉVERB' },
+    rows: [
+      { key: { en: 'Always pre-filter', fr: 'Toujours pré-filtrer' }, val: 'HP 200–400 Hz, LP 8–10 kHz' },
+      { key: { en: 'Club-ready decay', fr: 'Decay club-ready' }, val: '0.5–2.5 s' },
+      { key: { en: 'Return channel EQ', fr: 'EQ canal de retour' }, val: { en: 'Cut lows, tame 2–4 kHz', fr: 'Coupe les graves, dompte 2–4 kHz' }},
+      { key: { en: 'Duck with drums SC', fr: 'Duck avec SC drums' }, val: { en: 'Pro-C 2 on return, 3:1', fr: 'Pro-C 2 sur retour, 3:1' }},
+    ]
+  },
+  {
+    title: { en: 'COMPRESSION CHEAT SHEET', fr: 'AIDE-MÉMOIRE COMPRESSION' },
+    rows: [
+      { key: { en: 'Kick (punch)', fr: 'Kick (punch)' }, val: '4:1, Atk 5 ms, Rel 50 ms' },
+      { key: { en: 'Bass (control)', fr: 'Basse (contrôle)' }, val: '4:1, Atk 8 ms, Rel 60 ms' },
+      { key: { en: 'Drums bus (glue)', fr: 'Bus drums (glue)' }, val: '2:1, Atk 15 ms, Rel auto' },
+      { key: { en: 'Synth bus (smooth)', fr: 'Bus synthé (smooth)' }, val: '3:1, Atk 10 ms, Rel 100 ms' },
+      { key: { en: 'Master (gentle)', fr: 'Master (doux)' }, val: '1.5:1, Atk 30 ms, Rel auto' },
+    ]
+  }
+];
+
+/* ============================================================
+   DATA — FULL PLUGIN INVENTORY
+   ============================================================ */
+const INVENTORY = {
+  'Arturia': ['ARP 2600 V3','Buchla Easel V','Bus EXCITER-104','Bus FORCE','Bus PEAK','Chorus DIMENSION-D','Chorus JUN-6','CMI V','Comp DIODE-609','Comp FET-76','Comp TUBE-STA','Comp VCA-65','CS-80 V4','CZ V','Delay BRIGADE','Delay ETERNITY','Delay TAPE-201','Dist COLDFIRE','Dist OPAMP-21','Dist TUBE-CULTURE','DX7 V','Efx FRAGMENTS','Efx MOTIONS','Efx REFRACT','Emulator II V','EQ SITRAL-295','Filter Mini','Filter M12','Filter MS-20','Filter SEM','Flanger BL-20','Jun-6 V','Jup-8 V4','KORG MS-20 V','Matrix-12 V2','Mini V3','MiniFreak V','Modular V3','OP-Xa V','Phaser BI-TRON','Pigments','Pre 1973','Pre TridA','Pre V76','Prophet-5 V','Prophet-VS V','Rev INTENSITY','Rev LX-24','Rev PLATE-140','Rev SPRING-636','Rotary CLS-222','SEM V2','SQ80 V','Synclavier V','Synthi V','Tape MELLO-FI','Vocoder V'],
+  'Baby Audio': ['BA-1','BA-1 FX Strip','Crystalline','Super VHS'],
+  'Cableguys': ['ShaperBox 3'],
+  'D16': ['Antresol','Decimort 2','Devastor 2','Drumazon 2','Fazortan 2','Frontier','Godfazer','Lush 2','Nepheton 2','Nithonat 2','Phoscyon 2','PunchBox','Redoptor 2','Repeater','Sigmund 2','Spacerek','Syntorus 2','Tekturon','Toraverb 2'],
+  'Devious Machines': ['Infiltrator'],
+  'Eventide': ['Blackhole','Blackhole Immersive','CrushStation','Crystals','DeBoom','EChannel','EQ45','EQ65','H910 Dual Harmonizer','H910 Harmonizer','H949 Dual Harmonizer','H949 Harmonizer','H3000 Band Delays Mk II','H3000 Factory Mk II','Instant Flanger Mk II','Instant Phaser Mk II','MangledVerb','MicroPitch','MicroPitch Immersive','Octavox','Omnipressor','Physion Mk II','Precision Time Align','Quadravox','Rotary Mod','Sheen Machine','ShimmerVerb','SP2016 Reverb','SplitEQ','Spring','Temperance Lite','Temperance Pro','TriceraChorus','Tverb','UltraChannel','UltraReverb','UltraTap','Undulator'],
+  'FabFilter': ['FabFilter Pro-C','FabFilter Pro-Q','Micro','One','Pro-C 2','Pro-DS','Pro-G','Pro-L','Pro-L 2','Pro-MB','Pro-Q 2','Pro-Q 3','Pro-Q 4','Pro-R','Pro-R 2','Saturn','Saturn 2','Simplon','Timeless 2','Timeless 3','Twin 2','Twin 3','Volcano 2','Volcano 3'],
+  'iZotope': ['Neutron 5','Neutron 5 Clipper','Neutron 5 Compressor','Neutron 5 Density','Neutron 5 Equalizer','Neutron 5 Exciter','Neutron 5 Gate','Neutron 5 Phase','Neutron 5 Sculptor','Neutron 5 Transient Shaper','Neutron 5 Unmask','Neutron 5 Visual Mixer','Ozone 12','Ozone 12 Bass Control','Ozone 12 Clarity','Ozone 12 Dynamic EQ','Ozone 12 Dynamics','Ozone 12 Equalizer','Ozone 12 Exciter','Ozone 12 Imager','Ozone 12 Impact','Ozone 12 Low End Focus','Ozone 12 Master Rebalance','Ozone 12 Match EQ','Ozone 12 Maximizer','Ozone 12 Spectral Shaper','Ozone 12 Stabilizer','Ozone 12 Stem EQ','Ozone 12 Unlimiter','Ozone 12 Vintage Compressor','Ozone 12 Vintage EQ','Ozone 12 Vintage Limiter','Ozone 12 Vintage Tape'],
+  'KORG': ['Polysix'],
+  'Spectrasonics': ['Trilian'],
+  'u-he': ['Diva'],
+  'Valhalla DSP': ['ValhallaDelay','ValhallaFreqEcho','ValhallaPlate','ValhallaRoom','ValhallaShimmer','ValhallaSpaceModulator','ValhallaSupermassive','ValhallaUberMod','ValhallaVintageVerb'],
+  'Xfer Records': ['Serum 2','Serum 2 FX']
+};
+
+const PRIORITY_PLUGINS = new Set([
+  'Diva','Serum 2','Serum 2 FX','Pigments','Mini V3','MiniFreak V','BA-1','BA-1 FX Strip','Super VHS','Crystalline',
+  'Pro-Q 3','Pro-Q 4','Pro-C 2','Pro-L 2','Pro-MB','Saturn 2','Pro-R 2','Pro-DS','Timeless 3',
+  'Devastor 2','Decimort 2','Drumazon 2','PunchBox','Toraverb 2',
+  'ShaperBox 3','Infiltrator','Trilian',
+  'ValhallaVintageVerb','ValhallaRoom','ValhallaPlate','ValhallaDelay','ValhallaShimmer','ValhallaSupermassive',
+  'Neutron 5','Ozone 12','Ozone 12 Maximizer','Ozone 12 Imager','Ozone 12 Dynamic EQ','Ozone 12 Exciter',
+  'SP2016 Reverb','MangledVerb','Blackhole','MicroPitch',
+  'Comp FET-76','Comp VCA-65','Tape MELLO-FI','Chorus DIMENSION-D','Chorus JUN-6','Phaser BI-TRON',
+  'Efx FRAGMENTS','Efx MOTIONS','Efx REFRACT','Dist COLDFIRE',
+  'CS-80 V4','Jup-8 V4','DX7 V','Prophet-5 V'
+]);
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let lang = localStorage.getItem('kapman-lang') || 'en';
+let theme = localStorage.getItem('kapman-theme') || 'dark';
+let finishState = JSON.parse(localStorage.getItem('kapman-finish') || '{}');
+let activeVendorFilter = null;
+
+/* ============================================================
+   GATE
+   ============================================================ */
+function initGate() {
+  const gate = document.getElementById('gate');
+  const input = document.getElementById('gate-input');
+  const error = document.getElementById('gate-error');
+  const app = document.getElementById('app');
+
+  if (localStorage.getItem('kapman-gate') === 'ok') {
+    gate.classList.add('dismissed');
+    app.classList.remove('hidden');
+    return;
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      if (input.value === GATE_PASS) {
+        localStorage.setItem('kapman-gate', 'ok');
+        gate.classList.add('dismissed');
+        app.classList.remove('hidden');
+      } else {
+        error.classList.add('visible');
+        input.value = '';
+        setTimeout(() => error.classList.remove('visible'), 2000);
+      }
+    }
+  });
+
+  setTimeout(() => input.focus(), 300);
 }
 
-function setLang(lang) {
-  state.lang = lang;
+/* ============================================================
+   THEME
+   ============================================================ */
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', theme);
+}
+function toggleTheme() {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('kapman-theme', theme);
+  applyTheme();
+}
+
+/* ============================================================
+   i18n ENGINE
+   ============================================================ */
+function applyLang() {
+  const dict = I18N[lang] || I18N.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (dict[key]) el.placeholder = dict[key];
+  });
+  document.getElementById('btn-lang').textContent = lang === 'en' ? 'FR' : 'EN';
+  document.documentElement.lang = lang;
+}
+function toggleLang() {
+  lang = lang === 'en' ? 'fr' : 'en';
   localStorage.setItem('kapman-lang', lang);
-  $$('.seg').forEach(b => b.classList.toggle('is-active', b.id === (lang === 'en' ? 'langEN' : 'langFR')));
-  $$('[data-i18n]').forEach(el => {
-    const v = i18n[lang][el.dataset.i18n];
-    if (v) el.textContent = v;
-  });
-  $$('[data-i18n-placeholder]').forEach(el => {
-    const v = i18n[lang][el.dataset.i18nPlaceholder];
-    if (v) el.setAttribute('placeholder', v);
-  });
-  setTheme(state.theme);
+  applyLang();
   renderAll();
 }
 
-/* ─── Page routing ─── */
-function switchPage(page) {
-  state.page = page;
-  $$('.page').forEach(p => p.classList.toggle('is-active', p.dataset.page === page));
-  $$('.nav-link').forEach(n => n.classList.toggle('is-active', n.dataset.page === page));
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function initNav() {
+  // Mode switch
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.mode;
+      document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('mode-' + mode);
+      if (panel) panel.classList.add('active');
+      // Reset sub-nav to first tab
+      const firstSub = panel?.querySelector('.sub-btn');
+      if (firstSub) firstSub.click();
+    });
+  });
+
+  // Sub nav (delegate)
+  document.addEventListener('click', (e) => {
+    const subBtn = e.target.closest('.sub-btn');
+    if (!subBtn) return;
+    const nav = subBtn.closest('.sub-nav');
+    nav.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+    subBtn.classList.add('active');
+    const panel = subBtn.closest('.mode-panel');
+    panel.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+    const target = panel.querySelector('#sub-' + subBtn.dataset.sub);
+    if (target) target.classList.add('active');
+  });
 }
 
-/* ─── Gate ─── */
-function initGate() {
-  if (localStorage.getItem('kapman-gate') === 'ok') {
-    $('#gate').classList.remove('is-open');
-    return;
-  }
-  const check = () => {
-    if ($('#passwordInput').value === PASSWORD) {
-      localStorage.setItem('kapman-gate', 'ok');
-      $('#gate').classList.remove('is-open');
-      $('#gateError').textContent = '';
-    } else {
-      $('#gateError').textContent = ui('wrongPassword');
+/* ============================================================
+   RENDER — SYNTHS
+   ============================================================ */
+function renderSynths() {
+  try {
+    const tiers = { primary: 'grid-primary', classic: 'grid-classic', digital: 'grid-digital', experimental: 'grid-experimental', drums: 'grid-drums' };
+    for (const [key, gridId] of Object.entries(tiers)) {
+      const grid = document.getElementById(gridId);
+      if (!grid) continue;
+      grid.innerHTML = '';
+      (SYNTHS[key] || []).forEach(s => {
+        const chip = document.createElement('div');
+        chip.className = 'synth-chip' + (s.priority ? ' priority' : '');
+        chip.innerHTML = `${s.name}<span class="chip-vendor">${s.vendor}</span>`;
+        grid.appendChild(chip);
+      });
     }
-  };
-  $('#enterBtn').onclick = check;
-  $('#passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  } catch (e) { console.error('renderSynths:', e); }
 }
 
-/* ─── Vendor rail ─── */
-function renderVendorRail() {
-  const rail = $('#vendorRail');
-  if (!rail) return;
-  rail.innerHTML = vendors.map(v => `
-    <button class="vendor-card" style="--g:${v.glow}" data-vendor="${v.id}">
-      <span class="vendor-mark">${v.mark}</span>
-      <strong>${v.name}</strong>
-      <span class="vendor-pitch">${pickLang(v.pitchEn, v.pitchFr)}</span>
-    </button>`).join('');
-  $$('.vendor-card', rail).forEach(btn => btn.onclick = () => {
-    state.vendorFilter = btn.dataset.vendor;
-    state.modeFilter = 'all';
-    switchPage('library');
-    renderFilters();
-    renderPlugins();
-  });
-}
-
-/* ─── Filters ─── */
-function renderFilters() {
-  const modeDefs = [
-    ['all',ui('filterAll')],['mix',ui('filterMix')],['sound',ui('filterSound')],
-    ['dynamics',ui('filterDynamics')],['space',ui('filterSpace')],
-    ['tone',ui('filterTone')],['motion',ui('filterMotion')],['instrument',ui('filterInstrument')]
-  ];
-  const modeEl = $('#modeChips');
-  const vendorEl = $('#vendorChips');
-  if (!modeEl || !vendorEl) return;
-  modeEl.innerHTML = modeDefs.map(([id,label]) => `<button class="chip${state.modeFilter===id?' is-active':''}" data-mode="${id}">${label}</button>`).join('');
-  vendorEl.innerHTML = [`<button class="chip${state.vendorFilter==='all'?' is-active':''}" data-vendor="all">${ui('filterAll')}</button>`]
-    .concat(vendors.map(v => `<button class="chip${state.vendorFilter===v.id?' is-active':''}" data-vendor="${v.id}">${v.name}</button>`))
-    .join('');
-  $$('#modeChips .chip').forEach(b => b.onclick = () => { state.modeFilter = b.dataset.mode; renderFilters(); renderPlugins(); });
-  $$('#vendorChips .chip').forEach(b => b.onclick = () => { state.vendorFilter = b.dataset.vendor; renderFilters(); renderPlugins(); });
-}
-
-/* ─── Role strip ─── */
-function renderRoleStrip() {
-  const el = $('#roleStrip');
-  if (!el) return;
-  el.innerHTML = roleDefs.map(def => {
-    const count = def.id === 'all' ? plugins.length
-      : plugins.filter(p => def.id === 'mix' ? p.mode === 'mix'
-        : p.tags.includes(def.id) || (def.id === 'space' && p.tags.includes('width'))).length;
-    return `<button class="role-chip${state.roleFilter===def.id?' is-active':''}" data-role="${def.id}">
-      <strong>${pickLang(def.en, def.fr)}</strong>
-      <span>${count} · ${pickLang(def.hintEn, def.hintFr)}</span>
-    </button>`;
-  }).join('');
-  $$('.role-chip', el).forEach(b => b.onclick = () => { state.roleFilter = b.dataset.role; renderRoleStrip(); renderPlugins(); });
-}
-
-/* ─── Library featured ─── */
-function renderLibraryFeatured() {
-  const el = $('#libraryFeatured');
-  if (!el) return;
-  const cards = [
-    {title:ui('libraryFeaturedA'),body:ui('libraryFeaturedABody'),role:'bass'},
-    {title:ui('libraryFeaturedB'),body:ui('libraryFeaturedBBody'),role:'space'},
-    {title:ui('libraryFeaturedC'),body:ui('libraryFeaturedCBody'),role:'motion'}
-  ];
-  el.innerHTML = cards.map(c => `
-    <article class="feat-mini">
-      <p class="mono-label">${ui('libraryFeaturedTitle')}</p>
-      <strong>${c.title}</strong>
-      <span class="dim">${c.body}</span>
-      <button class="btn-chip" data-role="${c.role}">${state.lang==='fr'?'Filtrer':'Filter'}</button>
-    </article>`).join('');
-  $$('.btn-chip[data-role]', el).forEach(b => b.onclick = () => { state.roleFilter = b.dataset.role; renderRoleStrip(); renderPlugins(); });
-}
-
-/* ─── Plugin matching ─── */
-function matchesPlugin(p) {
-  const q = state.search.trim().toLowerCase();
-  const txt = [p.name,p.vendor,p.roleEn,p.roleFr,p.useEn,p.useFr,p.tags.join(' ')].join(' ').toLowerCase();
-  const searchOk = !q || txt.includes(q);
-  const vendorOk = state.vendorFilter === 'all' || p.vendor === state.vendorFilter;
-  let modeOk = true;
-  if (['mix','sound'].includes(state.modeFilter)) modeOk = p.mode === state.modeFilter;
-  else if (state.modeFilter !== 'all') modeOk = p.tags.includes(state.modeFilter);
-  const roleOk = state.roleFilter === 'all'
-    || p.tags.includes(state.roleFilter)
-    || (state.roleFilter === 'space' && p.tags.includes('width'))
-    || (state.roleFilter === 'mix' && p.mode === 'mix');
-  return searchOk && vendorOk && modeOk && roleOk;
-}
-
-function vendorById(id) { return vendors.find(v => v.id === id) || vendors[0]; }
-function makeFirstMove(body) { return body.split(/→|\.|;/).map(s => s.trim()).filter(Boolean)[0] || body; }
-
-/* ─── Inspector ─── */
-function renderInspectorGuide() {
-  const empty = $('#inspectorEmpty');
-  const body = $('#inspectorBody');
-  if (!empty || !body) return;
-  state.selectedId = null;
-  empty.classList.remove('hidden');
-  body.classList.add('hidden');
-  empty.innerHTML = `
-    <p class="mono-label">${ui('inspectorEyebrow')}</p>
-    <h3>${ui('inspectorHintTitle')}</h3>
-    <p class="dim">${ui('inspectorHintBody')}</p>
-    <div class="insp-guide">
-      <div class="insp-hint"><strong>${ui('inspectorHintA')}</strong><p class="dim">${ui('inspectorHintABody')}</p></div>
-      <div class="insp-hint"><strong>${ui('inspectorHintB')}</strong><p class="dim">${ui('inspectorHintBBody')}</p></div>
-    </div>`;
-}
-
-function openInspector(id) {
-  state.selectedId = id;
-  const p = plugins.find(x => x.id === id);
-  if (!p) return;
-  const vendor = vendorById(p.vendor);
-  const recipe = recipes.find(r => r.titleEn === p.recipe);
-  const role = pickLang(p.roleEn, p.roleFr);
-  const use = pickLang(p.useEn, p.useFr);
-  const touch = pickLang(p.touchEn, p.touchFr);
-  const avoid = pickLang(p.avoidEn, p.avoidFr);
-  const firstMove = recipe ? makeFirstMove(pickLang(recipe.bodyEn, recipe.bodyFr)) : use;
-  const stop = recipe ? pickLang(recipe.stopEn, recipe.stopFr) : avoid;
-  $('#inspectorEmpty').classList.add('hidden');
-  const body = $('#inspectorBody');
-  body.classList.remove('hidden');
-  body.innerHTML = `
-    <p class="mono-label">${vendor.name}</p>
-    <h2>${p.name}</h2>
-    <p class="dim">${role}</p>
-    <div class="tag-row">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-    <div class="insp-grid">
-      <div class="insp-box"><span class="mono-label">${ui('inspectorUse')}</span><p>${use}</p></div>
-      <div class="insp-box"><span class="mono-label">${ui('inspectorTouch')}</span><p>${touch}</p></div>
-      <div class="insp-box"><span class="mono-label">${ui('inspectorAvoid')}</span><p>${avoid}</p></div>
-      <div class="insp-box"><span class="mono-label">${ui('firstMoveLabel')}</span><p>${firstMove}</p></div>
-      <div class="insp-box"><span class="mono-label">${ui('stopRuleLabel')}</span><p>${stop}</p></div>
-      <div class="insp-box"><span class="mono-label">${ui('inspectorMode')}</span><p>${p.mode.toUpperCase()}</p></div>
-      ${recipe ? `<div class="insp-box"><span class="mono-label">${ui('inspectorRecipe')}</span><p>${pickLang(recipe.titleEn, recipe.titleFr)}</p></div>` : ''}
-    </div>`;
-}
-
-/* ─── Plugins ─── */
-function renderPlugins() {
-  const grid = $('#pluginGrid');
-  if (!grid) return;
-  renderLibraryFeatured();
-  const list = plugins.filter(matchesPlugin);
-  grid.innerHTML = list.map(p => {
-    const vendor = vendorById(p.vendor);
-    const glow = p.glow || vendor.glow;
-    return `<button class="plugin-card" style="--g:${glow}" data-id="${p.id}">
-      <div class="pc-top">
-        <span class="mono-label pc-vendor">${vendor.mark} ${vendor.name}</span>
-        <span class="pc-badge">${p.mode.toUpperCase()}</span>
-      </div>
-      <h3>${p.name}</h3>
-      <p class="dim pc-role">${pickLang(p.roleEn, p.roleFr)}</p>
-      <div class="tag-row">${p.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-    </button>`;
-  }).join('');
-  $$('.plugin-card', grid).forEach(c => c.onclick = () => openInspector(c.dataset.id));
-  const kpi = $('#kpiPlugins');
-  const krir = $('#kpiRecipes');
-  if (kpi) kpi.textContent = plugins.length;
-  if (krir) krir.textContent = recipes.length;
-  if (!state.selectedId) renderInspectorGuide();
-}
-
-/* ─── Sound builder ─── */
-function builderScore(sel, tags) { return sel.reduce((s,t) => s + ((tags||[]).includes(t) ? 2 : 0), 0); }
-function inferRecipeTags(r) {
-  const txt = [r.titleEn,r.bodyEn,(r.uses||[]).join(' ')].join(' ').toLowerCase();
-  const t = [];
-  if (/bass|sub|mono/.test(txt)) t.push('bass');
-  if (/lead|hook/.test(txt)) t.push('lead');
-  if (/pad|wash|silk/.test(txt)) t.push('pad');
-  if (/drum|snare|kick/.test(txt)) t.push('drums');
-  if (/space|plate|reverb|micropitch|width/.test(txt)) t.push('space');
-  if (/transition|break|throw|riser/.test(txt)) t.push('transition');
-  if (/motion|sweep|macro/.test(txt)) t.push('motion');
-  if (!t.length) t.push('sound');
-  return t;
-}
-
-function renderSoundBuilder() {
-  const goalsEl = $('#sbGoals'), consEl = $('#sbConstraints'), outEl = $('#sbOutput');
-  if (!goalsEl || !consEl || !outEl) return;
-  goalsEl.innerHTML = sbGoalDefs.map(id => `<button class="chip${state.sbGoal===id?' is-active':''}" data-goal="${id}">${ui('goal'+titleCaseWord(id))}</button>`).join('');
-  consEl.innerHTML = [`<button class="chip${state.sbConstraint===null?' is-active':''}" data-constraint="none">${ui('filterAll')}</button>`]
-    .concat(sbConstraintDefs.map(id => `<button class="chip${state.sbConstraint===id?' is-active':''}" data-constraint="${id}">${ui('con'+titleCaseWord(id))}</button>`))
-    .join('');
-  $$('#sbGoals .chip').forEach(b => b.onclick = () => { state.sbGoal = b.dataset.goal; renderSoundBuilder(); renderRoutes(); renderRecipes(); });
-  $$('#sbConstraints .chip').forEach(b => b.onclick = () => { state.sbConstraint = b.dataset.constraint === 'none' ? null : b.dataset.constraint; renderSoundBuilder(); renderRoutes(); renderRecipes(); });
-  if (!state.sbGoal) { outEl.innerHTML = `<div class="sb-placeholder">${ui('sbEmpty')}</div>`; return; }
-  const gT = goalTagMap[state.sbGoal]||[state.sbGoal];
-  const cT = state.sbConstraint ? (constraintTagMap[state.sbConstraint]||[]) : [];
-  const rR = [...routes].map(r=>({r,s:builderScore(gT,r.tags)+builderScore(cT,r.tags)})).sort((a,b)=>b.s-a.s);
-  const rRec = [...recipes].map(r=>({r,s:builderScore(gT,inferRecipeTags(r))+builderScore(cT,inferRecipeTags(r))})).sort((a,b)=>b.s-a.s);
-  const bRoute = rR[0]?.r || routes[0];
-  const bRecipe = rRec[0]?.r || recipes[0];
-  const nRecipe = rRec[1]?.r || rRec[0]?.r;
-  const routeFirst = makeFirstMove(pickLang(bRoute.bodyEn, bRoute.bodyFr));
-  const recFirst = makeFirstMove(pickLang(bRecipe.bodyEn, bRecipe.bodyFr));
-  outEl.innerHTML = `
-    <article class="sb-card">
-      <p class="mono-label">${ui('sbRoute')}</p>
-      <h4>${pickLang(bRoute.titleEn,bRoute.titleFr)}</h4>
-      <p class="dim">${pickLang(bRoute.bodyEn,bRoute.bodyFr)}</p>
-      <div class="learn-row"><strong class="mono-label">${ui('firstMoveLabel')}</strong><span>${routeFirst}</span></div>
-    </article>
-    <article class="sb-card">
-      <p class="mono-label">${ui('sbRecipe')}</p>
-      <h4>${pickLang(bRecipe.titleEn,bRecipe.titleFr)}</h4>
-      <p class="dim">${pickLang(bRecipe.bodyEn,bRecipe.bodyFr)}</p>
-      <div class="learn-row"><strong class="mono-label">${ui('firstMoveLabel')}</strong><span>${recFirst}</span></div>
-      <div class="learn-row stop"><strong class="mono-label">${ui('stopRuleLabel')}</strong><span>${pickLang(bRecipe.stopEn,bRecipe.stopFr)}</span></div>
-    </article>
-    <article class="sb-card sb-next">
-      <p class="mono-label">${ui('sbNext')}</p>
-      <h4>${pickLang(nRecipe.titleEn,nRecipe.titleFr)}</h4>
-      <div class="tag-row"><span class="tag">${ui('goal'+titleCaseWord(state.sbGoal))}</span>${state.sbConstraint?`<span class="tag">${ui('con'+titleCaseWord(state.sbConstraint))}</span>`:''}</div>
-    </article>`;
-}
-
+/* ============================================================
+   RENDER — ROUTES
+   ============================================================ */
 function renderRoutes() {
-  const el = $('#routeGrid');
-  if (!el) return;
-  let list = [...routes];
-  if (state.sbGoal) {
-    const g=goalTagMap[state.sbGoal]||[state.sbGoal], c=state.sbConstraint?(constraintTagMap[state.sbConstraint]||[]):[];
-    list.sort((a,b)=>(builderScore(g,b.tags)+builderScore(c,b.tags))-(builderScore(g,a.tags)+builderScore(c,a.tags)));
-  }
-  el.innerHTML = list.slice(0,8).map(r => `
-    <article class="route-card">
-      <h4>${pickLang(r.titleEn,r.titleFr)}</h4>
-      <p class="dim">${pickLang(r.bodyEn,r.bodyFr)}</p>
-      <div class="tag-row">${(r.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-    </article>`).join('');
+  try {
+    const container = document.getElementById('routes-list');
+    if (!container) return;
+    container.innerHTML = '';
+    ROUTES.forEach((r, i) => {
+      const item = document.createElement('div');
+      item.className = 'route-item';
+      const chainHTML = r.chain.map(s => `<span class="chain-step">${s}</span>`).join('<span class="chain-arrow">→</span>');
+      item.innerHTML = `
+        <div>
+          <div class="route-name">${r.name[lang] || r.name.en}</div>
+          <div class="route-role">${r.role[lang] || r.role.en}</div>
+        </div>
+        <div class="route-detail">
+          <div class="route-chain">${chainHTML}</div>
+          <div class="route-notes">${r.notes[lang] || r.notes.en}</div>
+        </div>`;
+      item.addEventListener('click', () => item.classList.toggle('expanded'));
+      container.appendChild(item);
+    });
+  } catch (e) { console.error('renderRoutes:', e); }
 }
 
+/* ============================================================
+   RENDER — RECIPES
+   ============================================================ */
 function renderRecipes() {
-  const el = $('#recipeGrid');
-  if (!el) return;
-  let list = [...recipes];
-  if (state.sbGoal) {
-    const g=goalTagMap[state.sbGoal]||[state.sbGoal], c=state.sbConstraint?(constraintTagMap[state.sbConstraint]||[]):[];
-    list.sort((a,b)=>(builderScore(g,inferRecipeTags(b))+builderScore(c,inferRecipeTags(b)))-(builderScore(g,inferRecipeTags(a))+builderScore(c,inferRecipeTags(a))));
-  }
-  el.innerHTML = list.slice(0,8).map(r => `
-    <article class="recipe-card">
-      <h4>${pickLang(r.titleEn,r.titleFr)}</h4>
-      <p class="dim">${pickLang(r.bodyEn,r.bodyFr)}</p>
-      <div class="stop-pill"><strong class="mono-label">${ui('stopRuleLabel')}:</strong> ${pickLang(r.stopEn,r.stopFr)}</div>
-      <div class="tag-row">${(r.uses||[]).slice(0,4).map(u=>`<span class="tag">${u}</span>`).join('')}</div>
-    </article>`).join('');
+  try {
+    const container = document.getElementById('recipes-list');
+    if (!container) return;
+    container.innerHTML = '';
+    RECIPES.forEach(r => {
+      const item = document.createElement('div');
+      item.className = 'recipe-item';
+      const tagsHTML = r.tags.map(t => `<span class="recipe-tag">${t}</span>`).join('');
+      const steps = (r.steps[lang] || r.steps.en);
+      const stepsHTML = steps.map((s, i) => `<div class="recipe-step"><span class="step-num">${i + 1}</span><div class="step-text">${s}</div></div>`).join('');
+      item.innerHTML = `
+        <div class="recipe-header">
+          <div class="recipe-name">${r.name[lang] || r.name.en}</div>
+          <div class="recipe-tags">${tagsHTML}</div>
+        </div>
+        <div class="recipe-steps">${stepsHTML}</div>`;
+      item.addEventListener('click', () => item.classList.toggle('expanded'));
+      container.appendChild(item);
+    });
+  } catch (e) { console.error('renderRecipes:', e); }
 }
 
-/* ─── Checklists ─── */
-function renderChecklists() {
-  const sets = {
-    A:[ui('finishA1'),ui('finishA2'),ui('finishA3'),ui('finishA4')],
-    B:[ui('finishB1'),ui('finishB2'),ui('finishB3'),ui('finishB4')],
-    C:[ui('finishC1'),ui('finishC2'),ui('finishC3'),ui('finishC4')],
-    D:[ui('finishD1'),ui('finishD2'),ui('finishD3'),ui('finishD4')],
-    E:[ui('finishE1'),ui('finishE2'),ui('finishE3'),ui('finishE4')]
-  };
-  Object.entries(sets).forEach(([k,list]) => {
-    const el = $('#checklist'+k);
-    if (el) el.innerHTML = list.map(text => `<li><label><input type="checkbox" /><span>${text}</span></label></li>`).join('');
-  });
+/* ============================================================
+   RENDER — FX PALETTE
+   ============================================================ */
+function renderFX() {
+  try {
+    const container = document.getElementById('fx-categories');
+    if (!container) return;
+    container.innerHTML = '';
+    FX_PALETTE.forEach(cat => {
+      const card = document.createElement('div');
+      card.className = 'fx-category';
+      const itemsHTML = cat.items.map(it =>
+        `<div class="fx-item"><span class="fx-item-name">${it.name}</span><span class="fx-item-vendor">${it.vendor}</span></div>`
+      ).join('');
+      card.innerHTML = `<div class="fx-cat-name">${cat.category[lang] || cat.category.en}</div><div class="fx-list">${itemsHTML}</div>`;
+      container.appendChild(card);
+    });
+  } catch (e) { console.error('renderFX:', e); }
 }
 
-/* ─── Fix-It ─── */
+/* ============================================================
+   RENDER — MIX CHECK
+   ============================================================ */
+function renderMixCheck() {
+  try {
+    const container = document.getElementById('mixcheck-zones');
+    if (!container) return;
+    container.innerHTML = '';
+    MIXCHECK_ZONES.forEach(z => {
+      const zone = document.createElement('div');
+      zone.className = 'mc-zone';
+      const toolsHTML = z.tools.map(t => `<span class="mc-tool">${t}</span>`).join('');
+      zone.innerHTML = `
+        <div class="mc-zone-header">
+          <span class="mc-zone-freq">${z.freq}</span>
+          <span class="mc-zone-name">${z.name[lang] || z.name.en}</span>
+        </div>
+        <div class="mc-zone-detail">
+          <div class="mc-listen-for">${z.listen[lang] || z.listen.en}</div>
+          <div class="mc-tools">${toolsHTML}</div>
+        </div>`;
+      zone.addEventListener('click', () => zone.classList.toggle('expanded'));
+      container.appendChild(zone);
+    });
+  } catch (e) { console.error('renderMixCheck:', e); }
+}
+
+/* ============================================================
+   RENDER — CHAINS
+   ============================================================ */
+function renderChains() {
+  try {
+    const container = document.getElementById('chains-list');
+    if (!container) return;
+    container.innerHTML = '';
+    MIX_CHAINS.forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'chain-item';
+      const slotsHTML = c.slots.map((s, i) =>
+        `<div class="chain-slot"><span class="slot-num">${i + 1}</span><span class="slot-plugin">${s.plugin}</span><span class="slot-setting">${s.setting[lang] || s.setting.en}</span></div>`
+      ).join('');
+      item.innerHTML = `
+        <div class="chain-header">
+          <span class="chain-name">${c.name[lang] || c.name.en}</span>
+          <span class="chain-purpose">${c.purpose[lang] || c.purpose.en}</span>
+        </div>
+        <div class="chain-detail">${slotsHTML}</div>`;
+      item.addEventListener('click', () => item.classList.toggle('expanded'));
+      container.appendChild(item);
+    });
+  } catch (e) { console.error('renderChains:', e); }
+}
+
+/* ============================================================
+   RENDER — FINISH
+   ============================================================ */
+function renderFinish() {
+  try {
+    const container = document.getElementById('finish-groups');
+    if (!container) return;
+    container.innerHTML = '';
+    let totalItems = 0;
+    let checkedCount = 0;
+    FINISH_GROUPS.forEach((g, gi) => {
+      const group = document.createElement('div');
+      group.className = 'finish-group';
+      let itemsHTML = '';
+      g.items.forEach((item, ii) => {
+        const key = `${gi}-${ii}`;
+        const checked = finishState[key] || false;
+        totalItems++;
+        if (checked) checkedCount++;
+        itemsHTML += `<div class="finish-item${checked ? ' checked' : ''}" data-key="${key}">
+          <div class="finish-check">${checked ? '✓' : ''}</div>
+          <span class="finish-label">${typeof item === 'string' ? item : (item[lang] || item.en)}</span>
+        </div>`;
+      });
+      group.innerHTML = `<div class="finish-group-name">${g.name[lang] || g.name.en}</div>${itemsHTML}`;
+      container.appendChild(group);
+    });
+
+    // Click handlers
+    container.querySelectorAll('.finish-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const key = item.dataset.key;
+        finishState[key] = !finishState[key];
+        localStorage.setItem('kapman-finish', JSON.stringify(finishState));
+        renderFinish();
+      });
+    });
+
+    // Progress
+    const pct = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
+    const bar = document.getElementById('finish-bar');
+    const label = document.getElementById('finish-pct');
+    if (bar) bar.style.width = pct + '%';
+    if (label) label.textContent = pct + '%';
+  } catch (e) { console.error('renderFinish:', e); }
+}
+
+/* ============================================================
+   RENDER — FIX-IT
+   ============================================================ */
 function renderFixIt() {
-  const el = $('#fixitGrid');
-  if (!el) return;
-  el.innerHTML = fixIt.map(f => `
-    <article class="fixit-card">
-      <div class="fixit-symptom"><span class="fixit-dot"></span>${state.lang==='fr'?f.sFr:f.sEn}</div>
-      <p class="fixit-fix">${state.lang==='fr'?f.fFr:f.fEn}</p>
-    </article>`).join('');
+  try {
+    const container = document.getElementById('fixit-list');
+    if (!container) return;
+    container.innerHTML = '';
+    FIXIT_CARDS.forEach(f => {
+      const item = document.createElement('div');
+      item.className = 'fixit-item';
+      item.innerHTML = `
+        <div class="fixit-problem">${f.problem[lang] || f.problem.en}</div>
+        <div class="fixit-detail">
+          <div class="fixit-diagnosis">${f.diagnosis[lang] || f.diagnosis.en}</div>
+          <div class="fixit-solution">${f.solution[lang] || f.solution.en}</div>
+        </div>`;
+      item.addEventListener('click', () => item.classList.toggle('expanded'));
+      container.appendChild(item);
+    });
+  } catch (e) { console.error('renderFixIt:', e); }
 }
 
-/* ─── Mix Check ─── */
-function db(v) { return 20 * Math.log10(Math.max(v, 1e-9)); }
-function prettyDb(v) { return `${v >= 0 ? '+' : ''}${v.toFixed(1)} dB`; }
+/* ============================================================
+   RENDER — INVENTORY
+   ============================================================ */
+function renderInventory() {
+  try {
+    const container = document.getElementById('inventory-grid');
+    const countEl = document.getElementById('inv-count');
+    const filtersEl = document.getElementById('vendor-filters');
+    if (!container) return;
 
-function resizeCanvas(canvas) {
-  const ratio = window.devicePixelRatio || 1;
-  const w = canvas.clientWidth || 900;
-  const h = canvas.clientHeight || 200;
-  canvas.width = Math.floor(w * ratio);
-  canvas.height = Math.floor(h * ratio);
-  canvas.getContext('2d').setTransform(ratio,0,0,ratio,0,0);
+    // Vendor filters
+    if (filtersEl) {
+      filtersEl.innerHTML = '';
+      const allBtn = document.createElement('span');
+      allBtn.className = 'vendor-filter' + (!activeVendorFilter ? ' active' : '');
+      allBtn.textContent = lang === 'fr' ? 'Tous' : 'All';
+      allBtn.addEventListener('click', () => { activeVendorFilter = null; renderInventory(); });
+      filtersEl.appendChild(allBtn);
+      Object.keys(INVENTORY).forEach(v => {
+        const btn = document.createElement('span');
+        btn.className = 'vendor-filter' + (activeVendorFilter === v ? ' active' : '');
+        btn.textContent = v;
+        btn.addEventListener('click', () => { activeVendorFilter = activeVendorFilter === v ? null : v; renderInventory(); });
+        filtersEl.appendChild(btn);
+      });
+    }
+
+    const searchVal = (document.getElementById('inventory-search')?.value || '').toLowerCase();
+    container.innerHTML = '';
+    let count = 0;
+    const vendors = activeVendorFilter ? { [activeVendorFilter]: INVENTORY[activeVendorFilter] } : INVENTORY;
+
+    for (const [vendor, plugins] of Object.entries(vendors)) {
+      const filtered = plugins.filter(p => !searchVal || p.toLowerCase().includes(searchVal) || vendor.toLowerCase().includes(searchVal));
+      if (filtered.length === 0) continue;
+      const groupLabel = document.createElement('div');
+      groupLabel.className = 'inv-vendor-name';
+      groupLabel.textContent = vendor.toUpperCase();
+      container.appendChild(groupLabel);
+      filtered.forEach(p => {
+        const el = document.createElement('div');
+        el.className = 'inv-plugin' + (PRIORITY_PLUGINS.has(p) ? ' priority-plugin' : '');
+        el.textContent = p;
+        container.appendChild(el);
+        count++;
+      });
+    }
+    if (countEl) countEl.textContent = count;
+  } catch (e) { console.error('renderInventory:', e); }
 }
 
-function drawWaveform(samples) {
-  const canvas = $('#waveform');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  resizeCanvas(canvas);
-  const w = canvas.clientWidth || 900;
-  const h = canvas.clientHeight || 200;
-  ctx.clearRect(0,0,w,h);
-  const grad = ctx.createLinearGradient(0,0,w,0);
-  grad.addColorStop(0,'rgba(0,232,162,.9)');
-  grad.addColorStop(.5,'rgba(0,210,140,.8)');
-  grad.addColorStop(1,'rgba(0,190,120,.85)');
-  ctx.strokeStyle = grad;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  const bucket = Math.max(1, Math.floor(samples.length / w));
-  for (let x=0; x<w; x++) {
-    let max = 0;
-    const start = x * bucket;
-    const end = Math.min(samples.length, start + bucket);
-    for (let i=start; i<end; i++) max = Math.max(max, Math.abs(samples[i]));
-    const amp = max * (h * .42);
-    ctx.moveTo(x, h/2 - amp);
-    ctx.lineTo(x, h/2 + amp);
-  }
-  ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,.04)';
-  ctx.fillRect(0, h/2, w, 1);
+/* ============================================================
+   RENDER — REFERENCES
+   ============================================================ */
+function renderRefs() {
+  try {
+    const container = document.getElementById('refs-content');
+    if (!container) return;
+    container.innerHTML = '';
+    REFERENCES.forEach(ref => {
+      const card = document.createElement('div');
+      card.className = 'ref-card';
+      const title = typeof ref.title === 'string' ? ref.title : (ref.title[lang] || ref.title.en);
+      let rowsHTML = '';
+      ref.rows.forEach(r => {
+        const key = typeof r.key === 'string' ? r.key : (r.key[lang] || r.key.en);
+        const val = typeof r.val === 'string' ? r.val : (r.val[lang] || r.val.en);
+        rowsHTML += `<div class="ref-row"><span class="ref-key">${key}</span><span class="ref-val">${val}</span></div>`;
+      });
+      card.innerHTML = `<div class="ref-card-title">${title}</div>${rowsHTML}`;
+      container.appendChild(card);
+    });
+  } catch (e) { console.error('renderRefs:', e); }
 }
 
-function drawPlaceholderWave() {
-  const canvas = $('#waveform');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  resizeCanvas(canvas);
-  const w = canvas.clientWidth || 900;
-  const h = canvas.clientHeight || 200;
-  ctx.clearRect(0,0,w,h);
-  const grad = ctx.createLinearGradient(0,0,w,0);
-  grad.addColorStop(0,'rgba(0,232,162,.35)');
-  grad.addColorStop(1,'rgba(0,200,130,.2)');
-  ctx.strokeStyle = grad;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (let x=0; x<w; x++) {
-    const t = x/w;
-    const y = h/2 + Math.sin(t*12)*18*Math.sin(t*2.5);
-    x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-  }
-  ctx.stroke();
-}
-
-function analyzeAudioBuffer(buffer) {
-  const sr = buffer.sampleRate;
-  const len = buffer.length;
-  const ch0 = buffer.getChannelData(0);
-  const ch1 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : ch0;
-  let peak=0, sumSq=0, corrSum=0, sideLow=0, midLow=0;
-  let low=0, lowMid=0, highMid=0, high=0;
-  const step = Math.max(1, Math.floor(len/24000));
-  let prevL=0, prevR=0;
-  const alphaLow = Math.exp(-2*Math.PI*120/sr);
-  let lpL=0, lpR=0;
-  for (let i=0; i<len; i+=step) {
-    const l=ch0[i], r=ch1[i];
-    peak = Math.max(peak, Math.abs(l), Math.abs(r));
-    sumSq += (l*l+r*r)*.5;
-    corrSum += l*r;
-    lpL = (1-alphaLow)*l + alphaLow*lpL;
-    lpR = (1-alphaLow)*r + alphaLow*lpR;
-    midLow += Math.abs((lpL+lpR)*.5);
-    sideLow += Math.abs((lpL-lpR)*.5);
-    const hf = (Math.abs(l-prevL)+Math.abs(r-prevR))*.5;
-    low += Math.abs((lpL+lpR)*.5);
-    lowMid += Math.max(0, Math.abs((l+r)*.5) - Math.abs((lpL+lpR)*.5)) * .65;
-    highMid += hf * .85;
-    high += hf * .35;
-    prevL=l; prevR=r;
-  }
-  const rms = Math.sqrt(sumSq / Math.ceil(len/step));
-  const peakDb = db(peak), rmsDb = db(rms), crest = peakDb-rmsDb;
-  const corr = corrSum / Math.max(1, Math.ceil(len/step));
-  const lowSideRatio = sideLow / Math.max(1e-9, midLow);
-  const bandSum = low+lowMid+highMid+high+1e-9;
-  return {peakDb,rmsDb,crest,corr,lowSideRatio,
-    bands:{low:low/bandSum,lowMid:lowMid/bandSum,highMid:highMid/bandSum,high:high/bandSum},
-    mono:Float32Array.from({length:len},(_,i)=>buffer.numberOfChannels>1?(ch0[i]+ch1[i])*.5:ch0[i])};
-}
-
-function renderMixResults(res) {
-  const set = (id, v) => { const el=$(id); if(el) el.textContent=v; };
-  set('#metricPeak', prettyDb(res.peakDb));
-  set('#metricRms', prettyDb(res.rmsDb));
-  set('#metricCrest', `${res.crest.toFixed(1)} dB`);
-  set('#metricStereo', `${res.corr.toFixed(2)}`);
-  const b = res.bands;
-  const bar = $('#bandBar');
-  if (bar) bar.innerHTML = [['bandsLow',b.low],['bandsLowMid',b.lowMid],['bandsHighMid',b.highMid],['bandsHigh',b.high]]
-    .map(([k,v]) => `<div class="band-pill"><span class="mono-label">${ui(k)}</span><strong>${Math.round(v*100)}%</strong></div>`).join('');
-  const issues=[], actions=[];
-  if (res.peakDb > -0.8) { issues.push({k:'bad',t:`Peak ${prettyDb(res.peakDb)}`}); actions.push({t:'Output trim',b:state.lang==='fr'?'Baisse le niveau général ou relâche un bus qui clippe avant le pre-master.':'Lower output or relax the bus that is hitting too hard before pre-master.'}); }
-  if (res.crest < 8) { issues.push({k:'warn',t:`Crest ${res.crest.toFixed(1)} dB`}); actions.push({t:'Dynamics',b:state.lang==='fr'?'Le mix paraît tassé. Recheck ton drum bus, clipper et limiteur de preview.':'The mix looks flattened. Recheck drum bus compression, clipping and preview limiting.'}); }
-  if (res.lowSideRatio > 0.28) { issues.push({k:'warn',t:state.lang==='fr'?'Grave trop large':'Low-end too wide'}); actions.push({t:'Low-end mono',b:state.lang==='fr'?'Resserre les sides sous environ 120 Hz.':'Collapse side information below roughly 120 Hz.'}); }
-  if (b.lowMid > 0.38) { issues.push({k:'warn',t:state.lang==='fr'?'Bas médiums lourds':'Low mids heavy'}); actions.push({t:'Low-mid cleanup',b:state.lang==='fr'?'Cherche le chevauchement 200–450 Hz entre kick, basses, synths et reverbs.':'Check 200–450 Hz overlap between kick, bass, synth bodies and reverbs.'}); }
-  if (b.high > 0.22) { issues.push({k:'warn',t:state.lang==='fr'?'Aigu agressif possible':'High-end may be sharp'}); actions.push({t:'Top-end trim',b:state.lang==='fr'?'Vérifie hats, claps, noise risers et exciteurs autour de 4–10 kHz.':'Inspect hats, claps, noise risers and exciters around 4–10 kHz.'}); }
-  if (res.corr < 0.1) { issues.push({k:'warn',t:state.lang==='fr'?'Stéréo fragile':'Stereo fragile'}); actions.push({t:'Mono check',b:state.lang==='fr'?'La corrélation est basse. Recheck width, pitch widening et reverbs décoratives.':'Correlation is low. Recheck width tricks, pitch widening and decorative reverbs.'}); }
-  const iEl=$('#mixIssues'), aEl=$('#mixActions');
-  if (iEl) iEl.innerHTML = issues.length
-    ? issues.map(i=>`<span class="issue-chip ${i.k}">${i.t}</span>`).join('')
-    : `<span class="issue-chip">${ui('issueNone')}</span>`;
-  if (aEl) aEl.innerHTML = actions.map(a=>`<article class="action-card"><strong>${ui('mixActionTitle')}: ${a.t}</strong><p class="dim">${a.b}</p></article>`).join('');
-}
-
-function showMixPlaceholder() {
-  ['#metricPeak','#metricRms','#metricCrest','#metricStereo'].forEach(id=>{const e=$(id);if(e)e.textContent='—';});
-  const bar=$('#bandBar');
-  if (bar) bar.innerHTML=['bandsLow','bandsLowMid','bandsHighMid','bandsHigh']
-    .map(k=>`<div class="band-pill"><span class="mono-label">${ui(k)}</span><strong>—</strong></div>`).join('');
-  const iEl=$('#mixIssues');
-  if (iEl) iEl.innerHTML=`<span class="issue-chip">${ui('issueNeedFile')}</span>`;
-  const aEl=$('#mixActions');
-  if (aEl) aEl.innerHTML='';
-  drawPlaceholderWave();
-}
-
-function initAudio() {
-  const fileInput = $('#audioFile');
-  if (!fileInput) return;
-  fileInput.addEventListener('change', async e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const ab = await file.arrayBuffer();
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioCtx();
-    const buffer = await ctx.decodeAudioData(ab.slice(0));
-    const res = analyzeAudioBuffer(buffer);
-    drawWaveform(res.mono);
-    renderMixResults(res);
-    showToast(ui('uploadDone'));
-  });
-}
-
-/* ─── Toast ─── */
-function showToast(text) {
-  const t = $('#toast');
-  if (!t) return;
-  t.textContent = text;
-  t.classList.add('is-open');
-  clearTimeout(showToast._timer);
-  showToast._timer = setTimeout(() => t.classList.remove('is-open'), 2200);
-}
-
-/* ─── renderAll ─── */
+/* ============================================================
+   RENDER ALL
+   ============================================================ */
 function renderAll() {
-  try { renderVendorRail(); } catch(e){}
-  try { renderFilters(); } catch(e){}
-  try { renderRoleStrip(); } catch(e){}
-  try { renderPlugins(); } catch(e){}
-  try { renderSoundBuilder(); } catch(e){}
-  try { renderRoutes(); } catch(e){}
-  try { renderRecipes(); } catch(e){}
-  try { renderChecklists(); } catch(e){}
-  try { renderFixIt(); } catch(e){}
-  try { showMixPlaceholder(); } catch(e){}
+  try { renderSynths(); } catch(e) { console.error(e); }
+  try { renderRoutes(); } catch(e) { console.error(e); }
+  try { renderRecipes(); } catch(e) { console.error(e); }
+  try { renderFX(); } catch(e) { console.error(e); }
+  try { renderMixCheck(); } catch(e) { console.error(e); }
+  try { renderChains(); } catch(e) { console.error(e); }
+  try { renderFinish(); } catch(e) { console.error(e); }
+  try { renderFixIt(); } catch(e) { console.error(e); }
+  try { renderInventory(); } catch(e) { console.error(e); }
+  try { renderRefs(); } catch(e) { console.error(e); }
 }
 
-/* ─── UI init ─── */
-function initUi() {
-  // Nav links
-  $$('.nav-link').forEach(btn => btn.onclick = () => switchPage(btn.dataset.page));
-  $$('.quick-nav').forEach(btn => btn.onclick = () => switchPage(btn.dataset.target));
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  applyTheme();
+  applyLang();
+  initGate();
+  initNav();
+  renderAll();
 
-  // Menu toggle (mobile)
-  const menuBtn = $('#menuBtn');
-  if (menuBtn) menuBtn.onclick = () => document.body.classList.toggle('nav-open');
-
-  // Lang
-  $('#langEN').onclick = () => setLang('en');
-  $('#langFR').onclick = () => setLang('fr');
-
-  // Theme
-  $('#themeBtn').onclick = () => setTheme(state.theme === 'dark' ? 'light' : 'dark');
+  document.getElementById('btn-lang').addEventListener('click', toggleLang);
+  document.getElementById('btn-theme').addEventListener('click', toggleTheme);
 
   // Search
-  $('#globalSearch').addEventListener('input', e => {
-    state.search = e.target.value;
-    if (state.page !== 'library') switchPage('library');
-    renderPlugins();
-  });
-
-  window.addEventListener('resize', drawPlaceholderWave);
+  const searchInput = document.getElementById('inventory-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => renderInventory());
+  }
 }
 
-/* ─── Boot ─── */
-function boot() {
-  initUi();
-  setTheme(state.theme);
-  setLang(state.lang);
-  initGate();
-  initAudio();
-}
-
-boot();
+document.addEventListener('DOMContentLoaded', init);
