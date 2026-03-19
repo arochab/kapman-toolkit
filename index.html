@@ -7,32 +7,36 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
+<!-- ======================== PASSWORD GATE ======================== -->
 <div id="gate">
   <div class="gate-inner">
     <div class="gate-brand">KAPMAN<span class="gate-dot">.</span></div>
     <div class="gate-sub" data-i18n="gate-sub">studio</div>
-    <input type="password" id="gate-input" autocomplete="off" spellcheck="false" data-i18n-placeholder="gate-placeholder">
+    <div class="gate-input-wrap">
+      <input type="password" id="gate-input" autocomplete="off" spellcheck="false" data-i18n-placeholder="gate-placeholder">
+      <div class="gate-input-line"></div>
+    </div>
     <div id="gate-error" data-i18n="gate-error"></div>
   </div>
+  <div class="gate-footer">Ableton Live 12 Production Toolkit</div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ======================== MAIN APP ======================== -->
 <div id="app" class="hidden">
 
   <!-- TOP BAR -->
   <header id="topbar">
     <div class="topbar-left">
-      <span class="brand-mark">K<span class="brand-dot">.</span></span>
+      <button id="btn-home" class="brand-mark" title="Home">KAPMAN<span class="brand-dot">.</span></button>
     </div>
-    <nav id="mode-switch">
-      <button class="mode-btn active" data-mode="design"><span data-i18n="mode-design">DESIGN</span></button>
-      <button class="mode-btn" data-mode="mix"><span data-i18n="mode-mix">MIX</span></button>
-      <button class="mode-btn" data-mode="tools"><span data-i18n="mode-tools">TOOLS</span></button>
+    <nav id="mode-tabs" class="mode-tabs hidden">
+      <button class="mode-tab" data-mode="design"><span data-i18n="mode-design">DESIGN</span></button>
+      <button class="mode-tab" data-mode="mix"><span data-i18n="mode-mix">MIX</span></button>
+      <button class="mode-tab" data-mode="tools"><span data-i18n="mode-tools">TOOLS</span></button>
     </nav>
     <div class="topbar-right">
       <button id="btn-lang" class="ctrl-btn" title="Language">FR</button>
@@ -40,142 +44,114 @@
     </div>
   </header>
 
-  <!-- ===================== DESIGN MODE ===================== -->
-  <main id="mode-design" class="mode-panel active">
+  <!-- ======================== HERO / LAUNCHER ======================== -->
+  <section id="hero" class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title" data-i18n="hero-title">What are you working on?</h1>
+      <div class="hero-grid">
+        <button class="hero-card hc-design" data-goto="design">
+          <div class="hero-card-top">
+            <span class="hero-card-icon">◈</span>
+            <span class="hero-card-badge" data-i18n="hero-badge-creative">CREATIVE</span>
+          </div>
+          <div class="hero-card-label" data-i18n="hero-design-label">Sound Design</div>
+          <div class="hero-card-desc" data-i18n="hero-design-desc">Synthesis · texture · tone · movement · creative FX</div>
+          <div class="hero-card-actions">
+            <span class="hca" data-i18n="hca-synths">Synths</span>
+            <span class="hca" data-i18n="hca-routes">Routes</span>
+            <span class="hca" data-i18n="hca-recipes">Recipes</span>
+            <span class="hca" data-i18n="hca-fx">FX Palette</span>
+          </div>
+        </button>
+        <button class="hero-card hc-mix" data-goto="mix">
+          <div class="hero-card-top">
+            <span class="hero-card-icon">◉</span>
+            <span class="hero-card-badge" data-i18n="hero-badge-technical">TECHNICAL</span>
+          </div>
+          <div class="hero-card-label" data-i18n="hero-mix-label">Mixdown</div>
+          <div class="hero-card-desc" data-i18n="hero-mix-desc">Balance · EQ · dynamics · diagnosis · finish</div>
+          <div class="hero-card-actions">
+            <span class="hca" data-i18n="hca-mixcheck">Mix Check</span>
+            <span class="hca" data-i18n="hca-chains">Chains</span>
+            <span class="hca" data-i18n="hca-finish">Finish</span>
+            <span class="hca" data-i18n="hca-fixit">Fix-It</span>
+          </div>
+        </button>
+      </div>
+      <div class="hero-shortcuts">
+        <button class="hero-shortcut" data-goto="tools" data-sub="inventory"><span data-i18n="qs-plugins">Plugin Inventory</span></button>
+        <button class="hero-shortcut" data-goto="tools" data-sub="references"><span data-i18n="qs-refs">Quick References</span></button>
+      </div>
+    </div>
+  </section>
 
-    <!-- DESIGN: Sub-navigation -->
+  <!-- ======================== DESIGN MODE ======================== -->
+  <main id="mode-design" class="mode-panel">
     <div class="sub-nav">
       <button class="sub-btn active" data-sub="synths" data-i18n="design-synths">Synths</button>
       <button class="sub-btn" data-sub="routes" data-i18n="design-routes">Routes</button>
       <button class="sub-btn" data-sub="recipes" data-i18n="design-recipes">Recipes</button>
       <button class="sub-btn" data-sub="fx-palette" data-i18n="design-fx">FX Palette</button>
     </div>
-
-    <!-- DESIGN > SYNTHS -->
     <section id="sub-synths" class="sub-panel active">
-      <div class="section-header">
-        <h2 data-i18n="synths-title">Sound Sources</h2>
-        <p class="section-desc" data-i18n="synths-desc">Your synthesis engines — pick a starting point</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="synths-title">Sound Sources</h2><p class="section-desc" data-i18n="synths-desc">Your synthesis engines — pick a starting point</p></div>
       <div class="synth-tiers">
-        <div class="tier" id="tier-primary">
-          <div class="tier-label" data-i18n="tier-primary">PRIMARY</div>
-          <div class="tier-grid" id="grid-primary"></div>
-        </div>
-        <div class="tier" id="tier-classic">
-          <div class="tier-label" data-i18n="tier-classic">CLASSIC ANALOG</div>
-          <div class="tier-grid" id="grid-classic"></div>
-        </div>
-        <div class="tier" id="tier-digital">
-          <div class="tier-label" data-i18n="tier-digital">DIGITAL / FM / WAVETABLE</div>
-          <div class="tier-grid" id="grid-digital"></div>
-        </div>
-        <div class="tier" id="tier-experimental">
-          <div class="tier-label" data-i18n="tier-experimental">EXPERIMENTAL / MODULAR</div>
-          <div class="tier-grid" id="grid-experimental"></div>
-        </div>
-        <div class="tier" id="tier-drums">
-          <div class="tier-label" data-i18n="tier-drums">DRUM MACHINES</div>
-          <div class="tier-grid" id="grid-drums"></div>
-        </div>
+        <div class="tier"><div class="tier-label" data-i18n="tier-primary">PRIMARY</div><div class="tier-grid" id="grid-primary"></div></div>
+        <div class="tier"><div class="tier-label" data-i18n="tier-classic">CLASSIC ANALOG</div><div class="tier-grid" id="grid-classic"></div></div>
+        <div class="tier"><div class="tier-label" data-i18n="tier-digital">DIGITAL / FM / WAVETABLE</div><div class="tier-grid" id="grid-digital"></div></div>
+        <div class="tier"><div class="tier-label" data-i18n="tier-experimental">EXPERIMENTAL / MODULAR</div><div class="tier-grid" id="grid-experimental"></div></div>
+        <div class="tier"><div class="tier-label" data-i18n="tier-drums">DRUM MACHINES</div><div class="tier-grid" id="grid-drums"></div></div>
       </div>
     </section>
-
-    <!-- DESIGN > ROUTES -->
     <section id="sub-routes" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="routes-title">Sound Design Routes</h2>
-        <p class="section-desc" data-i18n="routes-desc">Signal paths for specific sonic goals</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="routes-title">Sound Design Routes</h2><p class="section-desc" data-i18n="routes-desc">Signal paths for specific sonic goals</p></div>
       <div id="routes-list" class="routes-container"></div>
     </section>
-
-    <!-- DESIGN > RECIPES -->
     <section id="sub-recipes" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="recipes-title">Recipes</h2>
-        <p class="section-desc" data-i18n="recipes-desc">Step-by-step sound design procedures</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="recipes-title">Recipes</h2><p class="section-desc" data-i18n="recipes-desc">Step-by-step sound design procedures</p></div>
       <div id="recipes-list" class="recipes-container"></div>
     </section>
-
-    <!-- DESIGN > FX PALETTE -->
     <section id="sub-fx-palette" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="fx-title">FX Palette</h2>
-        <p class="section-desc" data-i18n="fx-desc">Creative effects — texture, movement, space, destruction</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="fx-title">FX Palette</h2><p class="section-desc" data-i18n="fx-desc">Creative effects — texture, movement, space, destruction</p></div>
       <div id="fx-categories" class="fx-container"></div>
     </section>
-
   </main>
 
-  <!-- ===================== MIX MODE ===================== -->
+  <!-- ======================== MIX MODE ======================== -->
   <main id="mode-mix" class="mode-panel">
-
     <div class="sub-nav">
       <button class="sub-btn active" data-sub="mixcheck" data-i18n="mix-check">Mix Check</button>
       <button class="sub-btn" data-sub="chains" data-i18n="mix-chains">Chains</button>
       <button class="sub-btn" data-sub="finish" data-i18n="mix-finish">Finish</button>
       <button class="sub-btn" data-sub="fixit" data-i18n="mix-fixit">Fix-It</button>
     </div>
-
-    <!-- MIX > MIX CHECK -->
     <section id="sub-mixcheck" class="sub-panel active">
-      <div class="section-header">
-        <h2 data-i18n="mixcheck-title">Mix Check</h2>
-        <p class="section-desc" data-i18n="mixcheck-desc">Systematic listening pass — diagnose before you touch anything</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="mixcheck-title">Mix Check</h2><p class="section-desc" data-i18n="mixcheck-desc">Systematic listening pass — diagnose before you touch anything</p></div>
       <div id="mixcheck-zones" class="mixcheck-container"></div>
     </section>
-
-    <!-- MIX > CHAINS -->
     <section id="sub-chains" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="chains-title">Mix Chains</h2>
-        <p class="section-desc" data-i18n="chains-desc">Channel strip templates — EQ, compression, dynamics, stereo</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="chains-title">Mix Chains</h2><p class="section-desc" data-i18n="chains-desc">Channel strip templates — EQ, compression, dynamics, stereo</p></div>
       <div id="chains-list" class="chains-container"></div>
     </section>
-
-    <!-- MIX > FINISH -->
     <section id="sub-finish" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="finish-title">Finish Checklist</h2>
-        <p class="section-desc" data-i18n="finish-desc">Pre-master verification — nothing left unchecked</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="finish-title">Finish Checklist</h2><p class="section-desc" data-i18n="finish-desc">Pre-master verification — nothing left unchecked</p></div>
+      <div class="finish-progress"><div class="progress-bar"><div class="progress-fill" id="finish-bar"></div></div><span class="progress-label" id="finish-pct">0%</span><button class="finish-reset" id="finish-reset-btn" title="Reset">↺</button></div>
       <div id="finish-groups" class="finish-container"></div>
-      <div class="finish-progress">
-        <div class="progress-bar"><div class="progress-fill" id="finish-bar"></div></div>
-        <span class="progress-label" id="finish-pct">0%</span>
-      </div>
     </section>
-
-    <!-- MIX > FIX-IT -->
     <section id="sub-fixit" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="fixit-title">Fix-It Playbook</h2>
-        <p class="section-desc" data-i18n="fixit-desc">Problem → diagnosis → solution with your plugins</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="fixit-title">Fix-It Playbook</h2><p class="section-desc" data-i18n="fixit-desc">Problem → diagnosis → solution with your plugins</p></div>
       <div id="fixit-list" class="fixit-container"></div>
     </section>
-
   </main>
 
-  <!-- ===================== TOOLS MODE ===================== -->
+  <!-- ======================== TOOLS MODE ======================== -->
   <main id="mode-tools" class="mode-panel">
-
     <div class="sub-nav">
       <button class="sub-btn active" data-sub="inventory" data-i18n="tools-inventory">Inventory</button>
       <button class="sub-btn" data-sub="references" data-i18n="tools-refs">References</button>
     </div>
-
-    <!-- TOOLS > INVENTORY -->
     <section id="sub-inventory" class="sub-panel active">
-      <div class="section-header">
-        <h2 data-i18n="inventory-title">Plugin Inventory</h2>
-        <p class="section-desc" data-i18n="inventory-desc">Everything you own — searchable</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="inventory-title">Plugin Inventory</h2><p class="section-desc" data-i18n="inventory-desc">Everything you own — searchable</p></div>
       <div class="inventory-controls">
         <input type="text" id="inventory-search" data-i18n-placeholder="inventory-search-placeholder" autocomplete="off" spellcheck="false">
         <div id="vendor-filters" class="vendor-filters"></div>
@@ -183,16 +159,10 @@
       <div id="inventory-grid" class="inventory-container"></div>
       <div class="inventory-count"><span id="inv-count">0</span> <span data-i18n="inventory-plugins">plugins</span></div>
     </section>
-
-    <!-- TOOLS > REFERENCES -->
     <section id="sub-references" class="sub-panel">
-      <div class="section-header">
-        <h2 data-i18n="refs-title">Quick References</h2>
-        <p class="section-desc" data-i18n="refs-desc">Frequency ranges, gain staging, sidechain settings</p>
-      </div>
+      <div class="section-header"><h2 data-i18n="refs-title">Quick References</h2><p class="section-desc" data-i18n="refs-desc">Frequency ranges, gain staging, sidechain settings</p></div>
       <div id="refs-content" class="refs-container"></div>
     </section>
-
   </main>
 
 </div>
