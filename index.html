@@ -22,13 +22,12 @@
     </div>
     <div id="gate-error" data-i18n="gate-error"></div>
   </div>
-  <div class="gate-footer">Ableton Live 12 Production Toolkit</div>
+  <div class="gate-footer">Ableton Live 12 · Electronic Music Production</div>
 </div>
 
 <!-- ======================== MAIN APP ======================== -->
 <div id="app" class="hidden">
 
-  <!-- TOP BAR -->
   <header id="topbar">
     <div class="topbar-left">
       <button id="btn-home" class="brand-mark" title="Home">KAPMAN<span class="brand-dot">.</span></button>
@@ -36,51 +35,42 @@
     <nav id="mode-tabs" class="mode-tabs hidden">
       <button class="mode-tab" data-mode="design"><span data-i18n="mode-design">DESIGN</span></button>
       <button class="mode-tab" data-mode="mix"><span data-i18n="mode-mix">MIX</span></button>
-      <button class="mode-tab" data-mode="tools"><span data-i18n="mode-tools">TOOLS</span></button>
     </nav>
     <div class="topbar-right">
+      <button id="btn-plugins" class="ctrl-btn ctrl-plugins hidden" data-i18n="btn-plugins">⚙ Plugins</button>
       <button id="btn-lang" class="ctrl-btn" title="Language">FR</button>
       <button id="btn-theme" class="ctrl-btn" title="Theme">◐</button>
     </div>
   </header>
 
-  <!-- ======================== HERO / LAUNCHER ======================== -->
+  <!-- ======================== HERO ======================== -->
   <section id="hero" class="hero">
     <div class="hero-inner">
-      <h1 class="hero-title" data-i18n="hero-title">What are you working on?</h1>
-      <div class="hero-grid">
-        <button class="hero-card hc-design" data-goto="design">
-          <div class="hero-card-top">
-            <span class="hero-card-icon">◈</span>
-            <span class="hero-card-badge" data-i18n="hero-badge-creative">CREATIVE</span>
-          </div>
-          <div class="hero-card-label" data-i18n="hero-design-label">Sound Design</div>
-          <div class="hero-card-desc" data-i18n="hero-design-desc">Synthesis · texture · tone · movement · creative FX</div>
-          <div class="hero-card-actions">
-            <span class="hca" data-i18n="hca-synths">Synths</span>
-            <span class="hca" data-i18n="hca-routes">Routes</span>
-            <span class="hca" data-i18n="hca-recipes">Recipes</span>
-            <span class="hca" data-i18n="hca-fx">FX Palette</span>
-          </div>
-        </button>
-        <button class="hero-card hc-mix" data-goto="mix">
-          <div class="hero-card-top">
-            <span class="hero-card-icon">◉</span>
-            <span class="hero-card-badge" data-i18n="hero-badge-technical">TECHNICAL</span>
-          </div>
-          <div class="hero-card-label" data-i18n="hero-mix-label">Mixdown</div>
-          <div class="hero-card-desc" data-i18n="hero-mix-desc">Balance · EQ · dynamics · diagnosis · finish</div>
-          <div class="hero-card-actions">
-            <span class="hca" data-i18n="hca-mixcheck">Mix Check</span>
-            <span class="hca" data-i18n="hca-chains">Chains</span>
-            <span class="hca" data-i18n="hca-finish">Finish</span>
-            <span class="hca" data-i18n="hca-fixit">Fix-It</span>
-          </div>
-        </button>
+      <div class="hero-header">
+        <p class="hero-for" data-i18n="hero-for">For Ableton Live 12 producers</p>
+        <h1 class="hero-tagline" data-i18n="hero-tagline">Finish tracks faster.</h1>
+        <p class="hero-sub" data-i18n="hero-sub">Sound design routes, mixdown playbooks, and a real audio check — built around your plugins.</p>
       </div>
-      <div class="hero-shortcuts">
-        <button class="hero-shortcut" data-goto="tools" data-sub="inventory"><span data-i18n="qs-plugins">Plugin Inventory</span></button>
-        <button class="hero-shortcut" data-goto="tools" data-sub="references"><span data-i18n="qs-refs">Quick References</span></button>
+
+      <div class="hero-section">
+        <div class="hero-section-label hs-design"><span class="hsl-dot dot-design"></span><span data-i18n="hs-design">SOUND DESIGN</span></div>
+        <div class="task-grid" id="tasks-design"></div>
+      </div>
+
+      <div class="hero-section">
+        <div class="hero-section-label hs-mix"><span class="hsl-dot dot-mix"></span><span data-i18n="hs-mix">MIXDOWN</span></div>
+        <div class="task-grid" id="tasks-mix"></div>
+      </div>
+
+      <div class="hero-bottom">
+        <button class="hero-explore he-design" data-goto="design" data-i18n="hero-explore-design">All sound design →</button>
+        <button class="hero-explore he-mix" data-goto="mix" data-i18n="hero-explore-mix">All mixdown →</button>
+      </div>
+
+      <div class="hero-utils">
+        <button class="hero-util" id="hero-plugins-btn"><span data-i18n="hu-plugins">Plugin Inventory</span></button>
+        <span class="hero-util-sep">·</span>
+        <button class="hero-util" id="hero-refs-btn"><span data-i18n="hu-refs">Quick References</span></button>
       </div>
     </div>
   </section>
@@ -105,11 +95,11 @@
     </section>
     <section id="sub-routes" class="sub-panel">
       <div class="section-header"><h2 data-i18n="routes-title">Sound Design Routes</h2><p class="section-desc" data-i18n="routes-desc">Signal paths for specific sonic goals</p></div>
-      <div id="routes-list" class="routes-container"></div>
+      <div id="routes-list"></div>
     </section>
     <section id="sub-recipes" class="sub-panel">
       <div class="section-header"><h2 data-i18n="recipes-title">Recipes</h2><p class="section-desc" data-i18n="recipes-desc">Step-by-step sound design procedures</p></div>
-      <div id="recipes-list" class="recipes-container"></div>
+      <div id="recipes-list"></div>
     </section>
     <section id="sub-fx-palette" class="sub-panel">
       <div class="section-header"><h2 data-i18n="fx-title">FX Palette</h2><p class="section-desc" data-i18n="fx-desc">Creative effects — texture, movement, space, destruction</p></div>
@@ -120,51 +110,79 @@
   <!-- ======================== MIX MODE ======================== -->
   <main id="mode-mix" class="mode-panel">
     <div class="sub-nav">
-      <button class="sub-btn active" data-sub="mixcheck" data-i18n="mix-check">Mix Check</button>
+      <button class="sub-btn active" data-sub="audiocheck" data-i18n="mix-audiocheck">Audio Check</button>
+      <button class="sub-btn" data-sub="mixcheck" data-i18n="mix-check">Zones</button>
       <button class="sub-btn" data-sub="chains" data-i18n="mix-chains">Chains</button>
-      <button class="sub-btn" data-sub="finish" data-i18n="mix-finish">Finish</button>
       <button class="sub-btn" data-sub="fixit" data-i18n="mix-fixit">Fix-It</button>
+      <button class="sub-btn" data-sub="finish" data-i18n="mix-finish">Finish</button>
     </div>
-    <section id="sub-mixcheck" class="sub-panel active">
-      <div class="section-header"><h2 data-i18n="mixcheck-title">Mix Check</h2><p class="section-desc" data-i18n="mixcheck-desc">Systematic listening pass — diagnose before you touch anything</p></div>
-      <div id="mixcheck-zones" class="mixcheck-container"></div>
+
+    <section id="sub-audiocheck" class="sub-panel active">
+      <div class="section-header"><h2 data-i18n="ac-title">Audio Check</h2><p class="section-desc" data-i18n="ac-desc">Drop a bounce — get instant mix diagnostics</p></div>
+      <div id="audio-drop" class="audio-drop">
+        <input type="file" id="audio-file" accept="audio/*" hidden>
+        <div class="audio-drop-inner" id="audio-drop-inner">
+          <div class="audio-drop-icon">◎</div>
+          <div class="audio-drop-text" data-i18n="ac-drop">Drop audio file or click to upload</div>
+          <div class="audio-drop-hint" data-i18n="ac-hint">WAV, MP3, FLAC — browser-side analysis, nothing uploaded</div>
+        </div>
+      </div>
+      <div id="audio-results" class="audio-results hidden">
+        <div class="ar-file-bar">
+          <span class="ar-filename" id="ar-filename"></span>
+          <button class="ar-clear" id="ar-clear" data-i18n="ac-clear">✕ Clear</button>
+        </div>
+        <canvas id="ar-waveform" class="ar-waveform" height="80"></canvas>
+        <div class="ar-metrics" id="ar-metrics"></div>
+        <div class="ar-diagnosis" id="ar-diagnosis"></div>
+      </div>
+    </section>
+
+    <section id="sub-mixcheck" class="sub-panel">
+      <div class="section-header"><h2 data-i18n="mixcheck-title">Mix Check Zones</h2><p class="section-desc" data-i18n="mixcheck-desc">Systematic listening pass — diagnose before you touch anything</p></div>
+      <div id="mixcheck-zones"></div>
     </section>
     <section id="sub-chains" class="sub-panel">
       <div class="section-header"><h2 data-i18n="chains-title">Mix Chains</h2><p class="section-desc" data-i18n="chains-desc">Channel strip templates — EQ, compression, dynamics, stereo</p></div>
-      <div id="chains-list" class="chains-container"></div>
+      <div id="chains-list"></div>
+    </section>
+    <section id="sub-fixit" class="sub-panel">
+      <div class="section-header"><h2 data-i18n="fixit-title">Fix-It Playbook</h2><p class="section-desc" data-i18n="fixit-desc">Problem → diagnosis → solution with your plugins</p></div>
+      <div id="fixit-list"></div>
     </section>
     <section id="sub-finish" class="sub-panel">
       <div class="section-header"><h2 data-i18n="finish-title">Finish Checklist</h2><p class="section-desc" data-i18n="finish-desc">Pre-master verification — nothing left unchecked</p></div>
       <div class="finish-progress"><div class="progress-bar"><div class="progress-fill" id="finish-bar"></div></div><span class="progress-label" id="finish-pct">0%</span><button class="finish-reset" id="finish-reset-btn" title="Reset">↺</button></div>
       <div id="finish-groups" class="finish-container"></div>
     </section>
-    <section id="sub-fixit" class="sub-panel">
-      <div class="section-header"><h2 data-i18n="fixit-title">Fix-It Playbook</h2><p class="section-desc" data-i18n="fixit-desc">Problem → diagnosis → solution with your plugins</p></div>
-      <div id="fixit-list" class="fixit-container"></div>
-    </section>
   </main>
 
-  <!-- ======================== TOOLS MODE ======================== -->
-  <main id="mode-tools" class="mode-panel">
-    <div class="sub-nav">
-      <button class="sub-btn active" data-sub="inventory" data-i18n="tools-inventory">Inventory</button>
-      <button class="sub-btn" data-sub="references" data-i18n="tools-refs">References</button>
-    </div>
-    <section id="sub-inventory" class="sub-panel active">
-      <div class="section-header"><h2 data-i18n="inventory-title">Plugin Inventory</h2><p class="section-desc" data-i18n="inventory-desc">Everything you own — searchable</p></div>
-      <div class="inventory-controls">
-        <input type="text" id="inventory-search" data-i18n-placeholder="inventory-search-placeholder" autocomplete="off" spellcheck="false">
-        <div id="vendor-filters" class="vendor-filters"></div>
+  <!-- ======================== TOOLS DRAWER ======================== -->
+  <div id="tools-drawer" class="drawer hidden">
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div class="drawer-tabs">
+          <button class="drawer-tab active" data-dtab="inventory" data-i18n="tools-inventory">Inventory</button>
+          <button class="drawer-tab" data-dtab="references" data-i18n="tools-refs">References</button>
+        </div>
+        <button class="drawer-close" id="drawer-close">✕</button>
       </div>
-      <div id="inventory-grid" class="inventory-container"></div>
-      <div class="inventory-count"><span id="inv-count">0</span> <span data-i18n="inventory-plugins">plugins</span></div>
-    </section>
-    <section id="sub-references" class="sub-panel">
-      <div class="section-header"><h2 data-i18n="refs-title">Quick References</h2><p class="section-desc" data-i18n="refs-desc">Frequency ranges, gain staging, sidechain settings</p></div>
-      <div id="refs-content" class="refs-container"></div>
-    </section>
-  </main>
-
+      <div class="drawer-body">
+        <div id="dtab-inventory" class="dtab-panel active">
+          <div class="inventory-controls">
+            <input type="text" id="inventory-search" data-i18n-placeholder="inventory-search-placeholder" autocomplete="off" spellcheck="false">
+            <div id="vendor-filters" class="vendor-filters"></div>
+          </div>
+          <div id="inventory-grid" class="inventory-container"></div>
+          <div class="inventory-count"><span id="inv-count">0</span> <span data-i18n="inventory-plugins">plugins</span></div>
+        </div>
+        <div id="dtab-references" class="dtab-panel">
+          <div id="refs-content" class="refs-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>
